@@ -1,0 +1,24 @@
+{
+  "name": "Mansion DBG Online",
+  "short_name": "Mansion DBG",
+  "description": "Juego de cartas tipo mansion con salas, bots, matchmaking simulado, chat y logros.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f1218",
+  "theme_color": "#111827",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='32' fill='%23111827'/%3E%3Cpath d='M44 150V60h24v90h24V34h32v116h24V76h20v74' fill='none' stroke='%23d8a84d' stroke-width='12' stroke-linejoin='round'/%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='86' fill='%23111827'/%3E%3Cpath d='M118 398V160h64v238h62V86h86v312h62V202h54v196' fill='none' stroke='%23d8a84d' stroke-width='32' stroke-linejoin='round'/%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

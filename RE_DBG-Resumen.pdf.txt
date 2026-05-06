@@ -1,0 +1,429 @@
+ 
+Jugadores: 1-4. Duración: 30 minutos. 
+Preparación. 
+ Toma papel y lápiz para anotar la salud de los personajes. 
+ Se prepara el “área de recursos” para ir comprando de ahí 
+cartas con monedas de oro. Lo forman 18 montones, 
+varían según el escenario que se esté jugando, pero siempre 
+contendrá estos 6 montones de “recursos básicos”: 
+-(28) Munición “Ammo x10”.  
+-(15) Munición “Ammo x20”.  
+-(15) Munición “Ammo x30”. 
+-(9) “Handgun” y (1)“Burst-Fire Handgun”(mezcladas) 
+-(11) “Combat Knife” y (1)“Survival Knife”(mezcladas) 
+-(6) “Hierbas Verdes” (“Green Herb”). 
+ Los jugadores tendrán su “inventario” (mazo boca abajo 
+con sus recursos) y su “pila de descartes” (donde 
+descartarán,boca arriba,las cartas jugadas desde su mano). 
+Cada vez que se gane una carta irá a la “pila de descartes”. 
+ Se forma el “mazo de mansión”: 
+-Todas las cartas de “Infectados” (33).  
+-Todas los “Estuches” (2).  
+-Todas las “Hierbas Amarillas” (3). 
+ Se determina quién es el jugador inicial al azar, 
+continuando después en sentido horario. Cada jugador coge 
+una carta de “personaje” al azar, se retira el resto. El 
+máximo de salud del personaje no puede ser superado 
+(excepto cuando se adjunte una “hierba amarilla”). 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+(1) MODO HISTORIA   (de 45m a 1h). 
+Un extraño virus mortal está causando que los muertos se 
+levanten. Conseguís llegar a una mansión… 
+PASO 1: Colocar los 18 mazos de recursos del escenario. 
+PASO 2: Cada jugador forma su mazo de “inventario”, 
+toma, mezcla y coloca boca abajo: 7 cartas de “Ammo 
+x10”, 1 “Handgun” y 2 “Combat Knife”. Entonces cada 
+uno coge 5 cartas y forma su mano inicial. 
+Turno. 
+Cada jugador puede hacer lo siguiente en cualquier orden: 
+ JUGAR 1 CARTA DE ACCIÓN: Primero se realizan 
+los iconos y después el texto. Debes terminar todos los 
+efectos que se pueda de una carta, antes de jugar otra. 
+Algunas cartas permiten jugar más cartas de acción por 
+turno. Otras proporcionan munición y monedas extra. 
+ JUGAR OBJETOS: Se colocan boca arriba en tu “área 
+de juego” y se realizan los efectos que se puedan. 
+ ACTIVAR EL EFECTO DE TU PERSONAJE: Cada 
+personaje tiene 2 niveles, y cada nivel requiere un nº de 
+condecoraciones. Si aparece la palabra “puede” se realiza 1 
+vez por turno. Cuando tenga nivel 2 también tiene nivel 1. 
+ COMPRAR 1 RECURSO: El jugador puede gastar las 
+monedas ganadas al jugar cartas. El coste de cada carta está 
+en la moneda de la esquina superior derecha. Cuando 
+compras una carta, la mueves del “área de recursos” a tu 
+“pila de descartes”. 
+ EXPLORAR LA MANSIÓN 1 VEZ: El jugador juega 
+todas sus armas y munición requerida de su mano. Cada 
+arma se utiliza 1 vez. Se suma el total de puntos de daño 
+(“damage”). Se aplican los efectos de cada arma. Después, 
+se revela la carta superior del “mazo de mansión”.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Si es un “infectado” se aplica su efecto, si tiene, cuando 
+diga. Si el total de puntos de daño del jugador es igual o 
+superior a la salud (“health”) del “infectado”, entonces lo 
+derrotas y lo adjuntas a tu jugador, ganando su(s) 
+condecoración(es). Si el total resultara ser menor, restas los 
+puntos de daño (“damage”) del “infectado” (+ cualquier 
+modificador) a tu salud. El “infectado” va al final del “mazo 
+de mansión”. Algunos tienen efectos si no son derrotados. 
+Si la salud de tu personaje es reducida a 0 o menos, ha sido 
+herido de gravedad. Gira a tu personaje boca abajo y baraja 
+tu inventario, tu mano y tu “pila de descartes”. Coloca tu 
+inventario boca abajo. Las cartas adjuntas continúan. 
+Cuando llegue tu turno siguiente se le da la vuelta a tu 
+personaje, restas 20 al máximo de tu salud actual, tomas 5 
+cartas y pierdes este turno. Si el máximo de tu salud llegara 
+a 0 o menos, tu personaje estaría muerto y fuera del juego. 
+Algunas armas permiten explorar más de 1 vez por turno, 
+esas “exploraciones” deberán ser simultáneas. El total de 
+puntos de daño del jugador deberá exceder o igualar los 
+puntos de salud de todos los “infectados” revelados. Si no 
+fuera así, recibiría el total de puntos de daño de todos ellos, 
+volviendo éstos al final del “mazo de mansión”. 
+Cartas de “no-infectados”: si el jugador decidiera no 
+cogerla, iría al final del “mazo de mansión”. 
+ FINAL DEL TURNO: El jugador descarta todas las 
+cartas en su mano y jugadas. Entonces toma 5 cartas de su 
+inventario (si no hubiera suficientes cartas, se baraja la “pila 
+de descartes” para formar un nuevo inventario). Si no 
+quieres realizar ninguna acción durante tu turno, puedes 
+pasar. El juego pasa al jugador de la izquierda. 
+ FINAL DEL JUEGO: El juego termina cuando algún 
+jugador derrote al poderoso “infectado” Uroboros Aheri. 
+Después de esto, los jugadores cuentan sus condecora-
+ciones. El jugador con más condecoraciones será el 
+ganador. En caso de empate, el que le quede más salud. 
+MAKENTRIX-UTRERA 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+Notas avanzadas. 
+ RECURSOS PERSONALIZADOS: Se cogen los 6 
+“recursos básicos”, después cada jugador, uno a uno, va 
+eligiendo uno hasta llegar a 18 montones. 
+ CAMBIAR DIFICULTAD DE JUEGO :  
+-FÁCIL: Todos los “infectados” -10 de salud, -10 de 
+puntos de daño y no aplicar sus efectos. 
+-DIFÍCIL: Todos los “infectados” +10 de salud, +10 de 
+puntos de daño y aplicar sus efectos 2 veces. 
+-PROFESIONAL: Se aplican las reglas de “difícil” y los 
+“infectados” no derrotados continúan activos, y no se podrá 
+explorar la mansión hasta que no sean derrotados. Los 
+jugadores que lleguen a 0, no pueden “revivir”. 
+ INVENTARIOS ALTERNATIVOS: Se elige el 
+inventario de cada personaje según el Modo Mercenario. 
+ OBSERVACIONES: Cuando se devuelve una carta al 
+“área de recurso”, se coloca al final de su mazo. 
+(2) MODO MERCENARIO   (de 30m a 45m). 
+Para este modo se incluyen las 5 cartas “bonus” en el 
+“mazo de mansión” y se quitan: los 2 “estuches”, las 3 
+“hierbas amarillas”, los 2 “Hunters”, “Nemesis T-Type”, 
+“Uroboros Aheri” y “El Gigante”. 
+PASO 1: Se elige el escenario y se colocan los 18 mazos. 
+PASO 2: Se prepara el inventario inicial de los personajes:  
+FIN DEL JUEGO: Después de jugar 15 turnos (para 
+todos) gana el equipo con más condecoraciones. En caso de 
+empate, el equipo que tenga al personaje con más salud. Si 
+la salud de un miembro se reduce a 0, es eliminado. Si son 
+todos eliminados, ese equipo pierde inmediatamente. Se 
+juega en equipos (1vs1vs1vs1 / 2vs2 / 1vs3). Se siguen las 
+reglas del Modo Historia, exceptuando que cuando se 
+derrota a un infectado va a la “pila de combos” del equipo. 
+Las condecoraciones totales que lleva todo el equipo se 
+comparten a efectos de subir de nivel. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+COMBOS: Un combo es un conjunto de “infectados” 
+derrotados seguidos. Cuando haya un turno en el que ese 
+equipo no haya derrotado a ninguno, se multiplica la suma 
+de condecoraciones por el nº de cartas de “infectados” que 
+se tenga (sin contar las cartas de “bonus”), se anota y esas 
+cartas van al final del “mazo de mansión” otra vez. 
+(3) MODO VERSUS   (de 45m a 1h). 
+Habéis escapado a salvo de la mansión, ahora se trata de 
+todos contra todos. Se puede usar cualquier escenario del 
+Modo Historia o Mercenario, simplemente hay que quitar 2 
+recursos e incluir “Struggle for Survival” y “ Back to 
+Back”. Este modo no necesita el “mazo de mansión”. Cada 
+jugador toma 7 “Ammo x10”, 1 “Handgun” y 2 “Combat 
+Knife”. Baraja esas 10 cartas y toma 5 para formar tu mano 
+inicial. Cuando un personaje ha derrotado a otro, gana 1 
+condecoración. Gana el jugador que consiga 3 condeco-
+raciones. Para subir de nivel, sólo necesitas 1 condecora-
+ción. Cuando un jugador explora, en lugar de revelar la 1ª 
+carta del “mazo de mansión”, designa a otro jugador. 
+Cuando la salud se reduce a 0 o menos, el jugador atacante 
+puede elegir un arma del jugador derrotado, de su mano, 
+inventario o “pila de descartes” y añadirla a su propia “pila 
+de descartes”. El jugador derrotado mezcla su “pila de 
+descartes” y su inventario para formar uno nuevo, coge 5 
+cartas para formar su mano y gira su personaje boca abajo 
+(no podrá ser atacado estando boca abajo). En el siguiente 
+turno sólo podrá ponerlo boca arriba, perdiendo el resto del 
+turno. Si un personaje tiene exploraciones “extra”, puede 
+atacar a varios jugadores, designando los personajes 
+atacados y qué armas usa contra ellos (cada arma puede ser 
+usada una vez, a no ser que se indique otra cosa). 
+INVENTARIOS ALTERNATIVOS: Se elige el 
+inventario de cada personaje según el Modo Mercenario. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+DIFERENCIAS CON EL 
+JUEGO ORIGINAL: 
+ MAZO DE MANSIÓN: Está formado por: 
+-(30) Todos los “infectados” excepto 2 “Reaper”, 2 “Los 
+Illuminados Monk” y 3 “Guardian of Insanity”. 
+-(5) Cartas de sucesos: Cuando salga, se hace lo que indica. 
+ JUGAR ACCIONES:  Algunas acciones tienen un 
+efecto que te permite usarlas durante el turno de otro 
+jugador, esto no cuesta acciones para realizarlas después. 
+ EXPLORAR LA MANSIÓN 1 VEZ: A la hora de 
+exploraciones “extra”, los jugadores pueden explorar 1 a 1, 
+en lugar de todas a la vez, pero utilizando armas distintas. 
+ FIN DEL JUEGO: Cuando se derrote a“Albert Wesker” 
+ CAMBIAR DIFICULTAD DE JUEGO : 
+-PROFESIONAL: Se debe explorar al menos 1 vez x turno 
+ VARIANTE: Combinar el “mazo de mansión” de ambos 
+juegos. El juego termina cuando se derrote a ambos “jefes”. 
+ MODO MERCENARIO: “Mazo de mansión”= hay que 
+quitar  2 “Iron Maiden”, “Albert Wesker”, “Proto Tyrant”, 
+2 “Garrador”, “Laser T. D.” y “Collapsing Floor Trap”. 
+ COMPAÑERO: Se añaden al “mazo de mansión” los 7 
+“infectados” que se quitaron en el Modo Historia. Se elige 
+otro personaje secundario como “compañero”. Es tratado 
+como otro personaje bajo tu control con su propia salud, su 
+nivel será determinado por las condecoraciones del perso-
+naje principal. Puedes gastar 1 acción para adjuntar un 
+arma de tu mano a tu compañero. Si quieres reemplazarla 
+por otra, lleva la reemplazada a tu “pila de descartes”. El nº 
+máximo de cartas adjuntas es 2. Las cartas de acción 
+“adjuntas” no proporcionan los iconos. Cuando elijas 
+explorar, se juegan todas las armas con normalidad. 
+Cuando asignes munición, puedes hacerlo a las armas 
+adjuntas de tu compañero. Los dos exploran a la vez, tú 
+decides quién va primero (el que lidere la exploración será 
+el que se lleve todo el daño si fallas). Si la salud de tu 
+compañero se reduce a 0, se retira del juego, todas sus 
+cartas adjuntas vuelven al “área de recursos”. 
+ 

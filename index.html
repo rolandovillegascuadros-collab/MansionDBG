@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#111827" />
+    <title>Mansion DBG Online</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <section class="entry-screen" id="entry-screen" aria-label="Ingreso">
+      <div class="entry-card">
+        <section class="home-hero" aria-label="Home principal">
+          <div class="home-hero-copy">
+            <p class="eyebrow">Juego web online y offline</p>
+            <h1>Mansion DBG</h1>
+            <p>
+              Construye tu mazo, compra armas y municion, explora la mansion y compite por
+              condecoraciones en los modos Historia, Mercenario y Versus.
+            </p>
+            <p class="developer-credit">Desarrollado por Rolando Villegas Cuadros, Chile</p>
+            <p class="rights-note">
+              Derechos del desarrollo de programacion reservados por Rolando Villegas Cuadros.
+              Demo no oficial inspirada en reglas de juego de mesa.
+            </p>
+          </div>
+          <div class="home-hero-media">
+            <img src="assets/board/Tablero DBG (Completo).jpg" alt="Tablero principal Mansion DBG" />
+          </div>
+        </section>
+
+        <section class="home-grid">
+          <div class="home-showcase" aria-label="Capturas del juego">
+            <div class="section-title">
+              <h2>Capturas del juego</h2>
+              <span>Mesa, cartas y mansion</span>
+            </div>
+            <div class="screenshot-grid">
+              <figure>
+                <img src="assets/board/Tablero A4-1.jpg" alt="Vista del tablero de juego" />
+                <figcaption>Tablero de mesa</figcaption>
+              </figure>
+              <figure>
+                <img src="assets/cards/CH-001.jpg" alt="Carta de personaje" />
+                <figcaption>Personajes</figcaption>
+              </figure>
+              <figure>
+                <img src="assets/cards/WE-001.jpg" alt="Carta de arma" />
+                <figcaption>Armas</figcaption>
+              </figure>
+              <figure>
+                <img src="assets/cards/MA-001.jpg" alt="Carta de mansion" />
+                <figcaption>Mansion</figcaption>
+              </figure>
+            </div>
+
+            <div class="rules-preview" aria-label="Reglas del juego">
+              <h2>Reglas principales</h2>
+              <ul>
+                <li>Empiezas con un mazo inicial de 10 cartas y robas 5 cartas por turno.</li>
+                <li>En tu turno puedes realizar accion, compra, exploracion, usar objetos y habilidades.</li>
+                <li>La municion entrega oro y requisito de uso para armas; si no alcanza, no puedes atacar con esa arma.</li>
+                <li>Al explorar la mansion derrotas infectados para ganar condecoraciones o recibes dano.</li>
+                <li>Gana quien consiga mas condecoraciones cuando termina la partida o al caer el jefe.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="login-panel" aria-label="Ingreso al juego">
+            <div class="brand entry-brand game-logo">
+              <div class="brand-mark logo-mark" aria-hidden="true">RE</div>
+              <div>
+                <p class="eyebrow">Demo Web</p>
+                <h2>Entrar al juego</h2>
+              </div>
+            </div>
+            <p class="entry-copy">
+              Crea una cuenta del sitio para encontrar usuarios registrados, agregarlos e invitarlos cuando esten conectados.
+            </p>
+            <div class="account-tabs" role="group" aria-label="Acceso">
+              <button class="active" type="button" data-auth-tab="login">Ingresar</button>
+              <button type="button" data-auth-tab="register">Crear cuenta</button>
+            </div>
+            <form class="site-auth-form" id="site-auth-form">
+              <input id="site-name" type="text" placeholder="Nombre visible" autocomplete="name" />
+              <input id="site-fullname" type="text" placeholder="Nombre completo" autocomplete="name" />
+              <input id="site-birthdate" type="date" aria-label="Fecha de nacimiento" />
+              <input id="site-age" type="number" min="13" max="120" placeholder="Edad" inputmode="numeric" />
+              <input id="site-email" type="email" placeholder="Correo electronico" autocomplete="email" required />
+              <input id="site-password" type="password" placeholder="Clave demo" autocomplete="current-password" required />
+              <button class="primary-button" type="submit" id="site-auth-submit">Ingresar</button>
+              <button class="ghost-button reset-password" type="button" id="reset-password">Recuperar clave por correo</button>
+            </form>
+            <p class="permission-note" id="permission-note">Ingresa con tu correo y clave del sitio, o crea una cuenta nueva para jugar online.</p>
+            <button class="ghost-button firebase-test-button" type="button" id="firebase-test">Probar Firebase</button>
+            <button class="offline-entry" type="button" id="offline-entry">Probar offline</button>
+            <button class="ghost-button music-toggle" type="button" id="entry-music">Musica ambiente</button>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <main class="app-shell">
+      <section class="sidebar" aria-label="Perfil y sala">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">M</div>
+          <div>
+            <p class="eyebrow">PWA para web, Android y iPhone</p>
+            <h1>Mansion DBG</h1>
+          </div>
+        </div>
+
+        <section class="panel auth-panel" id="auth-panel">
+          <h2>Cuenta del sitio</h2>
+          <p class="small">Ingresa con una cuenta creada en este sitio para ubicar usuarios y agregarlos.</p>
+          <button class="ghost-button firebase-test-button" type="button" id="firebase-test-panel">Probar Firebase</button>
+        </section>
+
+        <section class="panel profile-panel hidden" id="profile-panel">
+          <div class="profile-row">
+            <div class="avatar" id="avatar">P1</div>
+            <div>
+              <h2 id="player-name">Jugador</h2>
+              <p class="small" id="login-provider">Sesion del sitio activa</p>
+            </div>
+          </div>
+          <div class="stats-row">
+            <span><strong id="saved-wins">0</strong> victorias</span>
+            <span><strong id="saved-achievements">0</strong> logros</span>
+          </div>
+          <label class="availability-toggle">
+            <input type="checkbox" id="availability-toggle" checked />
+            <span>Disponible online</span>
+          </label>
+          <button class="ghost-button logout-button" type="button" id="logout-button">Cerrar sesion</button>
+        </section>
+
+        <section class="panel online-panel" id="online-panel">
+          <div class="section-title">
+            <h2>Usuarios</h2>
+            <span id="users-status">0 conectados</span>
+          </div>
+          <form class="add-user-form" id="add-user-form">
+            <input id="friend-email" type="text" placeholder="correo registrado" />
+            <button type="submit">Agregar</button>
+          </form>
+          <div class="friend-list" id="site-users" aria-label="Usuarios del sitio"></div>
+        </section>
+
+        <section class="panel">
+          <div class="section-title">
+            <h2>Sala</h2>
+            <button class="ghost-button" type="button" id="reset-room">Nueva</button>
+          </div>
+
+          <label for="mode">Modo de juego</label>
+          <select id="mode">
+            <option value="story">Historia, 1-4 jugadores</option>
+            <option value="mercenary">Mercenario, 1-4 jugadores</option>
+            <option value="versus">Versus, 2-4 jugadores</option>
+          </select>
+
+          <label for="scenario">Escenario</label>
+          <select id="scenario"></select>
+
+          <div class="segmented" role="group" aria-label="Tipo de partida">
+            <button type="button" class="active" data-session="friends">Amigos</button>
+            <button type="button" data-session="matchmaking">Online</button>
+            <button type="button" data-session="offline">Offline</button>
+          </div>
+
+          <div class="friend-list" id="friend-list" aria-label="Amigos disponibles"></div>
+          <button class="primary-button" type="button" id="fill-room">Completar sala</button>
+          <button class="start-button" type="button" id="start-game">Comenzar partida</button>
+          <button class="ghost-button offline-home-button" type="button" id="home-button">Volver home</button>
+          <p class="status" id="room-status">Inicia sesion con tu cuenta del sitio para crear una sala.</p>
+        </section>
+      </section>
+
+      <section class="game-surface" aria-label="Juego">
+        <div class="topbar">
+          <div>
+            <p class="eyebrow">Mesa actual</p>
+            <h2 id="room-title">Esperando sala</h2>
+          </div>
+          <div class="top-actions">
+            <button class="sound-button" type="button" id="sound-toggle" aria-pressed="true">Sonido</button>
+            <div class="turn-pill" id="turn-pill">Turno 0</div>
+          </div>
+        </div>
+
+        <section class="board">
+          <section class="table-grid" id="players"></section>
+
+          <section class="play-area">
+            <div class="table-zone mansion-panel">
+              <div class="section-title">
+                <h2>Mansion</h2>
+                <span id="mansion-count">0 cartas</span>
+              </div>
+              <div class="mansion-row">
+                <div class="deck-stack" aria-label="Mazo de mansion">
+                  <div class="deck-card"></div>
+                  <div class="deck-card"></div>
+                  <button class="mansion-card card-face card-back" type="button" id="mansion-card">
+                    <span>?</span>
+                    <strong>Mazo cerrado</strong>
+                  </button>
+                </div>
+                <div class="discard-slot" id="discard-slot">
+                  <span>Descarte</span>
+                  <strong>Sin encuentros</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="table-zone controls-panel">
+              <div class="section-title">
+                <h2>Mano del jugador</h2>
+                <span id="current-player">Sin jugador</span>
+              </div>
+              <div class="current-hero" id="current-hero">
+                <div class="portrait portrait-scout" aria-hidden="true"><span>PJ</span></div>
+                <div>
+                  <strong>Sin personaje</strong>
+                  <span>Comienza una partida</span>
+                </div>
+              </div>
+              <div class="live-trackers" aria-label="Estado en tiempo real">
+                <div>
+                  <span>Vida</span>
+                  <strong id="live-health">0/0</strong>
+                </div>
+                <div>
+                  <span>Acciones</span>
+                  <strong id="live-actions">0</strong>
+                </div>
+                <div>
+                  <span>Compras</span>
+                  <strong id="live-buys">0</strong>
+                </div>
+                <div>
+                  <span>Explorar</span>
+                  <strong id="live-explores">0</strong>
+                </div>
+                <div>
+                  <span>Medallas</span>
+                  <strong id="live-decorations">0</strong>
+                </div>
+                <div>
+                  <span>Daño</span>
+                  <strong id="live-damage">0</strong>
+                </div>
+                <div>
+                  <span>Oro</span>
+                  <strong id="live-gold">0</strong>
+                </div>
+                <div>
+                  <span>Munición</span>
+                  <strong id="live-ammo">0</strong>
+                </div>
+              </div>
+              <div class="hand" id="hand"></div>
+              <div class="action-picker">
+                <div class="section-title">
+                  <h2>Acciones en mano</h2>
+                  <span id="action-status">0 disponibles</span>
+                </div>
+                <div class="action-card-list" id="action-card-list"></div>
+              </div>
+              <div class="weapon-picker">
+                <div class="section-title">
+                  <h2>Armas disponibles</h2>
+                  <span id="weapon-status">0 seleccionadas</span>
+                </div>
+                <div class="weapon-list" id="weapon-list"></div>
+              </div>
+              <div class="played-row">
+                <div class="section-title">
+                  <h2>Cartas jugadas este turno</h2>
+                  <span id="played-status">0 cartas</span>
+                </div>
+                <div class="played-cards" id="played-cards"></div>
+              </div>
+              <div class="target-row" id="target-row">
+                <label for="versus-target">Objetivo versus</label>
+                <select id="versus-target"></select>
+              </div>
+              <div class="action-row">
+                <button class="turn-command" type="button" id="explore">Explorar / atacar</button>
+                <button class="turn-command" type="button" id="buy-resource">Comprar carta</button>
+                <button class="turn-command" type="button" id="play-action">Jugar accion</button>
+                <button class="turn-command" type="button" id="use-item">Utilizar objeto</button>
+                <button class="turn-command" type="button" id="character-effect">Efecto personaje</button>
+                <button class="turn-command end-command" type="button" id="end-turn">Finalizar turno</button>
+              </div>
+              <div class="turn-footer">
+                <p class="status" id="game-status">Crea una sala y comienza para repartir personajes al azar.</p>
+                <strong id="turn-timer">04:00</strong>
+              </div>
+            </div>
+          </section>
+        </section>
+      </section>
+
+      <aside class="right-rail" aria-label="Chat y logros">
+        <section class="panel chat-panel">
+          <div class="section-title">
+            <h2>Chat</h2>
+            <button class="voice-button" type="button" id="voice-toggle">Voz</button>
+          </div>
+          <ul id="chat-log"></ul>
+          <form id="chat-form">
+            <input id="chat-input" type="text" placeholder="Mensaje a la sala" />
+            <button type="submit">Enviar</button>
+          </form>
+        </section>
+
+        <section class="panel">
+          <div class="section-title">
+            <h2>Recursos</h2>
+            <span id="resource-status">Mercado cerrado</span>
+          </div>
+          <div class="resource-types" id="resource-types" aria-label="Tipos de recursos"></div>
+          <div class="resource-grid collapsed" id="resource-area"></div>
+        </section>
+
+        <section class="panel">
+          <div class="section-title">
+            <h2>Logros</h2>
+            <button class="ghost-button" type="button" id="clear-progress">Limpiar</button>
+          </div>
+          <ul class="achievement-list" id="achievements"></ul>
+        </section>
+
+        <section class="panel rules-panel hidden">
+          <h2>Reglas cargadas</h2>
+          <ul>
+            <li>Historia y Mercenario permiten 1 a 4 jugadores.</li>
+            <li>Versus requiere minimo 2 jugadores.</li>
+            <li>Cada jugador recibe personaje aleatorio e inventario inicial.</li>
+            <li>Mercenario dura 15 turnos de equipo.</li>
+            <li>Los logros y victorias se guardan localmente.</li>
+          </ul>
+        </section>
+      </aside>
+    </main>
+
+    <div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+    <div class="game-over-modal hidden" id="game-over-modal" role="dialog" aria-modal="true" aria-labelledby="game-over-title">
+      <div>
+        <h2 id="game-over-title">Perdiste</h2>
+        <p id="game-over-text">Tu personaje murio tres veces. Tu juego se acabo.</p>
+        <button class="primary-button" type="button" id="game-over-close">Volver al inicio</button>
+      </div>
+    </div>
+    <audio id="ambient-audio" src="assets/audio/resident-evil.mp3" loop preload="auto"></audio>
+    <script type="module" src="online-backend.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
