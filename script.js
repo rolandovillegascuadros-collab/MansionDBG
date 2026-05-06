@@ -1538,7 +1538,7 @@ function rollOpeningDiceValues(playerIndexes) {
 
 function resolveOpeningRoll() {
   let contenders = state.players.map((_, index) => index);
-  let values = {};
+  let values = rollOpeningDiceValues(contenders);
   let guard = 0;
   while (contenders.length > 1 && guard < 12) {
     const roundValues = rollOpeningDiceValues(contenders);

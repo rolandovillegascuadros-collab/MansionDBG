@@ -2799,6 +2799,69 @@ input {
   }
 }
 
+@media (min-width: 861px) and (min-height: 541px) {
+  .controls-panel {
+    display: grid;
+    grid-template-rows:
+      auto
+      auto
+      auto
+      clamp(104px, 15dvh, 150px)
+      auto
+      auto
+      minmax(42px, 0.35fr)
+      auto
+      auto;
+    gap: 4px;
+    overflow: hidden;
+  }
+
+  .hand {
+    min-height: 104px;
+    max-height: 150px;
+    align-items: stretch;
+    overflow: hidden;
+  }
+
+  .hand .card-face {
+    width: min(126px, 100%);
+    max-height: 150px;
+    justify-self: center;
+  }
+
+  .action-picker,
+  .weapon-picker,
+  .played-row {
+    min-height: 0;
+    margin-top: 4px;
+    padding-top: 4px;
+  }
+
+  .action-picker {
+    padding: 5px;
+  }
+
+  .played-row {
+    max-height: 74px;
+    overflow: hidden;
+  }
+
+  .played-cards {
+    min-height: 36px;
+    max-height: 48px;
+    overflow: hidden;
+  }
+
+  .action-row {
+    gap: 5px;
+    margin: 4px 0;
+  }
+
+  .turn-command {
+    min-height: 28px;
+  }
+}
+
 @media (orientation: landscape) and (max-height: 540px) and (max-width: 1000px) {
   body {
     overflow: hidden;
