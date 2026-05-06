@@ -217,6 +217,15 @@ async function createBackend() {
     return (room.invited || []).some((item) => item.uid === uid);
   }
 
+  function roomInvitationId(roomId, uid) {
+    return `room:${roomId}:${uid}`;
+  }
+
+  function parseRoomInvitationId(inviteId) {
+    const parts = String(inviteId || "").split(":");
+    return parts[0] === "room" && parts.length === 3 ? { roomId: parts[1], uid: parts[2] } : null;
+  }
+
   async function inviteToRoom(roomId, friend, sender, details = {}) {
     if (!roomId) throw new Error("Sala invalida: crea una sala online antes de invitar.");
     if (!friend?.uid) throw new Error("Invitado invalido: el usuario debe existir en Firebase.");
@@ -235,12 +244,11 @@ async function createBackend() {
     const maxPlayers = Number(details.maxPlayers || room.maxPlayers || 4);
     if ((room.players || []).length >= maxPlayers) throw new Error("La sala ya esta completa.");
     const inviteId = `${roomId}_${friend.uid}`;
-    const existingInvite = await getDoc(doc(db, "roomInvitations", inviteId));
-    if (existingInvite.exists() && existingInvite.data().status === "pending") {
-      throw new Error(`${friendProfile.name} ya tiene una invitacion pendiente.`);
-    }
+    const existingInvite = await getDoc(doc(db, "roomInvitations", inviteId)).catch(() => null);
+    if (existingInvite?.exists?.() && existingInvite.data().status === "pending") throw new Error(`${friendProfile.name} ya tiene una invitacion pendiente.`);
     if (roomHasPlayer(room, friend.uid)) throw new Error(`${friendProfile.name} ya esta dentro de la sala.`);
-    await setDoc(doc(db, "roomInvitations", inviteId), {
+    if (roomHasInvite(room, friend.uid)) throw new Error(`${friendProfile.name} ya tiene una invitacion pendiente.`);
+    const invitation = {
       roomId,
       toUid: friendProfile.uid,
       toName: friendProfile.name,
@@ -251,9 +259,20 @@ async function createBackend() {
       scenario: room.scenario || "",
       maxPlayers,
       status: "pending",
-      createdAt: serverTimestamp(),
+    };
+    try {
+      await setDoc(doc(db, "roomInvitations", inviteId), {
+        ...invitation,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      }, { merge: true });
+    } catch (error) {
+      if (!String(error?.message || "").toLowerCase().includes("permission")) throw error;
+    }
+    await updateDoc(doc(db, "rooms", roomId), {
+      invited: arrayUnion(invitation),
       updatedAt: serverTimestamp(),
-    }, { merge: true });
+    });
     return inviteId;
   }
 
@@ -271,10 +290,15 @@ async function createBackend() {
   async function acceptRoomInvite(inviteId, user) {
     if (!inviteId) throw new Error("Invitacion invalida: falta identificador.");
     if (!user?.uid) throw new Error("Sesion invalida: inicia sesion nuevamente.");
-    const inviteRef = doc(db, "roomInvitations", inviteId);
-    const inviteSnapshot = await getDoc(inviteRef);
-    if (!inviteSnapshot.exists()) throw new Error("Invitacion invalida o expirada.");
-    const invitation = inviteSnapshot.data();
+    const roomBased = parseRoomInvitationId(inviteId);
+    const inviteRef = roomBased ? null : doc(db, "roomInvitations", inviteId);
+    const inviteSnapshot = inviteRef ? await getDoc(inviteRef).catch(() => null) : null;
+    let invitation = inviteSnapshot?.exists?.() ? inviteSnapshot.data() : null;
+    if (!invitation && roomBased) {
+      const roomSnapshot = await getDoc(doc(db, "rooms", roomBased.roomId));
+      if (roomSnapshot.exists()) invitation = (roomSnapshot.data().invited || []).find((item) => item.uid === user.uid) || null;
+    }
+    if (!invitation) throw new Error("Invitacion invalida o expirada.");
     if (invitation.status !== "pending") throw new Error("Esta invitacion ya fue respondida.");
     if (invitation.toUid !== user.uid) throw new Error("Esta invitacion pertenece a otro usuario.");
     const roomRef = doc(db, "rooms", invitation.roomId);
@@ -284,7 +308,7 @@ async function createBackend() {
     const maxPlayers = Number(invitation.maxPlayers || currentRoom.maxPlayers || 4);
     if (currentRoom.status === "playing" || currentRoom.started) throw new Error("La partida ya comenzo. No puedes unirte ahora.");
     if (roomHasPlayer(currentRoom, user.uid)) {
-      await updateDoc(inviteRef, { status: "accepted", updatedAt: serverTimestamp() });
+      if (inviteRef) await updateDoc(inviteRef, { status: "accepted", updatedAt: serverTimestamp() }).catch(() => {});
       return { id: currentRoomSnapshot.id, ...currentRoom };
     }
     if ((currentRoom.players || []).length >= maxPlayers) throw new Error("La sala ya esta completa.");
@@ -292,10 +316,10 @@ async function createBackend() {
     await Promise.all([
       updateDoc(roomRef, {
         players: arrayUnion(player),
-        invited: arrayRemove({ uid: invitation.toUid, name: invitation.toName, email: invitation.toEmail || "" }),
+        invited: arrayRemove(invitation),
         updatedAt: serverTimestamp(),
       }),
-      updateDoc(inviteRef, { status: "accepted", updatedAt: serverTimestamp() }),
+      inviteRef ? updateDoc(inviteRef, { status: "accepted", updatedAt: serverTimestamp() }).catch(() => {}) : Promise.resolve(),
     ]);
     const roomSnapshot = await getDoc(doc(db, "rooms", invitation.roomId));
     return roomSnapshot.exists() ? { id: roomSnapshot.id, ...roomSnapshot.data() } : null;
@@ -303,14 +327,19 @@ async function createBackend() {
 
   async function rejectRoomInvite(inviteId) {
     if (!inviteId) return;
-    const inviteRef = doc(db, "roomInvitations", inviteId);
-    const inviteSnapshot = await getDoc(inviteRef);
-    if (!inviteSnapshot.exists()) return;
-    const invitation = inviteSnapshot.data();
+    const roomBased = parseRoomInvitationId(inviteId);
+    const inviteRef = roomBased ? null : doc(db, "roomInvitations", inviteId);
+    const inviteSnapshot = inviteRef ? await getDoc(inviteRef).catch(() => null) : null;
+    let invitation = inviteSnapshot?.exists?.() ? inviteSnapshot.data() : null;
+    if (!invitation && roomBased) {
+      const roomSnapshot = await getDoc(doc(db, "rooms", roomBased.roomId));
+      if (roomSnapshot.exists()) invitation = (roomSnapshot.data().invited || []).find((item) => item.uid === roomBased.uid) || null;
+    }
+    if (!invitation) return;
     await Promise.all([
-      updateDoc(inviteRef, { status: "rejected", updatedAt: serverTimestamp() }),
+      inviteRef ? updateDoc(inviteRef, { status: "rejected", updatedAt: serverTimestamp() }).catch(() => {}) : Promise.resolve(),
       updateDoc(doc(db, "rooms", invitation.roomId), {
-        invited: arrayRemove({ uid: invitation.toUid, name: invitation.toName, email: invitation.toEmail || "" }),
+        invited: arrayRemove(invitation),
         updatedAt: serverTimestamp(),
       }).catch(() => {}),
     ]);
@@ -326,10 +355,31 @@ async function createBackend() {
 
   function watchRoomInvitations(uid, callback) {
     if (!uid) return () => {};
+    let latestCollection = [];
+    let latestRooms = [];
+    const emit = () => callback([...latestCollection, ...latestRooms]);
     const invitationsQuery = query(collection(db, "roomInvitations"), where("toUid", "==", uid));
-    return onSnapshot(invitationsQuery, (snapshot) => {
-      callback(snapshot.docs.map((item) => ({ id: item.id, ...item.data() })).filter((item) => item.status === "pending"));
+    const roomsQuery = collection(db, "rooms");
+    const unsubscribeInvites = onSnapshot(invitationsQuery, (snapshot) => {
+      latestCollection = snapshot.docs.map((item) => ({ id: item.id, ...item.data() })).filter((item) => item.status === "pending");
+      emit();
+    }, () => {
+      latestCollection = [];
+      emit();
     });
+    const unsubscribeRooms = onSnapshot(roomsQuery, (snapshot) => {
+      latestRooms = snapshot.docs.flatMap((roomDoc) => {
+        const room = roomDoc.data();
+        return (room.invited || [])
+          .filter((item) => item.uid === uid && item.status === "pending")
+          .map((item) => ({ id: roomInvitationId(roomDoc.id, uid), ...item, roomId: roomDoc.id, mode: room.mode, scenario: room.scenario }));
+      });
+      emit();
+    });
+    return () => {
+      unsubscribeInvites();
+      unsubscribeRooms();
+    };
   }
 
   function watchRoom(roomId, callback) {
