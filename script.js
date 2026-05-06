@@ -1,4 +1,4 @@
-const CARD_PATH = "assets/cards/";
+﻿const CARD_PATH = "assets/cards/";
 const AUDIO_PATH = "assets/audio/";
 
 const modes = {
@@ -45,25 +45,25 @@ const catalog = {
   knife: { id: "knife", name: "Combat Knife", type: "Arma", damage: 10, ammoCost: 0, art: "knife", cost: 20, image: `${CARD_PATH}WE-004.jpg` },
   handgun: { id: "handgun", name: "Handgun", type: "Arma", damage: 20, ammoCost: 20, art: "handgun", cost: 40, image: `${CARD_PATH}WE-009.jpg` },
   bow: { id: "bow", name: "Longbow", type: "Arma", damage: 30, ammoCost: 20, art: "handgun", cost: 50, image: `${CARD_PATH}WE-002.jpg` },
-  grenade: { id: "grenade", name: "Grenade", type: "Arma", damage: 40, ammoCost: 20, splash: 10, art: "shotgun", cost: 60, image: `${CARD_PATH}WE-001.jpg`, text: "Hace daño adicional a otros jugadores si hay mas de uno." },
+  grenade: { id: "grenade", name: "Grenade", type: "Arma", damage: 40, ammoCost: 20, splash: 10, art: "shotgun", cost: 60, image: `${CARD_PATH}WE-001.jpg`, text: "Hace daÃ±o adicional a otros jugadores si hay mas de uno." },
   six: { id: "six", name: "Six Shooter", type: "Arma", damage: 40, ammoCost: 30, art: "handgun", cost: 70, image: `${CARD_PATH}WE-006.jpg` },
-  gatling: { id: "gatling", name: "Gatling Gun", type: "Arma", damage: 60, ammoCost: 40, damagePerAmmo: { step: 20, damage: 10 }, art: "shotgun", cost: 90, image: `${CARD_PATH}WE-007.jpg`, text: "Daño variable segun municion disponible." },
-  rocket: { id: "rocket", name: "Rocket Launcher", type: "Arma", damage: 80, ammoCost: 50, damageXAmmo: true, art: "shotgun", cost: 110, image: `${CARD_PATH}WE-008.jpg`, text: "Daño X por municion disponible del turno." },
+  gatling: { id: "gatling", name: "Gatling Gun", type: "Arma", damage: 60, ammoCost: 40, damagePerAmmo: { step: 20, damage: 10 }, art: "shotgun", cost: 90, image: `${CARD_PATH}WE-007.jpg`, text: "DaÃ±o variable segun municion disponible." },
+  rocket: { id: "rocket", name: "Rocket Launcher", type: "Arma", damage: 80, ammoCost: 50, damageXAmmo: true, art: "shotgun", cost: 110, image: `${CARD_PATH}WE-008.jpg`, text: "DaÃ±o X por municion disponible del turno." },
   green: { id: "green", name: "Green Herb", type: "Objeto", heal: 20, art: "herb", cost: 30, image: `${CARD_PATH}IT-001.jpg` },
   yellow: { id: "yellow", name: "Yellow Herb", type: "Objeto", maxHeal: 10, art: "herb", cost: 50, image: `${CARD_PATH}IT-002.jpg` },
   spray: { id: "spray", name: "First Aid Spray", type: "Objeto", fullHeal: true, art: "herb", cost: 70, image: `${CARD_PATH}IT-003.jpg` },
-  action1: { id: "action1", name: "Deadly Aim", type: "Accion", damageBonus: 20, art: "action", cost: 40, image: `${CARD_PATH}AC-001.jpg`, text: "+20 daño este turno." },
-  action2: { id: "action2", name: "Reload", type: "Accion", ammoBonus: 20, draw: 1, art: "action", cost: 40, image: `${CARD_PATH}AC-002.jpg`, text: "+20 munición y roba 1 carta." },
+  action1: { id: "action1", name: "Deadly Aim", type: "Accion", damageBonus: 20, art: "action", cost: 40, image: `${CARD_PATH}AC-001.jpg`, text: "+20 daÃ±o este turno." },
+  action2: { id: "action2", name: "Reload", type: "Accion", ammoBonus: 20, draw: 1, art: "action", cost: 40, image: `${CARD_PATH}AC-002.jpg`, text: "+20 municiÃ³n y roba 1 carta." },
   action3: { id: "action3", name: "Master of Unlocking", type: "Accion", extraBuy: 1, goldBonus: 20, art: "action", cost: 50, image: `${CARD_PATH}AC-003.jpg`, text: "+1 compra y +20 oro." },
-  action4: { id: "action4", name: "Escape Route", type: "Accion", extraExplore: 1, draw: 1, art: "action", cost: 60, image: `${CARD_PATH}AC-004.jpg`, text: "+1 exploración y roba 1 carta." },
-  action5: { id: "action5", name: "Ominous Battle", type: "Accion", damageBonus: 30, extraAction: 1, art: "action", cost: 70, image: `${CARD_PATH}AC-005.jpg`, text: "+30 daño y +1 acción." },
-  action6: { id: "action6", name: "Quick Reload", type: "Accion", ammoBonus: 30, goldBonus: 10, art: "action", cost: 50, image: `${CARD_PATH}AC-006.jpg`, text: "+30 munición y +10 oro." },
-  action7: { id: "action7", name: "Tactical Advance", type: "Accion", extraAction: 1, draw: 1, art: "action", cost: 60, image: `${CARD_PATH}AC-007.jpg`, text: "+1 acción y roba 1 carta." },
+  action4: { id: "action4", name: "Escape Route", type: "Accion", extraExplore: 1, draw: 1, art: "action", cost: 60, image: `${CARD_PATH}AC-004.jpg`, text: "+1 exploraciÃ³n y roba 1 carta." },
+  action5: { id: "action5", name: "Ominous Battle", type: "Accion", damageBonus: 30, extraAction: 1, art: "action", cost: 70, image: `${CARD_PATH}AC-005.jpg`, text: "+30 daÃ±o y +1 acciÃ³n." },
+  action6: { id: "action6", name: "Quick Reload", type: "Accion", ammoBonus: 30, goldBonus: 10, art: "action", cost: 50, image: `${CARD_PATH}AC-006.jpg`, text: "+30 municiÃ³n y +10 oro." },
+  action7: { id: "action7", name: "Tactical Advance", type: "Accion", extraAction: 1, draw: 1, art: "action", cost: 60, image: `${CARD_PATH}AC-007.jpg`, text: "+1 acciÃ³n y roba 1 carta." },
   action8: { id: "action8", name: "Resource Sweep", type: "Accion", extraBuy: 1, goldBonus: 30, art: "action", cost: 60, image: `${CARD_PATH}AC-008.jpg`, text: "+1 compra y +30 oro." },
-  action9: { id: "action9", name: "Focused Fire", type: "Accion", damageBonus: 40, ammoBonus: 10, art: "action", cost: 80, image: `${CARD_PATH}AC-009.jpg`, text: "+40 daño y +10 munición." },
+  action9: { id: "action9", name: "Focused Fire", type: "Accion", damageBonus: 40, ammoBonus: 10, art: "action", cost: 80, image: `${CARD_PATH}AC-009.jpg`, text: "+40 daÃ±o y +10 municiÃ³n." },
   action10: { id: "action10", name: "Emergency Supply", type: "Accion", draw: 2, goldBonus: 10, art: "action", cost: 70, image: `${CARD_PATH}AC-010.jpg`, text: "Roba 2 cartas y +10 oro." },
-  action11: { id: "action11", name: "Last Stand", type: "Accion", damageBonus: 20, extraExplore: 1, art: "action", cost: 80, image: `${CARD_PATH}AC-011.jpg`, text: "+20 daño y +1 exploración." },
-  action12: { id: "action12", name: "Field Command", type: "Accion", extraAction: 1, extraBuy: 1, goldBonus: 10, art: "action", cost: 90, image: `${CARD_PATH}AC-012.jpg`, text: "+1 acción, +1 compra y +10 oro." },
+  action11: { id: "action11", name: "Last Stand", type: "Accion", damageBonus: 20, extraExplore: 1, art: "action", cost: 80, image: `${CARD_PATH}AC-011.jpg`, text: "+20 daÃ±o y +1 exploraciÃ³n." },
+  action12: { id: "action12", name: "Field Command", type: "Accion", extraAction: 1, extraBuy: 1, goldBonus: 10, art: "action", cost: 90, image: `${CARD_PATH}AC-012.jpg`, text: "+1 acciÃ³n, +1 compra y +10 oro." },
 };
 
 const baseResourceIds = ["ammo10", "ammo20", "ammo30", "knife", "handgun", "green"];
@@ -215,7 +215,7 @@ function localAccountExists(email) {
   return accounts.some((account) => account.email === email);
 }
 
-function onlineBackend() {
+function getOnlineBackend() {
   return window.onlineBackend?.isEnabled?.() ? window.onlineBackend : null;
 }
 
@@ -285,7 +285,7 @@ function mergeSiteUsers(users) {
 }
 
 async function syncOnlineDirectory() {
-  const backend = onlineBackend();
+  const backend = getOnlineBackend();
   if (!backend || !state.currentUser?.uid) return;
   try {
     const [users, friendIds] = await Promise.all([
@@ -304,7 +304,7 @@ async function syncOnlineDirectory() {
 }
 
 async function ensureOnlineRoom() {
-  const backend = onlineBackend();
+  const backend = getOnlineBackend();
   if (!backend || !state.loggedIn || state.sessionType === "offline" || !state.currentUser?.uid) return "";
   if (state.roomId) return state.roomId;
   try {
@@ -328,7 +328,7 @@ async function addFriendByUser(user) {
   saveProgress();
   renderSiteUsers();
   renderFriends();
-  const backend = onlineBackend();
+  const backend = getOnlineBackend();
   if (backend && state.currentUser?.uid && user.uid) {
     try {
       await backend.addFriend(state.currentUser.uid, user.uid);
@@ -646,7 +646,11 @@ function renderSiteUsers() {
 function renderRoom() {
   const mode = getMode();
   $("#room-title").textContent = `${mode.name} - ${getScenario().name}`;
-  const backendLabel = onlineBackend() ? "Online real activo." : state.loggedIn && state.provider !== "Offline" ? "Online demo hasta configurar Firebase." : "";
+  const backendLabel = state.sessionType !== "offline" && getOnlineBackend()
+    ? "Online real activo."
+    : state.loggedIn && state.provider !== "Offline"
+      ? "Online demo hasta configurar Firebase."
+      : "";
   $("#room-status").textContent = state.entryDone
     ? `Sala con ${state.players.length}/${mode.max}. Minimo: ${mode.min}. ${mode.objective} ${backendLabel}`
     : "Inicia sesion con tu cuenta del sitio o prueba offline para crear una sala.";
@@ -842,7 +846,7 @@ async function setCurrentAvailability(online) {
   saveProgress();
   renderAuth();
   renderSiteUsers();
-  const backend = onlineBackend();
+  const backend = getOnlineBackend();
   if (backend && state.currentUser.uid) {
     try {
       await backend.setAvailability(state.currentUser.uid, state.currentUser.online);
@@ -860,7 +864,7 @@ function renderActionCards(current) {
   $("#action-status").textContent = `${actions.length} disponibles`;
   list.innerHTML = "";
   if (!actions.length) {
-    list.innerHTML = "<p class=\"status\">No hay cartas de acción en tu mano.</p>";
+    list.innerHTML = "<p class=\"status\">No hay cartas de acciÃ³n en tu mano.</p>";
     return;
   }
   actions.forEach((card) => {
@@ -966,10 +970,10 @@ function cardFace(card) {
 
 function actionEffectText(card) {
   const effects = [];
-  if (card.damageBonus) effects.push(`+${card.damageBonus} daño`);
-  if (card.ammoBonus) effects.push(`+${card.ammoBonus} munición`);
+  if (card.damageBonus) effects.push(`+${card.damageBonus} daÃ±o`);
+  if (card.ammoBonus) effects.push(`+${card.ammoBonus} municiÃ³n`);
   if (card.goldBonus) effects.push(`+${card.goldBonus} oro`);
-  if (card.extraAction) effects.push(`+${card.extraAction} acción`);
+  if (card.extraAction) effects.push(`+${card.extraAction} acciÃ³n`);
   if (card.extraBuy) effects.push(`+${card.extraBuy} compra`);
   if (card.extraExplore) effects.push(`+${card.extraExplore} explorar`);
   if (card.draw) effects.push(`roba ${card.draw}`);
@@ -998,14 +1002,14 @@ function cardIcon(card) {
 
 async function inviteFriend(friend) {
   const mode = getMode();
-  if (!state.loggedIn) return notify("Inicia sesión", "Debes ingresar con una cuenta del sitio para invitar jugadores.", "error");
-  if (!friend.online) return notify("Jugador no disponible", `${friend.name} no está online o no desea recibir invitaciones.`, "error");
-  if (state.players.length >= mode.max) return notify("Sala completa", "No hay espacio para más jugadores en esta sala.", "error");
+  if (!state.loggedIn) return notify("Inicia sesiÃ³n", "Debes ingresar con una cuenta del sitio para invitar jugadores.", "error");
+  if (!friend.online) return notify("Jugador no disponible", `${friend.name} no estÃ¡ online o no desea recibir invitaciones.`, "error");
+  if (state.players.length >= mode.max) return notify("Sala completa", "No hay espacio para mÃ¡s jugadores en esta sala.", "error");
   if (!state.players.some((player) => player.name === friend.name)) {
     state.players.push(createPlayer(friend.name, false, true));
     sound("card");
     await ensureOnlineRoom();
-    const backend = onlineBackend();
+    const backend = getOnlineBackend();
     if (backend && state.roomId) {
       try {
         await backend.inviteToRoom(state.roomId, friend);
@@ -1013,7 +1017,7 @@ async function inviteFriend(friend) {
         notify("Invitacion local", `No se pudo guardar online: ${error.message}`, "error");
       }
     }
-    notify("Invitación enviada", `${friend.name} entró a la sala.`, "success");
+    notify("InvitaciÃ³n enviada", `${friend.name} entrÃ³ a la sala.`, "success");
     renderRoom();
   }
 }
@@ -1094,7 +1098,7 @@ function fillRoom() {
     const name = state.sessionType === "offline" ? `Bot ${state.players.length}` : state.sessionType === "matchmaking" ? `Rival online ${state.players.length}` : `Bot invitado ${state.players.length}`;
     state.players.push(createPlayer(name, state.sessionType !== "matchmaking"));
   }
-  notify("Sala completada", state.sessionType === "offline" ? `Bots agregados hasta el máximo: ${mode.max}.` : `Mínimo requerido: ${mode.min}.`, "success");
+  notify("Sala completada", state.sessionType === "offline" ? `Bots agregados hasta el mÃ¡ximo: ${mode.max}.` : `MÃ­nimo requerido: ${mode.min}.`, "success");
   sound("card");
   renderRoom();
 }
@@ -1113,7 +1117,7 @@ function resetRoom() {
   buildResourceArea();
   $("#chat-log").innerHTML = "";
   sound("click");
-  notify("Sala nueva", "Se reinició la sala.", "success");
+  notify("Sala nueva", "Se reiniciÃ³ la sala.", "success");
   if (state.sessionType === "offline" && state.entryDone) {
     const mode = getMode();
     while (state.players.length < mode.max) {
@@ -1168,7 +1172,7 @@ async function markCurrentUserOffline() {
   if (!user) return;
   user.online = false;
   mergeSiteUsers([user]);
-  const backend = onlineBackend();
+  const backend = getOnlineBackend();
   if (backend && user.uid) {
     try {
       await backend.setAvailability(user.uid, false);
@@ -1273,13 +1277,13 @@ function playHandCard(instanceId) {
   if (!card) return;
   playAudio("resident-evil-2-inventario.mp3", 0.8);
   if (card.type === "Municion") {
-    notify(card.name, `Ya generó ${card.gold || 0} oro y ${card.ammo || 0} munición al salir en tu mano.`);
+    notify(card.name, `Ya generÃ³ ${card.gold || 0} oro y ${card.ammo || 0} municiÃ³n al salir en tu mano.`);
     sound("card");
     renderGame();
     return;
   }
   if (card.type === "Accion") {
-    if (state.turn.actions <= 0) return notify("No puedes jugar acción", "No quedan acciones este turno.", "error");
+    if (state.turn.actions <= 0) return notify("No puedes jugar acciÃ³n", "No quedan acciones este turno.", "error");
     state.turn.actions -= 1;
     state.turn.damage += card.damageBonus || 0;
     state.turn.gold += card.goldBonus || 0;
@@ -1311,26 +1315,26 @@ function selectWeapon(card) {
     state.turn.ammo += card.ammoCost || 0;
     state.turn.weaponAmmoSpent = Math.max(0, state.turn.weaponAmmoSpent - (card.ammoCost || 0));
     state.turn.damage = Math.max(0, state.turn.damage - weaponDamage(card));
-    notify("Arma retirada", `${card.name} ya no se usará en este ataque.`);
+    notify("Arma retirada", `${card.name} ya no se usarÃ¡ en este ataque.`);
     renderGame();
     return;
   }
   if (state.turn.ammo < (card.ammoCost || 0)) {
-    notify("Munición insuficiente", `${card.name} requiere ${card.ammoCost || 0} de munición. Disponible: ${state.turn.ammo}.`, "error");
+    notify("MuniciÃ³n insuficiente", `${card.name} requiere ${card.ammoCost || 0} de municiÃ³n. Disponible: ${state.turn.ammo}.`, "error");
     return;
   }
   state.turn.ammo -= card.ammoCost || 0;
   state.turn.weaponAmmoSpent += card.ammoCost || 0;
   state.turn.damage += weaponDamage(card);
   player.selectedWeapons.push(card);
-  notify("Arma seleccionada", `${card.name}: +${weaponDamage(card)} daño. Coste: ${card.ammoCost || 0} munición.`, "success");
+  notify("Arma seleccionada", `${card.name}: +${weaponDamage(card)} daÃ±o. Coste: ${card.ammoCost || 0} municiÃ³n.`, "success");
   if (card.id === "grenade" && state.players.length > 1) {
     state.players
       .filter((target) => target !== player)
       .forEach((target) => {
         target.health = Math.max(0, target.health - (card.splash || 0));
       });
-    notify("Efecto de granada", "Hace daño adicional a otros jugadores.", "success");
+    notify("Efecto de granada", "Hace daÃ±o adicional a otros jugadores.", "success");
   }
   sound("card");
   renderGame();
@@ -1361,9 +1365,9 @@ function drawCards(player, amount) {
 function playAction() {
   if (!state.started) return;
   const actions = currentPlayer().hand.filter((card) => card.type === "Accion");
-  if (actions.length > 1) return notify("Selecciona acción", "Tienes varias acciones. Elige la carta exacta en Acciones en mano.", "error");
+  if (actions.length > 1) return notify("Selecciona acciÃ³n", "Tienes varias acciones. Elige la carta exacta en Acciones en mano.", "error");
   const action = actions[0];
-  if (!action) return notify("Sin acciones", "No tienes cartas de acción en la mano.", "error");
+  if (!action) return notify("Sin acciones", "No tienes cartas de acciÃ³n en la mano.", "error");
   playHandCard(action.instanceId);
 }
 
@@ -1381,7 +1385,7 @@ function buyResource(index) {
   const pile = state.resourceArea[index];
   if (!pile || pile.count <= 0) return;
   state.selectedResource = index;
-  if (["gatling", "rocket"].includes(pile.card.id)) return notify("Carta no comprable", "WE-007 y WE-008 solo se obtienen desde la mansión.", "error");
+  if (["gatling", "rocket"].includes(pile.card.id)) return notify("Carta no comprable", "WE-007 y WE-008 solo se obtienen desde la mansiÃ³n.", "error");
   if (state.turn.buys <= 0) return notify("No puedes comprar", "No quedan compras este turno.", "error");
   if (state.turn.gold < pile.card.cost) return notify("Oro insuficiente", `Necesitas ${pile.card.cost} oro para ${pile.card.name}. Disponible: ${state.turn.gold}.`, "error");
   state.turn.buys -= 1;
@@ -1401,11 +1405,11 @@ function explore() {
   const player = currentPlayer();
   const hasWeapons = player.hand.some((card) => card.type === "Arma");
   if (!player.selectedWeapons.length && hasWeapons) {
-    return notify("Selecciona arma", "Tienes armas en mano. Selecciona con cuáles atacar o retíralas para cambiar.", "error");
+    return notify("Selecciona arma", "Tienes armas en mano. Selecciona con cuÃ¡les atacar o retÃ­ralas para cambiar.", "error");
   }
   if (!player.selectedWeapons.length && !hasWeapons && !state.allowUnarmedExplore) {
     state.allowUnarmedExplore = true;
-    notify("Explorar sin arma", "No tienes armas en mano. Vuelve a pulsar Explorar para confirmar que deseas revelar la mansión sin daño.", "error");
+    notify("Explorar sin arma", "No tienes armas en mano. Vuelve a pulsar Explorar para confirmar que deseas revelar la mansiÃ³n sin daÃ±o.", "error");
     return;
   }
   if (!validateWeaponRequirements(player)) return;
@@ -1421,15 +1425,15 @@ function explore() {
   if (revealed.type === "Bonus") {
     state.round = Math.max(1, state.round - (revealed.bonusTurns || 0));
     player.decorations += revealed.decorations || 0;
-    notify("Bonus de mansión", `${player.name} obtuvo ${revealed.name}.`, "success");
+    notify("Bonus de mansiÃ³n", `${player.name} obtuvo ${revealed.name}.`, "success");
   } else if (revealed.type === "Objeto") {
     if (revealed.mansionItem && catalog[revealed.mansionItem]) player.discard.push(cloneCard(catalog[revealed.mansionItem]));
     player.decorations += revealed.decorations || 0;
-    notify("Objeto de mansión", `${revealed.name} va al descarte de ${player.name}.`, "success");
+    notify("Objeto de mansiÃ³n", `${revealed.name} va al descarte de ${player.name}.`, "success");
   } else if (state.turn.damage >= revealed.health) {
     player.decorations += revealed.decorations;
     if (revealed.boss && player.character.name === "Sheva Alomar") player.decorations += 1;
-    notify("Infectado derrotado", `${player.name} derrotó ${revealed.name} con ${state.turn.damage} de daño.`, "success");
+    notify("Infectado derrotado", `${player.name} derrotÃ³ ${revealed.name} con ${state.turn.damage} de daÃ±o.`, "success");
     addAchievement("Primer infectado derrotado");
     playAudio("matalo.mp3", 0.9);
     if (revealed.boss) {
@@ -1439,7 +1443,7 @@ function explore() {
   } else {
     player.health = Math.max(0, player.health - revealed.damage);
     state.mansion.push(revealed);
-    notify("Daño recibido", `${player.name} recibe ${revealed.damage}. ${revealed.name} vuelve al final del mazo.`, "error");
+    notify("DaÃ±o recibido", `${player.name} recibe ${revealed.damage}. ${revealed.name} vuelve al final del mazo.`, "error");
     playAudio("resident-evil-dead-caddicarus.mp3", 0.9);
     if (player.health <= 0) handlePlayerDeath(player, revealed.name);
   }
@@ -1452,8 +1456,8 @@ function validateWeaponRequirements(player) {
   const availableForWeapons = state.turn.ammo + state.turn.weaponAmmoSpent;
   if (required > availableForWeapons) {
     notify(
-      "Munición insuficiente",
-      `Las armas seleccionadas requieren ${required} munición y solo tienes ${availableForWeapons}. Retira armas o genera más munición.`,
+      "MuniciÃ³n insuficiente",
+      `Las armas seleccionadas requieren ${required} municiÃ³n y solo tienes ${availableForWeapons}. Retira armas o genera mÃ¡s municiÃ³n.`,
       "error",
     );
     return false;
@@ -1461,7 +1465,7 @@ function validateWeaponRequirements(player) {
   if (state.turn.weaponAmmoSpent < required) {
     notify(
       "Requerimiento no pagado",
-      `Debes pagar ${required} munición para usar las armas seleccionadas antes de atacar.`,
+      `Debes pagar ${required} municiÃ³n para usar las armas seleccionadas antes de atacar.`,
       "error",
     );
     return false;
@@ -1476,19 +1480,19 @@ function attackVersus() {
   state.turn.explores -= 1;
   const hit = Math.max(0, state.turn.damage);
   target.health = Math.max(0, target.health - hit);
-  notify("Ataque versus", `${attacker.name} atacó a ${target.name} por ${hit} de daño.`, "success");
+  notify("Ataque versus", `${attacker.name} atacÃ³ a ${target.name} por ${hit} de daÃ±o.`, "success");
   if (target.health <= 0) {
     attacker.decorations += 1;
     attacker.defeatedPlayers += 1;
     handlePlayerDeath(target, attacker.name);
-    notify("Personaje derrotado", `${attacker.name} gana 1 condecoración.`, "success");
+    notify("Personaje derrotado", `${attacker.name} gana 1 condecoraciÃ³n.`, "success");
     if (attacker.decorations >= 3) finishGameByScore(`${attacker.name} alcanzo 3 condecoraciones.`);
   }
   sound("hit");
   renderGame();
 }
 
-function handlePlayerDeath(player, source = "daño") {
+function handlePlayerDeath(player, source = "daÃ±o") {
   if (player.eliminated) return;
   player.deaths = (player.deaths || 0) + 1;
   player.health = 0;
@@ -1636,7 +1640,7 @@ function applyAmmoResourcesFromCards(player, cards) {
   state.turn.autoGold += gold;
   state.turn.autoAmmo += ammo;
   state.allowUnarmedExplore = false;
-  if (gold || ammo) notify("Munición en mano", `${player.name} recibe +${gold} oro y +${ammo} munición.`, "success");
+  if (gold || ammo) notify("MuniciÃ³n en mano", `${player.name} recibe +${gold} oro y +${ammo} municiÃ³n.`, "success");
 }
 
 function botTurn() {
@@ -1677,10 +1681,10 @@ function toggleVoice() {
     .then((stream) => {
       stream.getTracks().forEach((track) => track.stop());
       button.textContent = "Voz lista";
-      notify("Micrófono habilitado", "Para voz real falta conectar WebRTC al servidor.", "success");
+      notify("MicrÃ³fono habilitado", "Para voz real falta conectar WebRTC al servidor.", "success");
       sound("voice");
     })
-    .catch(() => notify("Permiso rechazado", "No se habilitó el micrófono.", "error"));
+    .catch(() => notify("Permiso rechazado", "No se habilitÃ³ el micrÃ³fono.", "error"));
 }
 
 function renderAchievements() {
@@ -1835,7 +1839,7 @@ $("#add-user-form").addEventListener("submit", async (event) => {
   event.preventDefault();
   const term = $("#friend-email").value.trim().toLowerCase();
   if (!term) return;
-  const backend = onlineBackend();
+  const backend = getOnlineBackend();
   let user = state.siteUsers.find((siteUser) => siteUser.email === term || siteUser.uid === term);
   if (!user && backend) {
     try {
