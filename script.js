@@ -132,6 +132,7 @@ const state = {
   matchHistory: JSON.parse(localStorage.getItem("mdbg-match-history") || "[]"),
   matchRecorded: false,
   endVotes: {},
+  diceRoll: null,
   authMode: "login",
   currentUser: JSON.parse(localStorage.getItem("mdbg-current-user") || "null"),
   siteUsers: [],
@@ -382,6 +383,7 @@ function roomGameState() {
     matchRecorded: state.matchRecorded,
     allowUnarmedExplore: state.allowUnarmedExplore,
     endVotes: state.endVotes,
+    diceRoll: state.diceRoll,
     turnEndsAt: state.turnEndsAt,
     updatedBy: state.currentUser?.uid || "",
     updatedAt: Date.now(),
@@ -430,6 +432,7 @@ function applyRemoteGameState(gameState) {
   state.matchRecorded = Boolean(gameState.matchRecorded);
   state.allowUnarmedExplore = Boolean(gameState.allowUnarmedExplore);
   state.endVotes = gameState.endVotes || {};
+  state.diceRoll = gameState.diceRoll || null;
   state.turnEndsAt = gameState.turnEndsAt || null;
   checkEndGameVote();
 }
@@ -1088,9 +1091,94 @@ function renderGame() {
   renderWeapons(current);
   renderPlayed(current);
   renderPlayers();
+  renderDiceRoll();
   renderResources();
   renderTurnControls();
   schedulePublishRoomState();
+}
+
+function renderDiceRoll() {
+  const panel = $("#dice-roll-panel");
+  const grid = $("#dice-roll-grid");
+  if (!panel || !grid) return;
+  const roll = state.diceRoll;
+  panel.classList.toggle("hidden", !roll);
+  if (!roll) return;
+  const winner = state.players[roll.winnerIndex];
+  $("#dice-roll-status").textContent = roll.rolling
+    ? "Girando dados..."
+    : winner
+      ? `Comienza ${winner.name} con ${roll.values?.[roll.winnerIndex] || 0}`
+      : "Tirada completa";
+  grid.innerHTML = "";
+  state.players.forEach((player, index) => {
+    const item = document.createElement("div");
+    item.className = `dice-result ${index === roll.winnerIndex ? "winner" : ""} ${roll.rolling ? "rolling" : ""}`;
+    item.innerHTML = `
+      <span>${player.name}</span>
+      <strong>${roll.values?.[index] || "-"}</strong>
+    `;
+    grid.append(item);
+  });
+}
+
+function rollOpeningDiceValues(playerIndexes) {
+  const values = {};
+  playerIndexes.forEach((index) => {
+    values[index] = 1 + Math.floor(Math.random() * 6);
+  });
+  return values;
+}
+
+function resolveOpeningRoll() {
+  let contenders = state.players.map((_, index) => index);
+  let values = {};
+  let guard = 0;
+  while (contenders.length > 1 && guard < 12) {
+    const roundValues = rollOpeningDiceValues(contenders);
+    values = { ...values, ...roundValues };
+    const max = Math.max(...contenders.map((index) => roundValues[index]));
+    contenders = contenders.filter((index) => roundValues[index] === max);
+    guard += 1;
+  }
+  return {
+    values,
+    winnerIndex: contenders[0] || 0,
+  };
+}
+
+function runOpeningDiceRoll() {
+  const result = resolveOpeningRoll();
+  state.diceRoll = {
+    values: Object.fromEntries(state.players.map((_, index) => [index, 1])),
+    winnerIndex: null,
+    rolling: true,
+  };
+  renderDiceRoll();
+  schedulePublishRoomState();
+  let ticks = 0;
+  const spin = window.setInterval(() => {
+    ticks += 1;
+    state.diceRoll.values = Object.fromEntries(state.players.map((_, index) => [index, 1 + Math.floor(Math.random() * 6)]));
+    renderDiceRoll();
+    schedulePublishRoomState();
+    if (ticks >= 12) {
+      window.clearInterval(spin);
+      state.diceRoll = {
+        values: result.values,
+        winnerIndex: result.winnerIndex,
+        rolling: false,
+      };
+      state.activeIndex = result.winnerIndex;
+      state.turn = freshTurn();
+      state.turnEndsAt = Date.now() + 4 * 60 * 1000;
+      applyHandResources(currentPlayer());
+      notify("Dado inicial", `${currentPlayer().name} comienza la partida.`, "success");
+      startTurnTimer();
+      renderRoom();
+      renderGame();
+    }
+  }, 110);
 }
 
 function renderTurnControls() {
@@ -1507,6 +1595,7 @@ function resetRoom() {
   state.resourceMarketOpen = false;
   state.matchRecorded = false;
   state.endVotes = {};
+  state.diceRoll = null;
     buildResourceArea();
   state.chatMessages = [];
   $("#chat-log").innerHTML = "";
@@ -1533,6 +1622,7 @@ async function startGame() {
   state.started = true;
   state.matchRecorded = false;
   state.endVotes = {};
+  state.diceRoll = null;
   state.round = 1;
   state.activeIndex = 0;
   state.turn = freshTurn();
@@ -1553,19 +1643,18 @@ async function startGame() {
     player.selectedWeapons = [];
     player.alive = true;
   });
-  applyHandResources(currentPlayer());
   sound("card");
   addAchievement("Primera sala iniciada");
-  notify("Partida iniciada", `${getMode().name} - ${getScenario().name}`, "success");
+  notify("Partida iniciada", "Tirada inicial para definir quien comienza.", "success");
   const backend = getOnlineBackend();
   if (backend && state.roomId) {
     backend.updateRoom(state.roomId, { status: "playing", started: true }).catch((error) => {
       notify("Sala online no actualizada", error.message, "error");
     });
   }
-  startTurnTimer();
   renderRoom();
   renderGame();
+  runOpeningDiceRoll();
 }
 
 async function markCurrentUserOffline() {
