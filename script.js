@@ -140,6 +140,9 @@ const state = {
   audio: null,
   achievements: JSON.parse(localStorage.getItem("mdbg-achievements") || "[]"),
   wins: Number(localStorage.getItem("mdbg-wins") || 0),
+  losses: Number(localStorage.getItem("mdbg-losses") || 0),
+  matchHistory: JSON.parse(localStorage.getItem("mdbg-match-history") || "[]"),
+  matchRecorded: false,
   authMode: "login",
   currentUser: JSON.parse(localStorage.getItem("mdbg-current-user") || "null"),
   siteUsers: JSON.parse(localStorage.getItem("mdbg-site-users") || JSON.stringify(defaultSiteUsers)),
@@ -185,6 +188,8 @@ function shuffle(items) {
 function saveProgress() {
   localStorage.setItem("mdbg-achievements", JSON.stringify(state.achievements));
   localStorage.setItem("mdbg-wins", String(state.wins));
+  localStorage.setItem("mdbg-losses", String(state.losses));
+  localStorage.setItem("mdbg-match-history", JSON.stringify(state.matchHistory));
   localStorage.setItem("mdbg-sound", state.sound ? "on" : "off");
   localStorage.setItem("mdbg-site-users", JSON.stringify(state.siteUsers));
   localStorage.setItem("mdbg-friends", JSON.stringify(state.friends));
@@ -256,6 +261,11 @@ async function testFirebaseConnection() {
     const reason = window.onlineBackend?.reason || "Firebase no termino de cargar en este navegador";
     notify("Firebase no conectado", reason, "error");
     addEntryMessage(`Firebase no conectado: ${reason}`);
+    return;
+  }
+  if (!state.loggedIn || !state.currentUser?.uid) {
+    notify("Firebase cargado", "Auth esta listo. Para probar Firestore crea una cuenta o inicia sesion primero.", "success");
+    addEntryMessage("Firebase cargo correctamente. Firestore exige usuario logeado: crea una cuenta o inicia sesion y vuelve a probar.");
     return;
   }
   try {
@@ -430,6 +440,29 @@ function addAchievement(name) {
   }
 }
 
+function recordMatchResult(result, reason, winner = null) {
+  if (state.matchRecorded) return;
+  const mine = state.players.find((player) => player.name === "Tu");
+  const winnerName = winner?.name || "Sin ganador";
+  if (result === "win") state.wins += 1;
+  if (result === "loss") state.losses += 1;
+  state.matchHistory.unshift({
+    result,
+    reason,
+    winner: winnerName,
+    character: mine?.character?.name || "Sin personaje",
+    mode: getMode().name,
+    scenario: getScenario().name,
+    decorations: mine?.decorations || 0,
+    health: mine?.health || 0,
+    date: new Date().toLocaleString("es-CL"),
+  });
+  state.matchHistory = state.matchHistory.slice(0, 20);
+  state.matchRecorded = true;
+  saveProgress();
+  renderAchievements();
+}
+
 function createStartingDeck() {
   return shuffle([
     ...Array.from({ length: 7 }, () => cloneCard(catalog.ammo10)),
@@ -567,6 +600,7 @@ function renderAuth() {
     item.hidden = hiddenInOffline;
   });
   $("#saved-wins").textContent = state.wins;
+  $("#saved-losses").textContent = state.losses;
   $("#saved-achievements").textContent = state.achievements.length;
 }
 
@@ -618,6 +652,7 @@ function renderRoom() {
     : "Inicia sesion con tu cuenta del sitio o prueba offline para crear una sala.";
   $("#start-game").disabled = !state.started && !canStart();
   $("#start-game").textContent = state.started ? "Partida activa" : "Comenzar partida";
+  $("#fill-room").hidden = state.sessionType !== "offline";
   renderAuth();
   renderFriends();
   renderPlayers();
@@ -1048,6 +1083,10 @@ function addEntryMessage(text) {
 
 function fillRoom() {
   if (!state.entryDone) return;
+  if (state.sessionType !== "offline") {
+    notify("Sala online", "En online debes invitar amigos disponibles o emparejar con jugadores reales.", "error");
+    return;
+  }
   const mode = getMode();
   if (state.players.length === 0) state.players.push(createPlayer("Tu", false));
   const targetSize = state.sessionType === "offline" ? mode.max : mode.min;
@@ -1070,6 +1109,7 @@ function resetRoom() {
   state.mansion = [];
   state.lastRevealed = null;
   state.resourceMarketOpen = false;
+  state.matchRecorded = false;
   buildResourceArea();
   $("#chat-log").innerHTML = "";
   sound("click");
@@ -1093,6 +1133,7 @@ function startGame() {
   if (!canStart()) return;
   ensureOnlineRoom();
   state.started = true;
+  state.matchRecorded = false;
   state.round = 1;
   state.activeIndex = 0;
   state.turn = freshTurn();
@@ -1461,7 +1502,10 @@ function handlePlayerDeath(player, source = "daño") {
     player.eliminated = true;
     player.skipTurns = Infinity;
     notify("Jugador eliminado", `${player.name} murio por tercera vez. Su juego se acabo.`, "error");
-    if (player.name === "Tu") showGameOverModal();
+    if (player.name === "Tu") {
+      recordMatchResult("loss", "Tu personaje murio tres veces.", state.players.find((item) => item.name !== "Tu" && !item.eliminated));
+      showGameOverModal();
+    }
     checkRemainingPlayers();
     return;
   }
@@ -1614,7 +1658,7 @@ function finishGameByScore(reason) {
   const winner = [...state.players].sort((a, b) => b.decorations - a.decorations || b.health - a.health)[0];
   state.started = false;
   stopTurnTimer();
-  state.wins += winner.name === "Tu" ? 1 : 0;
+  recordMatchResult(winner.name === "Tu" ? "win" : "loss", reason, winner);
   addAchievement("Partida finalizada");
   if (winner.name === "Tu") addAchievement("Victoria guardada");
   saveProgress();
@@ -1642,12 +1686,38 @@ function toggleVoice() {
 function renderAchievements() {
   $("#saved-achievements").textContent = state.achievements.length;
   $("#saved-wins").textContent = state.wins;
+  $("#saved-losses").textContent = state.losses;
   const list = $("#achievements");
   list.innerHTML = "";
   const items = state.achievements.length ? state.achievements : ["Aun sin logros guardados"];
   items.forEach((name) => {
     const li = document.createElement("li");
     li.textContent = name;
+    list.append(li);
+  });
+  renderMatchHistory();
+}
+
+function renderMatchHistory() {
+  const list = $("#match-history");
+  if (!list) return;
+  list.innerHTML = "";
+  $("#match-history-status").textContent = `${state.matchHistory.length} partidas`;
+  if (!state.matchHistory.length) {
+    const li = document.createElement("li");
+    li.textContent = "Aun sin partidas guardadas";
+    list.append(li);
+    return;
+  }
+  state.matchHistory.forEach((match) => {
+    const li = document.createElement("li");
+    const result = match.result === "win" ? "Victoria" : "Derrota";
+    li.innerHTML = `
+      <strong>${result} - ${match.character}</strong>
+      <span>${match.mode} / ${match.scenario}</span>
+      <span>Ganador: ${match.winner}. Medallas tuyas: ${match.decorations}. Vida: ${match.health}.</span>
+      <span>${match.date}</span>
+    `;
     list.append(li);
   });
 }
@@ -1724,7 +1794,7 @@ $("#scenario").addEventListener("change", resetRoom);
 $("#fill-room").addEventListener("click", fillRoom);
 $("#reset-room").addEventListener("click", resetRoom);
 $("#start-game").addEventListener("click", startGame);
-$("#home-button").addEventListener("click", returnHome);
+$("#home-button").addEventListener("click", () => returnHome({ logout: true }));
 $("#logout-button").addEventListener("click", () => returnHome({ logout: true }));
 $("#game-over-close").addEventListener("click", () => {
   $("#game-over-modal").classList.add("hidden");
@@ -1747,6 +1817,9 @@ $("#sound-toggle").addEventListener("click", () => {
 $("#clear-progress").addEventListener("click", () => {
   state.achievements = [];
   state.wins = 0;
+  state.losses = 0;
+  state.matchHistory = [];
+  state.matchRecorded = false;
   saveProgress();
   renderAchievements();
 });

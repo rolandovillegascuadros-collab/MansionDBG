@@ -420,6 +420,10 @@ body.offline-mode .logout-button {
   display: none;
 }
 
+body:not(.offline-mode) #fill-room {
+  display: none;
+}
+
 body:not(.offline-mode) .offline-home-button {
   display: none;
 }
@@ -1447,6 +1451,20 @@ input {
   color: var(--muted);
   background: rgba(255, 255, 255, 0.04);
   font-size: 0.88rem;
+}
+
+.match-history li {
+  display: grid;
+  gap: 3px;
+}
+
+.match-history strong {
+  color: var(--ink);
+}
+
+.match-history span {
+  color: var(--muted);
+  font-size: 0.78rem;
 }
 
 #chat-form {
