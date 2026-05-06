@@ -18,7 +18,11 @@ Colecciones usadas:
 - `roomInvitations`: invitaciones a una sala online que el destinatario puede aceptar o rechazar.
 - `rooms/{roomId}/voiceConnections`: senalizacion WebRTC para voz de la sala.
 
-Reglas Firestore recomendadas para pruebas controladas:
+Reglas Firestore recomendadas:
+
+El proyecto incluye un archivo listo en `firestore.rules`. Copia esas reglas en Firebase Console > Firestore Database > Rules y publica.
+
+Para pruebas rapidas, esta version amplia permite que el online funcione con usuarios autenticados:
 
 ```txt
 rules_version = '2';
@@ -43,3 +47,5 @@ service cloud.firestore {
   }
 }
 ```
+
+Para produccion mas estricta, usa el archivo `firestore.rules`, que valida propietario, jugadores de sala y destinatarios de invitaciones con mas detalle.

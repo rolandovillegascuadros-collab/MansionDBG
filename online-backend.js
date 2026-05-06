@@ -202,6 +202,7 @@ async function createBackend() {
       maxPlayers: Number(details.maxPlayers || 4),
       status: "waiting",
       players: [{ uid: owner.uid, name: owner.name, email: owner.email || "", online: true }],
+      playerUids: [owner.uid],
       invited: [],
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
@@ -301,6 +302,7 @@ async function createBackend() {
     const player = { uid: user.uid, name: user.name, email: user.email || "", online: true };
     const patch = {
       players: arrayUnion(player),
+      playerUids: arrayUnion(user.uid),
       updatedAt: serverTimestamp(),
     };
     if (roomInvitation) patch.invited = arrayRemove(roomInvitation);
