@@ -2852,6 +2852,45 @@ input {
     overflow: hidden;
   }
 
+  .weapon-picker {
+    max-height: 74px;
+    overflow: hidden;
+  }
+
+  .weapon-list {
+    grid-template-columns: repeat(auto-fit, minmax(132px, 164px));
+    align-items: start;
+    justify-content: start;
+    max-height: 44px;
+    overflow: hidden;
+  }
+
+  .weapon-list .card-face {
+    width: 100%;
+    height: 44px;
+    min-height: 44px;
+    max-height: 44px;
+    aspect-ratio: auto;
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    grid-template-rows: 1fr;
+    gap: 4px;
+    justify-self: start;
+  }
+
+  .weapon-list .card-art {
+    min-height: 0;
+    height: 100%;
+  }
+
+  .weapon-list .card-copy strong {
+    font-size: 0.58rem;
+  }
+
+  .weapon-list .card-copy span {
+    display: none;
+  }
+
   .action-row {
     gap: 5px;
     margin: 4px 0;
