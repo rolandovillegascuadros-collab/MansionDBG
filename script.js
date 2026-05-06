@@ -1166,6 +1166,7 @@ function runOpeningDiceRoll() {
   renderDiceRoll();
   renderTurnTimer();
   renderTurnControls();
+  publishRoomState();
   schedulePublishRoomState();
   let ticks = 0;
   const spin = window.setInterval(() => {
@@ -1638,6 +1639,7 @@ async function startGame() {
   state.matchRecorded = false;
   state.endVotes = {};
   state.diceRoll = null;
+  state.lastPublishedState = "";
   state.round = 1;
   state.activeIndex = 0;
   state.turn = freshTurn();
@@ -1661,15 +1663,9 @@ async function startGame() {
   sound("card");
   addAchievement("Primera sala iniciada");
   notify("Partida iniciada", "Tirada inicial para definir quien comienza.", "success");
-  const backend = getOnlineBackend();
-  if (backend && state.roomId) {
-    backend.updateRoom(state.roomId, { status: "playing", started: true }).catch((error) => {
-      notify("Sala online no actualizada", error.message, "error");
-    });
-  }
   renderRoom();
-  renderGame();
   runOpeningDiceRoll();
+  renderGame();
 }
 
 async function markCurrentUserOffline() {
