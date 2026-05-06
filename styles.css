@@ -275,7 +275,7 @@ button {
   height: calc(100vh - 28px);
   margin: 14px auto;
   display: grid;
-  grid-template-columns: 250px minmax(0, 1fr) 320px;
+  grid-template-columns: 230px minmax(0, 1fr) 310px;
   gap: 10px;
   overflow: hidden;
 }
@@ -305,7 +305,7 @@ button {
 }
 
 .panel {
-  padding: 12px;
+  padding: 10px;
 }
 
 .game-surface {
@@ -355,8 +355,8 @@ button {
 }
 
 .avatar {
-  width: 46px;
-  height: 46px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
 }
 
@@ -433,7 +433,7 @@ input {
 }
 
 button {
-  min-height: 42px;
+  min-height: 38px;
   padding: 0 12px;
   font-weight: 800;
 }
@@ -448,7 +448,7 @@ input:focus-visible {
 
 label {
   display: block;
-  margin: 10px 0 5px;
+  margin: 7px 0 4px;
   font-size: 0.82rem;
   font-weight: 800;
 }
@@ -456,7 +456,7 @@ label {
 select,
 input {
   width: 100%;
-  min-height: 36px;
+  min-height: 34px;
   padding: 0 10px;
 }
 
@@ -532,11 +532,29 @@ input {
 }
 
 .profile-row {
-  gap: 12px;
+  gap: 9px;
 }
 
 .stats-row {
-  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px;
+  margin-top: 9px;
+  font-size: 0.72rem;
+}
+
+.stats-row span {
+  min-width: 0;
+  padding: 5px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.stats-row strong {
+  display: block;
+  color: var(--ink);
   font-size: 0.9rem;
 }
 
@@ -561,8 +579,8 @@ input {
 }
 
 .segmented {
-  margin-top: 10px;
-  padding: 4px;
+  margin-top: 8px;
+  padding: 3px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.04);
@@ -570,7 +588,7 @@ input {
 
 .segmented button {
   flex: 1;
-  min-height: 34px;
+  min-height: 30px;
   border: 0;
   color: var(--muted);
   background: transparent;
@@ -584,8 +602,15 @@ input {
 .friend-list,
 .invitation-list {
   display: grid;
-  gap: 6px;
-  margin-top: 8px;
+  gap: 5px;
+  margin-top: 6px;
+}
+
+#site-users,
+#friend-list,
+#invitation-list {
+  max-height: 150px;
+  overflow: auto;
 }
 
 .friend,
@@ -594,7 +619,7 @@ input {
   grid-template-columns: 1fr auto;
   gap: 8px;
   align-items: center;
-  padding: 7px;
+  padding: 6px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.04);
@@ -603,11 +628,13 @@ input {
 .friend span {
   display: block;
   color: var(--muted);
-  font-size: 0.78rem;
+  font-size: 0.72rem;
+  overflow-wrap: anywhere;
 }
 
 .friend button {
-  min-height: 34px;
+  min-height: 30px;
+  padding-inline: 8px;
 }
 
 .invite-actions {
@@ -1637,6 +1664,88 @@ input {
   font-size: 0.88rem;
 }
 
+#chat-log li.chat-message {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 8px;
+  padding: 8px;
+}
+
+.chat-avatar {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #10141b;
+  background: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.chat-bubble {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.chat-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.chat-meta strong {
+  color: var(--ink);
+  text-transform: uppercase;
+}
+
+.chat-meta span {
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.chat-bubble p {
+  margin: 0;
+  color: var(--ink);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.chat-bubble audio {
+  width: 100%;
+  min-height: 34px;
+}
+
+.chat-reactions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.chat-reactions button {
+  min-height: 26px;
+  width: 30px;
+  padding: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.reaction-summary {
+  display: flex;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+#voice-message.recording {
+  color: #fff;
+  background: var(--danger);
+}
+
 .match-history li {
   display: grid;
   gap: 3px;
@@ -1653,7 +1762,7 @@ input {
 
 #chat-form {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto auto;
   gap: 8px;
   margin-top: 12px;
 }
@@ -1678,7 +1787,7 @@ input {
     height: auto;
     min-height: calc(100vh - 28px);
     overflow: visible;
-    grid-template-columns: 250px minmax(0, 1fr);
+    grid-template-columns: 230px minmax(0, 1fr);
   }
 
   .right-rail {
@@ -1853,6 +1962,26 @@ input {
   .sidebar,
   .right-rail {
     gap: 8px;
+  }
+
+  .sidebar {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .brand {
+    min-height: auto;
+  }
+
+  #site-users,
+  #friend-list,
+  #invitation-list {
+    max-height: 92px;
+  }
+
+  .room-panel .segmented {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .panel,
@@ -2102,6 +2231,10 @@ input {
     order: 3;
     width: 100%;
     min-width: 0;
+    grid-template-columns: 1fr;
+  }
+
+  #chat-form {
     grid-template-columns: 1fr;
   }
 

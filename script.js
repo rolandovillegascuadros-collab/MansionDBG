@@ -149,6 +149,10 @@ const state = {
   voiceStream: null,
   voicePeers: {},
   voiceCandidatesSeen: {},
+  voiceRecorder: null,
+  voiceChunks: [],
+  voiceRecordTimer: null,
+  playedVoiceMessages: new Set(),
   applyingRemoteRoom: false,
   publishTimer: null,
   lastPublishedState: "",
@@ -733,12 +737,30 @@ function setGameVolume(value) {
   renderSoundControls();
 }
 
-function addChat(author, text) {
+function chatAuthorInitials(message) {
+  return initials(message.author || message.name || "Jugador").toLowerCase();
+}
+
+function escapeHtml(value) {
+  return String(value || "").replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  }[char]));
+}
+
+function addChat(author, text, extra = {}) {
   const message = {
     id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
     author,
     uid: state.currentUser?.uid || "",
-    text,
+    text: text || "",
+    type: extra.type || "text",
+    audioData: extra.audioData || "",
+    audioMime: extra.audioMime || "",
+    reactions: {},
     time: Date.now(),
   };
   state.chatMessages = [message, ...state.chatMessages].slice(0, 80);
@@ -749,20 +771,134 @@ function addChat(author, text) {
   }
 }
 
+async function publishChatMessages() {
+  const backend = getOnlineBackend();
+  if (isOnlineRoomActive() && backend?.updateRoom) {
+    await backend.updateRoom(state.roomId, { chatMessages: state.chatMessages.slice(0, 80) });
+  }
+}
+
+function reactToMessage(messageId, reaction) {
+  const key = state.currentUser?.uid || myPlayer()?.name || "local";
+  state.chatMessages = state.chatMessages.map((message) => {
+    if (message.id !== messageId) return message;
+    const reactions = { ...(message.reactions || {}) };
+    if (reactions[key] === reaction) delete reactions[key];
+    else reactions[key] = reaction;
+    return { ...message, reactions };
+  });
+  renderChatMessages(state.chatMessages);
+  publishChatMessages().catch((error) => notify("Reaccion no enviada", error.message, "error"));
+}
+
+function reactionCounts(reactions = {}) {
+  return Object.values(reactions).reduce((counts, reaction) => {
+    counts[reaction] = (counts[reaction] || 0) + 1;
+    return counts;
+  }, {});
+}
+
+function playVoiceMessage(message) {
+  if (!message.audioData || state.playedVoiceMessages.has(message.id)) return;
+  if (message.uid && message.uid === state.currentUser?.uid) return;
+  state.playedVoiceMessages.add(message.id);
+  const audio = new Audio(message.audioData);
+  audio.volume = Math.min(1, Math.max(0, state.gameVolume / 100));
+  audio.play().catch(() => {});
+}
+
+function blobToDataUrl(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
+async function stopVoiceMessageRecording() {
+  if (!state.voiceRecorder || state.voiceRecorder.state === "inactive") return;
+  state.voiceRecorder.stop();
+}
+
+async function toggleVoiceMessage() {
+  const button = $("#voice-message");
+  if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
+    return notify("Audio no disponible", "Este navegador no permite grabar mensajes de voz.", "error");
+  }
+  if (state.voiceRecorder?.state === "recording") {
+    await stopVoiceMessageRecording();
+    return;
+  }
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  state.voiceChunks = [];
+  const recorderOptions = MediaRecorder.isTypeSupported("audio/webm") ? { mimeType: "audio/webm" } : undefined;
+  const recorder = new MediaRecorder(stream, recorderOptions);
+  state.voiceRecorder = recorder;
+  recorder.ondataavailable = (event) => {
+    if (event.data?.size) state.voiceChunks.push(event.data);
+  };
+  recorder.onstop = async () => {
+    window.clearTimeout(state.voiceRecordTimer);
+    stream.getTracks().forEach((track) => track.stop());
+    button.textContent = "Audio";
+    button.classList.remove("recording");
+    const blob = new Blob(state.voiceChunks, { type: recorder.mimeType || "audio/webm" });
+    if (!blob.size) return;
+    if (blob.size > 700000) {
+      notify("Audio muy largo", "El mensaje supera el limite para sincronizar en Firebase.", "error");
+      return;
+    }
+    const audioData = await blobToDataUrl(blob);
+    addChat(state.currentUser?.name || myPlayer()?.name || "Jugador", "Mensaje de voz", {
+      type: "voice",
+      audioData,
+      audioMime: blob.type,
+    });
+    notify("Audio enviado", "El mensaje de voz quedo en el chat.", "success");
+  };
+  recorder.start();
+  button.textContent = "Grabando";
+  button.classList.add("recording");
+  state.voiceRecordTimer = window.setTimeout(stopVoiceMessageRecording, 8000);
+  notify("Grabando audio", "Toca Audio otra vez para enviar. Maximo 8 segundos.", "success");
+}
+
 function renderChatMessages(messages = []) {
   const list = $("#chat-log");
   if (!list) return;
   const normalized = [...messages]
-    .filter((message) => message?.text)
+    .filter((message) => message?.text || message?.audioData)
     .sort((a, b) => (b.time || b.createdAt || 0) - (a.time || a.createdAt || 0))
     .slice(0, 80);
   state.chatMessages = normalized;
   list.innerHTML = "";
   normalized.forEach((message) => {
     const item = document.createElement("li");
+    item.className = `chat-message ${message.uid === state.currentUser?.uid ? "mine" : "theirs"}`;
     const time = new Intl.DateTimeFormat("es-CL", { hour: "2-digit", minute: "2-digit" }).format(new Date(message.time || message.createdAt || Date.now()));
-    item.textContent = `${time} ${message.author}: ${message.text}`;
+    const counts = reactionCounts(message.reactions);
+    const reactionSummary = Object.entries(counts).map(([reaction, count]) => `<span>${reaction} ${count}</span>`).join("");
+    item.innerHTML = `
+      <div class="chat-avatar">${chatAuthorInitials(message)}</div>
+      <div class="chat-bubble">
+        <div class="chat-meta"><strong>${chatAuthorInitials(message)}</strong><span>${time}</span></div>
+        ${message.audioData ? `<audio controls preload="metadata" src="${message.audioData}"></audio>` : `<p>${escapeHtml(message.text)}</p>`}
+        <div class="chat-reactions" data-message-id="${message.id}">
+          <button type="button" data-reaction="👍" aria-label="Me gusta">👍</button>
+          <button type="button" data-reaction="❤️" aria-label="Me encanta">❤️</button>
+          <button type="button" data-reaction="😂" aria-label="Me divierte">😂</button>
+          <button type="button" data-reaction="😡" aria-label="Me enoja">😡</button>
+          <button type="button" data-reaction="😭" aria-label="Llorando">😭</button>
+          <div class="reaction-summary">${reactionSummary}</div>
+        </div>
+      </div>
+    `;
+    item.querySelectorAll("[data-reaction]").forEach((button) => {
+      button.addEventListener("click", () => reactToMessage(message.id, button.dataset.reaction));
+    });
     list.append(item);
+    if (message.audioData) playVoiceMessage(message);
   });
 }
 
@@ -2410,7 +2546,10 @@ function createVoicePeer(connectionId, remoteUid) {
   const peer = new RTCPeerConnection({ iceServers: [{ urls: "stun:stun.l.google.com:19302" }] });
   state.voiceStream?.getTracks?.().forEach((track) => peer.addTrack(track, state.voiceStream));
   peer.ontrack = (event) => {
-    remoteVoiceAudio(remoteUid).srcObject = event.streams[0];
+    const audio = remoteVoiceAudio(remoteUid);
+    audio.srcObject = event.streams[0];
+    audio.volume = Math.min(1, Math.max(0, state.gameVolume / 100));
+    audio.play().catch(() => notify("Voz recibida", "Toca la pantalla una vez si el navegador bloqueo la reproduccion.", "error"));
   };
   peer.onicecandidate = (event) => {
     if (!event.candidate || !backend?.addVoiceCandidate) return;
@@ -2650,8 +2789,11 @@ $("#chat-form").addEventListener("submit", (event) => {
   const input = $("#chat-input");
   const text = input.value.trim();
   if (!text) return;
-  addChat("Tu", text);
+  addChat(state.currentUser?.name || myPlayer()?.name || "Jugador", text);
   input.value = "";
+});
+$("#voice-message").addEventListener("click", () => {
+  toggleVoiceMessage().catch((error) => notify("Audio no enviado", error.message, "error"));
 });
 $("#add-user-form").addEventListener("submit", async (event) => {
   event.preventDefault();

@@ -283,7 +283,7 @@ async function createBackend() {
   }
 
   async function addRoomChat(roomId, message) {
-    if (!roomId || !message?.text) return;
+    if (!roomId || (!message?.text && !message?.audioData)) return;
     await updateDoc(doc(db, "rooms", roomId), {
       chatMessages: arrayUnion({
         ...message,
