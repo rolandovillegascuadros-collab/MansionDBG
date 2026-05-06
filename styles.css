@@ -929,6 +929,36 @@ input {
   border-color: rgba(216, 168, 77, 0.75);
 }
 
+.table-grid .player-card {
+  display: grid;
+  grid-template-columns: clamp(68px, 22%, 92px) minmax(0, 1fr);
+  grid-template-rows: auto auto auto minmax(0, 1fr);
+  column-gap: 8px;
+  min-height: 116px;
+}
+
+.table-grid .player-card .portrait {
+  grid-row: 1 / -1;
+  width: 100%;
+  height: 100%;
+  min-height: 96px;
+  margin: 0;
+  background: rgba(8, 10, 14, 0.78);
+}
+
+.table-grid .player-card .portrait img {
+  object-fit: contain;
+  background: rgba(8, 10, 14, 0.78);
+}
+
+.table-grid .player-name-row,
+.table-grid .player-card > span,
+.table-grid .player-card > p,
+.table-grid .health-bar,
+.table-grid .player-meta {
+  grid-column: 2;
+}
+
 .portrait {
   height: 58px;
   border-radius: 8px;
@@ -1128,7 +1158,37 @@ input {
   width: min(150px, 84%);
   min-height: 0;
   aspect-ratio: 2.5 / 3.5;
+  display: grid;
   padding: 10px;
+}
+
+.mansion-card.card-face.has-card-image {
+  grid-template-rows: minmax(0, 1fr);
+  padding: 4px;
+}
+
+.mansion-card.has-card-image .card-art {
+  grid-area: 1 / 1;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border-radius: 6px;
+}
+
+.mansion-card.has-card-image .card-art img {
+  object-fit: contain;
+  background: #080a0e;
+}
+
+.mansion-card.has-card-image .card-copy {
+  grid-area: 1 / 1;
+  z-index: 2;
+  align-self: end;
+  margin: 4px;
+  padding: 5px;
+  border-radius: 6px;
+  background: rgba(6, 8, 12, 0.86);
+  box-shadow: 0 -8px 22px rgba(0, 0, 0, 0.35);
 }
 
 .card-mark {
@@ -1557,6 +1617,10 @@ input {
   background: #232a36;
   box-shadow: 0 12px 26px rgba(0, 0, 0, 0.28);
   overflow: hidden;
+}
+
+.mansion-card.card-face {
+  display: grid !important;
 }
 
 .card-face:hover {
@@ -3107,11 +3171,29 @@ input {
 
   .player-card {
     padding: 4px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
   }
 
-  .portrait {
+  .portrait,
+  .table-grid .player-card .portrait {
+    grid-row: auto;
     height: 24px;
+    min-height: 24px;
     margin-bottom: 3px;
+  }
+
+  .table-grid .player-card .portrait img {
+    object-fit: cover;
+  }
+
+  .table-grid .player-name-row,
+  .table-grid .player-card > span,
+  .table-grid .player-card > p,
+  .table-grid .health-bar,
+  .table-grid .player-meta {
+    grid-column: auto;
   }
 
   .player-card p,
@@ -3152,6 +3234,10 @@ input {
     width: 66px;
     padding: 5px;
     font-size: 0.64rem;
+  }
+
+  .mansion-card.has-card-image .card-copy {
+    display: none;
   }
 
   .card-mark {

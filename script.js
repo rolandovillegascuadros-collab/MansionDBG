@@ -479,8 +479,31 @@ function playersForSharedState() {
 function playersForLocalView(players = []) {
   return players.map((player) => ({
     ...player,
+    character: hydrateCardVisual(player.character || {}),
+    hand: (player.hand || []).map(hydrateCardVisual),
+    deck: (player.deck || []).map(hydrateCardVisual),
+    discard: (player.discard || []).map(hydrateCardVisual),
+    played: (player.played || []).map(hydrateCardVisual),
     name: player.uid && player.uid === state.currentUser?.uid ? "Tu" : player.name,
   }));
+}
+
+function cardVisualTemplates() {
+  return [
+    ...characters,
+    ...Object.values(catalog),
+    ...mansionStory,
+    ...mercenaryBonus,
+  ];
+}
+
+function hydrateCardVisual(card = {}) {
+  if (!card || card.image) return card;
+  const template = cardVisualTemplates().find((item) => (
+    (card.id && item.id === card.id) ||
+    (card.name && item.name === card.name && (!card.type || item.type === card.type))
+  ));
+  return template ? { ...card, image: template.image, art: card.art || template.art } : card;
 }
 
 function applyRemoteGameState(gameState) {
@@ -495,9 +518,12 @@ function applyRemoteGameState(gameState) {
   state.round = Number(gameState.round || 0);
   state.players = gameState.players ? playersForLocalView(gameState.players) : state.players;
   state.turn = gameState.turn || freshTurn();
-  state.mansion = gameState.mansion || [];
-  state.lastRevealed = gameState.lastRevealed || null;
-  state.resourceArea = gameState.resourceArea || state.resourceArea;
+  state.mansion = (gameState.mansion || []).map(hydrateCardVisual);
+  state.lastRevealed = gameState.lastRevealed ? hydrateCardVisual(gameState.lastRevealed) : null;
+  state.resourceArea = (gameState.resourceArea || state.resourceArea).map((pile) => ({
+    ...pile,
+    card: hydrateCardVisual(pile.card),
+  }));
   state.resourceMarketOpen = Boolean(gameState.resourceMarketOpen);
   state.resourceMarketOrder = gameState.resourceMarketOrder || state.resourceMarketOrder;
   state.resourceFilter = gameState.resourceFilter || "Todos";
@@ -1639,7 +1665,9 @@ function renderTargets() {
 
 function renderMansionCard(mode) {
   $("#mansion-card").disabled = mode === "versus";
-  $("#mansion-card").className = state.lastRevealed ? `mansion-card card-face card-${state.lastRevealed.art}` : "mansion-card card-face card-back";
+  $("#mansion-card").className = state.lastRevealed
+    ? `mansion-card card-face card-${state.lastRevealed.art} ${state.lastRevealed.image ? "has-card-image" : ""}`
+    : "mansion-card card-face card-back";
   if (mode === "versus") {
     $("#mansion-card").innerHTML = "<span class=\"card-mark\">VS</span><strong>Sin mansion</strong><small>Ataca personajes</small>";
     $("#discard-slot").innerHTML = "<span>Modo Versus</span><strong>Elige un objetivo</strong>";
