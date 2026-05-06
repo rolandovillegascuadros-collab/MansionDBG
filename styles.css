@@ -2909,10 +2909,10 @@ input {
       auto
       auto
       auto
-      clamp(104px, 15dvh, 150px)
+      clamp(96px, 13dvh, 132px)
       auto
-      auto
-      minmax(42px, 0.35fr)
+      minmax(86px, 104px)
+      minmax(28px, 0.18fr)
       auto
       auto;
     gap: 4px;
@@ -2920,15 +2920,15 @@ input {
   }
 
   .hand {
-    min-height: 104px;
-    max-height: 150px;
+    min-height: 96px;
+    max-height: 132px;
     align-items: stretch;
     overflow: hidden;
   }
 
   .hand .card-face {
     width: min(126px, 100%);
-    max-height: 150px;
+    max-height: 132px;
     justify-self: center;
   }
 
@@ -2956,42 +2956,52 @@ input {
   }
 
   .weapon-picker {
-    max-height: 74px;
+    max-height: 104px;
     overflow: hidden;
   }
 
   .weapon-list {
-    grid-template-columns: repeat(auto-fit, minmax(132px, 164px));
+    grid-template-columns: repeat(auto-fit, minmax(150px, 184px));
     align-items: start;
     justify-content: start;
-    max-height: 44px;
+    max-height: 70px;
     overflow: hidden;
   }
 
-  .weapon-list .card-face {
+  .weapon-list .weapon-select-card {
     width: 100%;
-    height: 44px;
-    min-height: 44px;
-    max-height: 44px;
+    height: 64px;
+    min-height: 64px;
+    max-height: 64px;
     aspect-ratio: auto;
     display: grid;
-    grid-template-columns: 44px minmax(0, 1fr);
+    grid-template-columns: 58px minmax(0, 1fr);
     grid-template-rows: 1fr;
-    gap: 4px;
+    gap: 5px;
     justify-self: start;
   }
 
-  .weapon-list .card-art {
+  .weapon-list .weapon-select-card .card-art {
     min-height: 0;
     height: 100%;
   }
 
-  .weapon-list .card-copy strong {
-    font-size: 0.58rem;
+  .weapon-list .weapon-select-card .card-copy {
+    justify-content: center;
+    min-height: 0;
   }
 
-  .weapon-list .card-copy span {
-    display: none;
+  .weapon-list .weapon-select-card .card-copy small {
+    font-size: 0.5rem;
+  }
+
+  .weapon-list .weapon-select-card .card-copy strong {
+    font-size: 0.64rem;
+  }
+
+  .weapon-list .weapon-select-card .card-copy span {
+    display: block;
+    font-size: 0.5rem;
   }
 
   .action-row {

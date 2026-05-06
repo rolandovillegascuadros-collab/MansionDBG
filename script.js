@@ -1757,7 +1757,7 @@ function renderWeapons(current) {
     const selectedWeapon = current.selectedWeapons.some((weapon) => weapon.instanceId === card.instanceId);
     const button = document.createElement("button");
     button.type = "button";
-    button.className = `card card-face card-${card.art} ${selectedWeapon ? "selected-card" : ""}`;
+    button.className = `card card-face weapon-select-card card-${card.art} ${selectedWeapon ? "selected-card" : ""}`;
     button.setAttribute("aria-label", `${selectedWeapon ? "Quitar" : "Seleccionar"} ${card.name}`);
     button.innerHTML = cardFace(card, "weapon");
     button.addEventListener("click", () => selectWeapon(card));
@@ -2343,7 +2343,11 @@ function explore() {
   const player = currentPlayer();
   const hasWeapons = player.hand.some((card) => card.type === "Arma");
   if (!player.selectedWeapons.length && hasWeapons) {
-    return notify("Selecciona arma", "Tienes armas en mano. Selecciona con cuÃ¡les atacar o retÃ­ralas para cambiar.", "error");
+    const attackWithoutWeapon = window.confirm("Tienes armas disponibles para seleccionar. ¿Estas seguro que deseas atacar sin usar arma?");
+    if (!attackWithoutWeapon) {
+      notify("Selecciona arma", "Elige un arma disponible para atacar o vuelve a explorar y confirma ataque sin arma.", "error");
+      return;
+    }
   }
   if (!player.selectedWeapons.length && !hasWeapons && !state.allowUnarmedExplore) {
     state.allowUnarmedExplore = true;
