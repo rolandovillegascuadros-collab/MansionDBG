@@ -1200,9 +1200,19 @@ async function rejectFriendInvitation(request) {
 
 async function acceptRoomInvitation(invitation) {
   const backend = getOnlineBackend();
-  if (!backend?.acceptRoomInvite || !state.currentUser?.uid) return;
+  if (!backend || !state.currentUser?.uid) return;
   try {
-    const room = await backend.acceptRoomInvite(invitation.id, state.currentUser);
+    let room = null;
+    if (backend.acceptRoomInvite) {
+      try {
+        room = await backend.acceptRoomInvite(invitation.id, state.currentUser);
+      } catch (error) {
+        if (!backend.joinRoomFromInvitation || !invitation.roomId) throw error;
+      }
+    }
+    if (!room && backend.joinRoomFromInvitation && invitation.roomId) {
+      room = await backend.joinRoomFromInvitation(invitation.roomId, state.currentUser, invitation);
+    }
     if (room) {
       state.sessionType = room.sessionType || "friends";
       state.roomId = room.id;
