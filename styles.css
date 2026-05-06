@@ -1341,6 +1341,12 @@ input {
   background: var(--ok);
 }
 
+.vote-command {
+  color: #10141b;
+  border: 0;
+  background: var(--accent);
+}
+
 .turn-footer {
   display: flex;
   align-items: center;

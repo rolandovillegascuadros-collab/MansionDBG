@@ -131,6 +131,7 @@ const state = {
   losses: Number(localStorage.getItem("mdbg-losses") || 0),
   matchHistory: JSON.parse(localStorage.getItem("mdbg-match-history") || "[]"),
   matchRecorded: false,
+  endVotes: {},
   authMode: "login",
   currentUser: JSON.parse(localStorage.getItem("mdbg-current-user") || "null"),
   siteUsers: [],
@@ -380,6 +381,7 @@ function roomGameState() {
     selectedResource: state.selectedResource,
     matchRecorded: state.matchRecorded,
     allowUnarmedExplore: state.allowUnarmedExplore,
+    endVotes: state.endVotes,
     turnEndsAt: state.turnEndsAt,
     updatedBy: state.currentUser?.uid || "",
     updatedAt: Date.now(),
@@ -427,7 +429,9 @@ function applyRemoteGameState(gameState) {
   state.selectedResource = Number(gameState.selectedResource || 0);
   state.matchRecorded = Boolean(gameState.matchRecorded);
   state.allowUnarmedExplore = Boolean(gameState.allowUnarmedExplore);
+  state.endVotes = gameState.endVotes || {};
   state.turnEndsAt = gameState.turnEndsAt || null;
+  checkEndGameVote();
 }
 
 function schedulePublishRoomState() {
@@ -1094,6 +1098,8 @@ function renderTurnControls() {
   $$(".turn-command").forEach((button) => {
     button.disabled = state.started && !canAct;
   });
+  $("#request-end-game").disabled = !state.started || hasVotedToEnd();
+  $("#request-end-game").textContent = hasVotedToEnd() ? "Voto enviado" : "Terminar partida";
   $("#mansion-card").disabled = getModeKey() === "versus" || (state.started && !canAct);
   $$("#hand button, #action-card-list button, #weapon-list button").forEach((button) => {
     button.disabled = state.started && !canAct;
@@ -1499,7 +1505,8 @@ function resetRoom() {
   state.mansion = [];
   state.lastRevealed = null;
   state.resourceMarketOpen = false;
-    state.matchRecorded = false;
+  state.matchRecorded = false;
+  state.endVotes = {};
     buildResourceArea();
   state.chatMessages = [];
   $("#chat-log").innerHTML = "";
@@ -1525,6 +1532,7 @@ async function startGame() {
   await ensureOnlineRoom();
   state.started = true;
   state.matchRecorded = false;
+  state.endVotes = {};
   state.round = 1;
   state.activeIndex = 0;
   state.turn = freshTurn();
@@ -1941,6 +1949,44 @@ function checkRemainingPlayers() {
   if (state.started && active.length <= 1) finishGameByScore("Solo queda un jugador activo.");
 }
 
+function voteEligiblePlayers() {
+  return state.players.filter((player) => !player.eliminated && !player.isBot && (player.uid || !isOnlineRoomActive()));
+}
+
+function endVoteKey() {
+  return state.currentUser?.uid || myPlayer()?.name || "local";
+}
+
+function hasVotedToEnd() {
+  return Boolean(state.endVotes?.[endVoteKey()]);
+}
+
+function requestEndGameVote() {
+  if (!state.started) return;
+  const key = endVoteKey();
+  state.endVotes ||= {};
+  state.endVotes[key] = {
+    name: state.currentUser?.name || myPlayer()?.name || "Jugador",
+    time: Date.now(),
+  };
+  const eligible = voteEligiblePlayers();
+  const total = Math.max(1, eligible.length);
+  const votes = eligible.filter((player) => state.endVotes[player.uid || player.name]).length;
+  notify("Voto registrado", `Terminar partida: ${votes}/${total} votos.`, "success");
+  checkEndGameVote();
+  renderGame();
+}
+
+function checkEndGameVote() {
+  if (!state.started) return false;
+  const eligible = voteEligiblePlayers();
+  if (!eligible.length) return false;
+  const allAccepted = eligible.every((player) => state.endVotes?.[player.uid || player.name]);
+  if (!allAccepted) return false;
+  finishGameByScore("Todos los jugadores aceptaron terminar la partida.");
+  return true;
+}
+
 function useItem() {
   if (!state.started) return;
   if (!requireMyTurn()) return;
@@ -2069,6 +2115,7 @@ function botTurn() {
 function finishGameByScore(reason) {
   const winner = [...state.players].sort((a, b) => b.decorations - a.decorations || b.health - a.health)[0];
   state.started = false;
+  state.endVotes = {};
   stopTurnTimer();
   recordMatchResult(winner.name === "Tu" ? "win" : "loss", reason, winner);
   addAchievement("Partida finalizada");
@@ -2318,6 +2365,7 @@ $("#mansion-card").addEventListener("click", explore);
 $("#use-item").addEventListener("click", useItem);
 $("#character-effect").addEventListener("click", useCharacterEffect);
 $("#end-turn").addEventListener("click", endTurn);
+$("#request-end-game").addEventListener("click", requestEndGameVote);
 $("#voice-toggle").addEventListener("click", toggleVoice);
 $("#sound-toggle").addEventListener("click", () => {
   state.sound = !state.sound;
