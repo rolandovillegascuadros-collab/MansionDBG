@@ -20,6 +20,7 @@
 body {
   min-height: 100vh;
   margin: 0;
+  overflow: hidden;
   color: var(--ink);
   background:
     linear-gradient(rgba(15, 18, 24, 0.85), rgba(15, 18, 24, 0.95)),
@@ -413,12 +414,12 @@ button[data-icon]::before {
 }
 
 .app-shell {
-  width: min(1480px, calc(100vw - 28px));
-  height: calc(100vh - 28px);
-  margin: 14px auto;
+  width: calc(100vw - 10px);
+  height: calc(100dvh - 10px);
+  margin: 5px auto;
   display: grid;
-  grid-template-columns: 230px minmax(0, 1fr) 310px;
-  gap: 10px;
+  grid-template-columns: clamp(205px, 12vw, 228px) minmax(0, 1fr) clamp(286px, 16vw, 310px);
+  gap: 6px;
   overflow: hidden;
 }
 
@@ -432,9 +433,9 @@ button[data-icon]::before {
 .right-rail {
   display: grid;
   align-content: start;
-  gap: 10px;
-  max-height: calc(100vh - 28px);
-  overflow: auto;
+  gap: 6px;
+  max-height: calc(100dvh - 10px);
+  overflow: hidden;
 }
 
 .panel,
@@ -447,15 +448,15 @@ button[data-icon]::before {
 }
 
 .panel {
-  padding: 10px;
+  padding: 8px;
 }
 
 .game-surface {
-  padding: 14px;
+  padding: 8px;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: 16px;
-  overflow: auto;
+  gap: 8px;
+  overflow: hidden;
 }
 
 .brand,
@@ -471,9 +472,9 @@ button[data-icon]::before {
 }
 
 .brand {
-  min-height: 82px;
-  gap: 12px;
-  padding: 12px;
+  min-height: 62px;
+  gap: 8px;
+  padding: 8px;
   border-radius: 8px;
   background: linear-gradient(135deg, rgba(216, 168, 77, 0.16), rgba(93, 140, 255, 0.1));
   border: 1px solid var(--line);
@@ -490,15 +491,15 @@ button[data-icon]::before {
 }
 
 .brand-mark {
-  width: 44px;
-  height: 44px;
+  width: 38px;
+  height: 38px;
   border-radius: 8px;
   font-size: 1.25rem;
 }
 
 .avatar {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
 }
 
@@ -526,20 +527,20 @@ p {
 
 h1 {
   margin-bottom: 0;
-  font-size: 1.35rem;
+  font-size: 1.08rem;
   line-height: 1;
 }
 
 h2 {
-  margin-bottom: 10px;
-  font-size: 0.94rem;
+  margin-bottom: 6px;
+  font-size: 0.84rem;
   letter-spacing: 0;
 }
 
 .small,
 .status {
   margin-bottom: 0;
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   line-height: 1.45;
 }
 
@@ -575,9 +576,10 @@ input {
 }
 
 button {
-  min-height: 38px;
-  padding: 0 12px;
+  min-height: 32px;
+  padding: 0 8px;
   font-weight: 800;
+  font-size: 0.78rem;
 }
 
 button:hover,
@@ -598,14 +600,15 @@ label {
 select,
 input {
   width: 100%;
-  min-height: 34px;
-  padding: 0 10px;
+  min-height: 30px;
+  padding: 0 8px;
+  font-size: 0.78rem;
 }
 
 .primary-button,
 .start-button {
   width: 100%;
-  margin-top: 8px;
+  margin-top: 6px;
   border: 0;
 }
 
@@ -623,8 +626,8 @@ input {
 .voice-button,
 .tutorial-button,
 .sound-button {
-  min-height: 34px;
-  padding-inline: 10px;
+  min-height: 30px;
+  padding-inline: 8px;
   color: var(--muted);
   background: transparent;
 }
@@ -641,15 +644,15 @@ input {
 
 .volume-controls {
   display: grid;
-  grid-template-columns: repeat(2, minmax(118px, 1fr));
-  gap: 8px;
-  min-width: min(360px, 42vw);
+  grid-template-columns: repeat(2, minmax(108px, 1fr));
+  gap: 6px;
+  min-width: min(340px, 35vw);
 }
 
 .volume-controls label {
   display: grid;
   gap: 4px;
-  padding: 6px 8px;
+  padding: 5px 7px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.04);
@@ -670,7 +673,7 @@ input {
 .topbar,
 .stats-row {
   justify-content: space-between;
-  gap: 12px;
+  gap: 8px;
 }
 
 .profile-row {
@@ -681,13 +684,13 @@ input {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 5px;
-  margin-top: 9px;
-  font-size: 0.72rem;
+  margin-top: 7px;
+  font-size: 0.66rem;
 }
 
 .stats-row span {
   min-width: 0;
-  padding: 5px;
+  padding: 4px;
   border: 1px solid var(--line);
   border-radius: 6px;
   text-align: center;
@@ -697,27 +700,27 @@ input {
 .stats-row strong {
   display: block;
   color: var(--ink);
-  font-size: 0.9rem;
+  font-size: 0.82rem;
 }
 
 .availability-toggle {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: 10px;
+  margin-top: 6px;
   color: var(--ink);
-  font-size: 0.82rem;
+  font-size: 0.74rem;
 }
 
 .availability-toggle input {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   accent-color: var(--ok);
 }
 
 .logout-button {
   width: 100%;
-  margin-top: 10px;
+  margin-top: 6px;
 }
 
 .segmented {
@@ -751,17 +754,17 @@ input {
 #site-users,
 #friend-list,
 #invitation-list {
-  max-height: 150px;
-  overflow: auto;
+  max-height: 116px;
+  overflow: hidden auto;
 }
 
 .friend,
 .invitation-card {
   display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 8px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 5px;
   align-items: center;
-  padding: 6px;
+  padding: 5px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.04);
@@ -770,13 +773,16 @@ input {
 .friend span {
   display: block;
   color: var(--muted);
-  font-size: 0.72rem;
+  font-size: 0.66rem;
   overflow-wrap: anywhere;
 }
 
 .friend button {
-  min-height: 30px;
-  padding-inline: 8px;
+  min-height: 26px;
+  max-width: 74px;
+  padding-inline: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .invite-actions {
@@ -794,8 +800,8 @@ input {
 }
 
 .turn-pill {
-  min-width: 92px;
-  padding: 10px 14px;
+  min-width: 84px;
+  padding: 8px 10px;
   border-radius: 999px;
   text-align: center;
   color: #10141b;
@@ -804,7 +810,7 @@ input {
 }
 
 .top-actions {
-  gap: 10px;
+  gap: 6px;
 }
 
 .board {
@@ -822,6 +828,44 @@ input {
     radial-gradient(circle at 50% 40%, rgba(216, 168, 77, 0.12), transparent 34rem),
     #11161d;
   overflow: auto;
+}
+
+@media (min-width: 861px) {
+  .board {
+    grid-template-rows: minmax(110px, 136px) minmax(0, 1fr);
+    gap: 6px;
+    padding: 6px;
+    overflow: hidden;
+  }
+
+  .table-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .player-card {
+    padding: 6px;
+  }
+
+  .portrait {
+    height: 42px;
+    margin-bottom: 5px;
+  }
+
+  .player-card p {
+    min-height: 20px;
+    font-size: 0.62rem;
+  }
+
+  .health-bar {
+    height: 8px;
+    margin: 6px 0;
+  }
+
+  .player-meta {
+    gap: 4px;
+    font-size: 0.64rem;
+  }
 }
 
 .table-grid {
@@ -1075,6 +1119,42 @@ input {
   display: block;
 }
 
+@media (min-width: 861px) {
+  .play-area {
+    grid-template-columns: clamp(190px, 18vw, 220px) minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .table-zone {
+    padding: 6px;
+    overflow: hidden;
+  }
+
+  .mansion-row {
+    gap: 6px;
+  }
+
+  .deck-card {
+    width: min(120px, 78%);
+  }
+
+  .mansion-card {
+    width: min(122px, 80%);
+    padding: 8px;
+  }
+
+  .card-mark {
+    width: 54px;
+    height: 54px;
+    font-size: 1.6rem;
+  }
+
+  .discard-slot {
+    min-height: 50px;
+    padding: 7px;
+  }
+}
+
 .controls-panel {
   display: grid;
   grid-template-rows: auto auto auto minmax(0, 1fr) auto auto auto auto;
@@ -1109,6 +1189,80 @@ input {
   margin-top: 4px;
   color: var(--muted);
   font-size: 0.72rem;
+}
+
+@media (min-width: 861px) {
+  .controls-panel {
+    grid-template-rows: auto auto auto minmax(0, 0.9fr) auto auto auto auto;
+  }
+
+  .current-hero {
+    min-height: 54px;
+    grid-template-columns: 52px minmax(0, 1fr);
+    gap: 6px;
+    margin-bottom: 6px;
+    padding: 6px;
+  }
+
+  .current-hero .portrait {
+    width: 46px;
+  }
+
+  .current-hero strong {
+    font-size: 0.82rem;
+  }
+
+  .current-hero span {
+    margin-top: 2px;
+    font-size: 0.64rem;
+  }
+
+  .live-trackers {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+    margin-bottom: 5px;
+  }
+
+  .live-trackers div {
+    padding: 4px;
+    border-radius: 6px;
+  }
+
+  .live-trackers span {
+    font-size: 0.52rem;
+  }
+
+  .live-trackers strong {
+    font-size: 0.76rem;
+  }
+
+  .hand {
+    grid-template-columns: repeat(5, minmax(56px, 1fr));
+    gap: 5px;
+    overflow: hidden;
+  }
+
+  .action-picker,
+  .weapon-picker,
+  .played-row {
+    margin-top: 6px;
+    padding-top: 6px;
+  }
+
+  .action-picker {
+    padding: 6px;
+  }
+
+  .weapon-list {
+    grid-template-columns: repeat(4, minmax(54px, 1fr));
+    gap: 5px;
+  }
+
+  .played-cards {
+    min-height: 48px;
+    grid-template-columns: repeat(5, minmax(48px, 1fr));
+    overflow: hidden;
+  }
 }
 
 .live-trackers {
@@ -1356,8 +1510,8 @@ input {
   aspect-ratio: 2.5 / 3.5;
   display: grid;
   grid-template-rows: 58% 42%;
-  gap: 5px;
-  padding: 5px;
+  gap: 4px;
+  padding: 4px;
   border: 1px solid var(--line);
   border-radius: 8px;
   color: var(--ink);
@@ -1450,20 +1604,20 @@ input {
 
 .card-copy small {
   color: var(--accent);
-  font-size: 0.56rem;
+  font-size: 0.5rem;
   font-weight: 900;
   text-transform: uppercase;
 }
 
 .card-copy strong {
   margin: 2px 0;
-  font-size: clamp(0.62rem, 1vw, 0.78rem);
+  font-size: clamp(0.56rem, 0.8vw, 0.72rem);
   line-height: 1.05;
 }
 
 .card-copy span {
   color: var(--muted);
-  font-size: 0.58rem;
+  font-size: 0.52rem;
   line-height: 1.2;
 }
 
@@ -1527,9 +1681,9 @@ input {
 }
 
 .turn-command {
-  min-height: 38px;
-  padding: 0 8px;
-  font-size: 0.78rem;
+  min-height: 32px;
+  padding: 0 6px;
+  font-size: 0.7rem;
 }
 
 .end-command {
@@ -1552,8 +1706,8 @@ input {
 }
 
 .dice-roll-panel {
-  margin-top: 10px;
-  padding: 8px;
+  margin-top: 6px;
+  padding: 6px;
   border: 1px solid rgba(216, 168, 77, 0.28);
   border-radius: 8px;
   background: rgba(216, 168, 77, 0.07);
@@ -1944,6 +2098,7 @@ input {
 
 @media (max-width: 860px) {
   body {
+    overflow: auto;
     background-attachment: scroll;
   }
 
@@ -2044,6 +2199,7 @@ input {
 @media (orientation: landscape) and (max-height: 540px) and (max-width: 1000px) {
   body {
     min-height: 100dvh;
+    overflow: auto;
     background-attachment: scroll;
   }
 
@@ -2487,5 +2643,549 @@ input {
   #chat-log,
   .achievement-list {
     max-height: 240px;
+  }
+}
+
+@media (min-width: 861px) {
+  .sidebar *,
+  .right-rail *,
+  .game-surface * {
+    min-width: 0;
+  }
+
+  .profile-row > div,
+  .brand div,
+  .friend > div,
+  .invitation-card > div,
+  .player-name-row {
+    min-width: 0;
+  }
+
+  .brand h1,
+  #player-name,
+  .friend strong,
+  .friend span,
+  .invitation-card strong,
+  .invitation-card span,
+  .player-name-row strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sidebar {
+    grid-template-rows: auto auto minmax(0, 1fr);
+  }
+
+  .online-panel,
+  .room-panel {
+    overflow: hidden;
+  }
+
+  .right-rail {
+    grid-template-rows: minmax(184px, 30dvh) auto minmax(0, 1fr) auto;
+    align-content: stretch;
+  }
+
+  .chat-panel,
+  .resources-panel,
+  .achievements-panel,
+  .history-panel {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .chat-panel {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+
+  #chat-log,
+  .resource-grid,
+  .achievement-list,
+  .match-history {
+    overflow: hidden auto;
+  }
+
+  #chat-log {
+    max-height: none;
+    gap: 5px;
+  }
+
+  #chat-log li,
+  .achievement-list li {
+    padding: 7px;
+    font-size: 0.76rem;
+  }
+
+  #chat-log li.chat-message {
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 6px;
+    padding: 6px;
+  }
+
+  .chat-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 0.66rem;
+  }
+
+  #chat-form {
+    grid-template-columns: minmax(0, 1fr) minmax(58px, auto) minmax(70px, auto);
+    gap: 5px;
+    margin-top: 6px;
+  }
+
+  #chat-form button {
+    min-width: 0;
+    padding-inline: 6px;
+    white-space: nowrap;
+  }
+
+  .resource-types {
+    gap: 5px;
+    margin-bottom: 6px;
+  }
+
+  .resource-types button {
+    min-height: 26px;
+    padding: 0 7px;
+    font-size: 0.7rem;
+  }
+
+  .resource-grid {
+    max-height: 222px;
+    gap: 5px;
+  }
+
+  .achievement-list {
+    max-height: 252px;
+    gap: 5px;
+  }
+
+  .match-history {
+    max-height: 170px;
+  }
+
+  .player-name-row {
+    gap: 4px;
+  }
+
+  .player-name-row strong {
+    font-size: 0.74rem;
+  }
+
+  .player-name-row em {
+    padding: 2px 5px;
+    font-size: 0.58rem;
+  }
+
+  .card-face {
+    min-height: 78px;
+  }
+
+  .action-row {
+    gap: 5px;
+    margin: 6px 0;
+  }
+
+  .turn-footer {
+    gap: 8px;
+  }
+
+  #turn-timer {
+    min-width: 70px;
+    padding: 8px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 540px) and (max-width: 1000px) {
+  body {
+    overflow: hidden;
+  }
+
+  .app-shell {
+    width: 100vw;
+    height: 100dvh;
+    min-height: 0;
+    margin: 0;
+    grid-template-columns: minmax(150px, 18vw) minmax(0, 1fr) minmax(190px, 23vw);
+    grid-template-rows: minmax(0, 1fr);
+    gap: 4px;
+    align-items: stretch;
+    overflow: hidden;
+  }
+
+  .sidebar,
+  .right-rail,
+  .game-surface {
+    grid-column: auto;
+    height: 100dvh;
+    max-height: 100dvh;
+    overflow: hidden;
+    border-radius: 0;
+  }
+
+  .sidebar,
+  .right-rail {
+    gap: 4px;
+  }
+
+  .sidebar {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto minmax(0, 1fr);
+  }
+
+  .sidebar > .panel:last-child {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .panel,
+  .game-surface {
+    padding: 5px;
+  }
+
+  .brand {
+    height: 42px;
+    min-height: 42px;
+    gap: 5px;
+    padding: 5px;
+  }
+
+  .brand-mark {
+    width: 30px;
+    height: 30px;
+    font-size: 0.9rem;
+  }
+
+  .brand h1 {
+    font-size: 0.86rem;
+  }
+
+  .brand span,
+  .profile-panel .small,
+  .availability-toggle .status,
+  .room-panel .status,
+  #room-status {
+    display: none;
+  }
+
+  .offline-home-button {
+    display: none;
+  }
+
+  .profile-row {
+    gap: 5px;
+  }
+
+  .avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 0.78rem;
+  }
+
+  .stats-row {
+    display: none;
+  }
+
+  .availability-toggle,
+  .logout-button,
+  button,
+  select,
+  input {
+    min-height: 24px;
+    padding: 0 6px;
+    font-size: 0.66rem;
+  }
+
+  h2,
+  h3 {
+    font-size: 0.72rem;
+    margin-bottom: 4px;
+  }
+
+  #site-users,
+  #friend-list,
+  #invitation-list {
+    max-height: 48px;
+  }
+
+  .friend,
+  .invitation-card {
+    padding: 4px;
+  }
+
+  .friend button,
+  .invitation-card button {
+    max-width: 58px;
+    min-height: 22px;
+    font-size: 0.58rem;
+  }
+
+  .game-surface {
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 4px;
+  }
+
+  .topbar {
+    gap: 4px;
+    min-height: 34px;
+  }
+
+  .topbar p {
+    font-size: 0.7rem;
+  }
+
+  .top-actions {
+    gap: 4px;
+    flex-wrap: nowrap;
+  }
+
+  .volume-controls {
+    display: none;
+  }
+
+  .turn-pill {
+    min-width: 58px;
+    padding: 6px;
+    font-size: 0.72rem;
+  }
+
+  .board {
+    grid-template-rows: 64px minmax(0, 1fr);
+    gap: 4px;
+    padding: 4px;
+    overflow: hidden;
+  }
+
+  .table-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+  }
+
+  .player-card {
+    padding: 4px;
+  }
+
+  .portrait {
+    height: 24px;
+    margin-bottom: 3px;
+  }
+
+  .player-card p,
+  .player-meta {
+    display: none;
+  }
+
+  .health-bar {
+    height: 5px;
+    margin: 3px 0 0;
+  }
+
+  .play-area {
+    grid-template-columns: minmax(96px, 24%) minmax(0, 1fr);
+    gap: 4px;
+    min-height: 0;
+  }
+
+  .table-zone {
+    padding: 4px;
+    overflow: hidden;
+  }
+
+  .mansion-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .deck-stack {
+    min-height: 112px;
+  }
+
+  .deck-card {
+    width: 62px;
+  }
+
+  .mansion-card {
+    width: 66px;
+    padding: 5px;
+    font-size: 0.64rem;
+  }
+
+  .card-mark {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+  }
+
+  .discard-slot {
+    min-height: 40px;
+    padding: 5px;
+  }
+
+  .controls-panel {
+    display: grid;
+    grid-template-rows: auto auto auto minmax(36px, 1fr) auto auto auto;
+    gap: 4px;
+    overflow: hidden;
+  }
+
+  .current-hero {
+    grid-row: 2;
+    min-height: 38px;
+    grid-template-columns: 38px minmax(0, 1fr);
+    gap: 5px;
+    padding: 5px;
+    margin-bottom: 0;
+  }
+
+  .current-hero .portrait {
+    width: 34px;
+  }
+
+  .current-hero strong {
+    font-size: 0.68rem;
+  }
+
+  .current-hero span,
+  .live-trackers span,
+  .card-copy span {
+    display: none;
+  }
+
+  .live-trackers {
+    grid-row: 3;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 3px;
+    margin-bottom: 0;
+  }
+
+  .live-trackers div {
+    padding: 3px;
+  }
+
+  .live-trackers strong {
+    font-size: 0.62rem;
+  }
+
+  .hand,
+  .weapon-list,
+  .played-cards {
+    grid-template-columns: repeat(4, minmax(42px, 1fr));
+    gap: 4px;
+  }
+
+  .hand {
+    grid-row: 4;
+    max-height: none;
+    overflow: hidden auto;
+  }
+
+  .card-face {
+    min-height: 52px;
+    padding: 3px;
+  }
+
+  .card-copy small {
+    font-size: 0.45rem;
+  }
+
+  .card-copy strong {
+    font-size: 0.52rem;
+  }
+
+  .action-picker,
+  .weapon-picker,
+  .played-row {
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  .action-picker {
+    grid-row: 5;
+    padding: 4px;
+    overflow: hidden;
+  }
+
+  .weapon-picker {
+    grid-row: 6;
+    overflow: hidden;
+  }
+
+  .played-row {
+    display: none;
+  }
+
+  .action-row {
+    grid-row: 1;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4px;
+    margin: 0;
+  }
+
+  .turn-command {
+    min-height: 24px;
+    font-size: 0.58rem;
+  }
+
+  .turn-footer {
+    grid-row: 7;
+    gap: 4px;
+    align-items: end;
+  }
+
+  #turn-hint {
+    font-size: 0.62rem;
+  }
+
+  #turn-timer {
+    min-width: 54px;
+    padding: 5px;
+    font-size: 0.72rem;
+  }
+
+  .right-rail {
+    grid-column: auto;
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(96px, 28dvh) auto minmax(0, 1fr) auto;
+  }
+
+  .chat-panel {
+    min-height: 0;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+
+  #chat-log {
+    gap: 4px;
+  }
+
+  #chat-log li,
+  .achievement-list li {
+    padding: 5px;
+    font-size: 0.64rem;
+  }
+
+  #chat-form {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  .resource-types {
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+
+  .resource-types button {
+    min-height: 22px;
+    font-size: 0.58rem;
+  }
+
+  .resource-grid,
+  .achievement-list,
+  .match-history {
+    max-height: 96px;
+    gap: 4px;
   }
 }
