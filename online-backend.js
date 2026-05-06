@@ -282,6 +282,17 @@ async function createBackend() {
     await updateDoc(doc(db, "rooms", roomId), { ...patch, updatedAt: serverTimestamp() });
   }
 
+  async function addRoomChat(roomId, message) {
+    if (!roomId || !message?.text) return;
+    await updateDoc(doc(db, "rooms", roomId), {
+      chatMessages: arrayUnion({
+        ...message,
+        createdAt: Date.now(),
+      }),
+      updatedAt: serverTimestamp(),
+    });
+  }
+
   async function getRoom(roomId) {
     if (!roomId) return null;
     const snapshot = await getDoc(doc(db, "rooms", roomId));
@@ -451,6 +462,7 @@ async function createBackend() {
     createRoom,
     inviteToRoom,
     updateRoom,
+    addRoomChat,
     getRoom,
     joinRoomFromInvitation,
     acceptRoomInvite,

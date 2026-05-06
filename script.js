@@ -145,6 +145,10 @@ const state = {
   voiceStream: null,
   voicePeers: {},
   voiceCandidatesSeen: {},
+  applyingRemoteRoom: false,
+  publishTimer: null,
+  lastPublishedState: "",
+  chatMessages: [],
   onlineReady: false,
   music: null,
   musicOn: false,
@@ -321,12 +325,119 @@ function watchCurrentRoom() {
   state.unsubRoom = null;
   if (!backend?.watchRoom || !state.roomId) return;
   state.unsubRoom = backend.watchRoom(state.roomId, (room) => {
-    if (!room?.players) return;
-    syncPlayersFromRoom(room.players);
-    if (state.voiceStream) startRoomVoice().catch(() => {});
-    renderRoom();
-    renderGame();
+    if (!room) return;
+    state.applyingRemoteRoom = true;
+    try {
+      if (room.gameState) applyRemoteGameState(room.gameState);
+      else if (room.players) syncPlayersFromRoom(room.players);
+      renderChatMessages(room.chatMessages || []);
+      if (state.voiceStream) startRoomVoice().catch(() => {});
+      renderRoom();
+      renderGame();
+    } finally {
+      state.applyingRemoteRoom = false;
+    }
   });
+}
+
+function isOnlineRoomActive() {
+  return state.loggedIn && state.sessionType !== "offline" && Boolean(state.roomId) && Boolean(getOnlineBackend());
+}
+
+function myPlayer() {
+  return state.players.find((player) => player.uid && player.uid === state.currentUser?.uid) || state.players.find((player) => player.name === "Tu") || state.players[0];
+}
+
+function isMyTurn() {
+  const current = currentPlayer();
+  if (!state.started || !current) return true;
+  if (!isOnlineRoomActive()) return true;
+  return current.uid === state.currentUser?.uid || current.name === "Tu";
+}
+
+function requireMyTurn() {
+  if (isMyTurn()) return true;
+  notify("Espera tu turno", `Ahora juega ${currentPlayer()?.name || "otro jugador"}.`, "error");
+  return false;
+}
+
+function roomGameState() {
+  return {
+    mode: getModeKey(),
+    scenario: $("#scenario").value,
+    started: state.started,
+    activeIndex: state.activeIndex,
+    round: state.round,
+    players: state.players,
+    turn: state.turn,
+    mansion: state.mansion,
+    lastRevealed: state.lastRevealed,
+    resourceArea: state.resourceArea,
+    resourceMarketOpen: state.resourceMarketOpen,
+    resourceMarketOrder: state.resourceMarketOrder,
+    resourceFilter: state.resourceFilter,
+    selectedResource: state.selectedResource,
+    matchRecorded: state.matchRecorded,
+    allowUnarmedExplore: state.allowUnarmedExplore,
+    turnEndsAt: state.turnEndsAt,
+    updatedBy: state.currentUser?.uid || "",
+    updatedAt: Date.now(),
+  };
+}
+
+function applyRemoteGameState(gameState) {
+  if (!gameState) return;
+  if (gameState.mode && $("#mode").value !== gameState.mode) {
+    $("#mode").value = gameState.mode;
+    populateScenarios();
+  }
+  if (gameState.scenario) $("#scenario").value = gameState.scenario;
+  state.started = Boolean(gameState.started);
+  state.activeIndex = Number(gameState.activeIndex || 0);
+  state.round = Number(gameState.round || 0);
+  state.players = gameState.players || state.players;
+  state.turn = gameState.turn || freshTurn();
+  state.mansion = gameState.mansion || [];
+  state.lastRevealed = gameState.lastRevealed || null;
+  state.resourceArea = gameState.resourceArea || state.resourceArea;
+  state.resourceMarketOpen = Boolean(gameState.resourceMarketOpen);
+  state.resourceMarketOrder = gameState.resourceMarketOrder || state.resourceMarketOrder;
+  state.resourceFilter = gameState.resourceFilter || "Todos";
+  state.selectedResource = Number(gameState.selectedResource || 0);
+  state.matchRecorded = Boolean(gameState.matchRecorded);
+  state.allowUnarmedExplore = Boolean(gameState.allowUnarmedExplore);
+  state.turnEndsAt = gameState.turnEndsAt || null;
+}
+
+function schedulePublishRoomState() {
+  if (!isOnlineRoomActive() || state.applyingRemoteRoom) return;
+  window.clearTimeout(state.publishTimer);
+  state.publishTimer = window.setTimeout(publishRoomState, 180);
+}
+
+async function publishRoomState() {
+  if (!isOnlineRoomActive() || state.applyingRemoteRoom) return;
+  const backend = getOnlineBackend();
+  const gameState = roomGameState();
+  const serialized = JSON.stringify(gameState);
+  if (serialized === state.lastPublishedState) return;
+  state.lastPublishedState = serialized;
+  try {
+    await backend.updateRoom(state.roomId, {
+      gameState,
+      players: state.players.map((player) => ({
+        uid: player.uid || "",
+        name: player.uid === state.currentUser?.uid ? state.currentUser.name : player.name,
+        email: player.email || "",
+        online: true,
+      })).filter((player) => player.uid),
+      playerUids: state.players.map((player) => player.uid).filter(Boolean),
+      status: state.started ? "playing" : "waiting",
+      started: state.started,
+    });
+  } catch (error) {
+    notify("Sincronizacion fallida", error.message, "error");
+  }
 }
 
 function syncPlayersFromRoom(roomPlayers = []) {
@@ -484,10 +595,36 @@ function stopAmbient() {
 }
 
 function addChat(author, text) {
-  const item = document.createElement("li");
-  const time = new Intl.DateTimeFormat("es-CL", { hour: "2-digit", minute: "2-digit" }).format(new Date());
-  item.textContent = `${time} ${author}: ${text}`;
-  $("#chat-log").prepend(item);
+  const message = {
+    id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    author,
+    uid: state.currentUser?.uid || "",
+    text,
+    time: Date.now(),
+  };
+  state.chatMessages = [message, ...state.chatMessages].slice(0, 80);
+  renderChatMessages(state.chatMessages);
+  const backend = getOnlineBackend();
+  if (isOnlineRoomActive() && backend?.addRoomChat) {
+    backend.addRoomChat(state.roomId, message).catch((error) => notify("Chat no enviado", error.message, "error"));
+  }
+}
+
+function renderChatMessages(messages = []) {
+  const list = $("#chat-log");
+  if (!list) return;
+  const normalized = [...messages]
+    .filter((message) => message?.text)
+    .sort((a, b) => (b.time || b.createdAt || 0) - (a.time || a.createdAt || 0))
+    .slice(0, 80);
+  state.chatMessages = normalized;
+  list.innerHTML = "";
+  normalized.forEach((message) => {
+    const item = document.createElement("li");
+    const time = new Intl.DateTimeFormat("es-CL", { hour: "2-digit", minute: "2-digit" }).format(new Date(message.time || message.createdAt || Date.now()));
+    item.textContent = `${time} ${message.author}: ${message.text}`;
+    list.append(item);
+  });
 }
 
 function notify(title, text = "", type = "info") {
@@ -909,6 +1046,8 @@ function renderGame() {
   $("#mansion-count").textContent = mode === "versus" ? "Sin mansion" : `${state.mansion.length} cartas`;
   $("#sound-toggle").textContent = state.sound ? "Sonido" : "Silencio";
   $("#sound-toggle").setAttribute("aria-pressed", String(state.sound));
+  if (state.started && !state.turnTimerId) startTurnTimer();
+  if (!state.started && state.turnTimerId) stopTurnTimer();
   $("#game-status").textContent = state.started
     ? `${current.name} esta jugando. ${getMode().objective}`
     : "Crea una sala y comienza para repartir personajes al azar.";
@@ -923,6 +1062,22 @@ function renderGame() {
   renderPlayed(current);
   renderPlayers();
   renderResources();
+  renderTurnControls();
+  schedulePublishRoomState();
+}
+
+function renderTurnControls() {
+  const canAct = isMyTurn();
+  $$(".turn-command").forEach((button) => {
+    button.disabled = state.started && !canAct;
+  });
+  $("#mansion-card").disabled = getModeKey() === "versus" || (state.started && !canAct);
+  $$("#hand button, #action-card-list button, #weapon-list button").forEach((button) => {
+    button.disabled = state.started && !canAct;
+  });
+  $$("#resource-area button").forEach((button) => {
+    button.disabled = button.closest(".resource-card.empty") || (state.started && !canAct);
+  });
 }
 
 function renderTurnTimer() {
@@ -1070,7 +1225,7 @@ function renderPlayed(current) {
 }
 
 function renderLiveTrackers(current) {
-  const mine = state.players[0];
+  const mine = myPlayer();
   if (!mine) {
     $("#current-hero").innerHTML = `<div class="portrait portrait-scout" aria-hidden="true"><span>PJ</span></div><div><strong>Sin personaje</strong><span>Comienza una partida</span></div>`;
     ["health", "actions", "buys", "explores", "decorations", "damage", "gold", "ammo"].forEach((key) => {
@@ -1087,13 +1242,13 @@ function renderLiveTrackers(current) {
   `;
   $("#live-health").textContent = `${mine.health}/${mine.maxHealth}`;
   $("#live-decorations").textContent = mine.decorations;
-  const isMyTurn = state.started && current?.name === "Tu";
-  $("#live-actions").textContent = isMyTurn ? state.turn.actions : 0;
-  $("#live-buys").textContent = isMyTurn ? state.turn.buys : 0;
-  $("#live-explores").textContent = isMyTurn ? state.turn.explores : 0;
-  $("#live-damage").textContent = isMyTurn ? state.turn.damage : 0;
-  $("#live-gold").textContent = isMyTurn ? state.turn.gold : 0;
-  $("#live-ammo").textContent = isMyTurn ? state.turn.ammo : 0;
+  const isMyTurnNow = isMyTurn();
+  $("#live-actions").textContent = isMyTurnNow ? state.turn.actions : 0;
+  $("#live-buys").textContent = isMyTurnNow ? state.turn.buys : 0;
+  $("#live-explores").textContent = isMyTurnNow ? state.turn.explores : 0;
+  $("#live-damage").textContent = isMyTurnNow ? state.turn.damage : 0;
+  $("#live-gold").textContent = isMyTurnNow ? state.turn.gold : 0;
+  $("#live-ammo").textContent = isMyTurnNow ? state.turn.ammo : 0;
 }
 
 function cardFace(card) {
@@ -1224,6 +1379,8 @@ async function acceptRoomInvitation(invitation) {
       if (room.scenario) $("#scenario").value = room.scenario;
       $$("[data-session]").forEach((item) => item.classList.toggle("active", item.dataset.session === state.sessionType));
       syncPlayersFromRoom(room.players || []);
+      if (room.gameState) applyRemoteGameState(room.gameState);
+      renderChatMessages(room.chatMessages || []);
       $("#entry-screen").classList.add("hidden");
       document.body.classList.toggle("offline-mode", false);
       watchCurrentRoom();
@@ -1319,8 +1476,9 @@ function resetRoom() {
   state.mansion = [];
   state.lastRevealed = null;
   state.resourceMarketOpen = false;
-  state.matchRecorded = false;
-  buildResourceArea();
+    state.matchRecorded = false;
+    buildResourceArea();
+  state.chatMessages = [];
   $("#chat-log").innerHTML = "";
   sound("click");
   notify("Sala nueva", "Se reiniciÃ³ la sala.", "success");
@@ -1467,10 +1625,11 @@ window.addEventListener("popstate", async () => {
 
 function startTurnTimer() {
   clearInterval(state.turnTimerId);
-  state.turnEndsAt = Date.now() + 4 * 60 * 1000;
+  state.turnEndsAt ||= Date.now() + 4 * 60 * 1000;
   state.turnTimerId = setInterval(() => {
     renderTurnTimer();
     if (state.started && Date.now() >= state.turnEndsAt) {
+      if (isOnlineRoomActive() && !isMyTurn()) return;
       notify("Turno finalizado", "Se agotaron los 4 minutos del turno.", "error");
       endTurn(true);
     }
@@ -1489,6 +1648,7 @@ function currentPlayer() {
 
 function playHandCard(instanceId) {
   if (!state.started) return;
+  if (!requireMyTurn()) return;
   const player = currentPlayer();
   const card = player.hand.find((item) => item.instanceId === instanceId);
   if (!card) return;
@@ -1525,6 +1685,7 @@ function playHandCard(instanceId) {
 }
 
 function selectWeapon(card) {
+  if (!requireMyTurn()) return;
   const player = currentPlayer();
   playAudio("resident-evil-2-inventario.mp3", 0.8);
   if (player.selectedWeapons.some((weapon) => weapon.instanceId === card.instanceId)) {
@@ -1581,6 +1742,7 @@ function drawCards(player, amount) {
 
 function playAction() {
   if (!state.started) return;
+  if (!requireMyTurn()) return;
   const actions = currentPlayer().hand.filter((card) => card.type === "Accion");
   if (actions.length > 1) return notify("Selecciona acciÃ³n", "Tienes varias acciones. Elige la carta exacta en Acciones en mano.", "error");
   const action = actions[0];
@@ -1590,6 +1752,7 @@ function playAction() {
 
 function buyResource(index) {
   if (!state.started) return;
+  if (typeof index === "number" && !requireMyTurn()) return;
   if (typeof index !== "number") {
     playAudio("welcome.mp3", 0.8);
     state.resourceMarketOpen = !state.resourceMarketOpen;
@@ -1618,6 +1781,7 @@ function buyResource(index) {
 
 function explore() {
   if (!state.started) return;
+  if (!requireMyTurn()) return;
   if (state.turn.explores <= 0) return notify("No puedes explorar", "No quedan exploraciones este turno.", "error");
   const player = currentPlayer();
   const hasWeapons = player.hand.some((card) => card.type === "Arma");
@@ -1756,6 +1920,7 @@ function checkRemainingPlayers() {
 
 function useItem() {
   if (!state.started) return;
+  if (!requireMyTurn()) return;
   const item = currentPlayer().hand.find((card) => card.type === "Objeto");
   if (!item) return notify("Sin objetos", "No tienes objetos en la mano.", "error");
   playHandCard(item.instanceId);
@@ -1773,6 +1938,7 @@ function useSpecificItem(card) {
 
 function useCharacterEffect() {
   if (!state.started) return;
+  if (!requireMyTurn()) return;
   const player = currentPlayer();
   if (state.turn.characterUsed) return notify("Efecto ya usado", "El efecto del personaje ya fue usado este turno.", "error");
   const level = levelFor(player);
@@ -1791,6 +1957,7 @@ function useCharacterEffect() {
 
 function endTurn(auto = false) {
   if (!state.started) return;
+  if (!auto && !requireMyTurn()) return;
   const player = currentPlayer();
   if (!player.eliminated && player.alive) {
     player.discard.push(...player.hand, ...player.played);
@@ -1800,6 +1967,7 @@ function endTurn(auto = false) {
   }
   advanceToNextTurn();
   state.turn = freshTurn();
+  state.turnEndsAt = Date.now() + 4 * 60 * 1000;
   applyHandResources(currentPlayer());
 
   if (getModeKey() === "mercenary" && state.round > modes.mercenary.turnLimit) return finishGameByScore("El tiempo mercenario termino.");
@@ -1964,6 +2132,10 @@ async function startRoomVoice() {
     return;
   }
   state.voiceStream ||= await navigator.mediaDevices.getUserMedia({ audio: true });
+  if (!window.RTCPeerConnection) {
+    notify("Voz no disponible", "Este navegador no soporta WebRTC.", "error");
+    return;
+  }
   if (!state.unsubVoice) {
     state.unsubVoice = backend.watchVoiceConnections(state.roomId, state.currentUser.uid, (connections) => {
       handleVoiceConnections(connections).catch((error) => notify("Voz no sincronizada", error.message, "error"));
