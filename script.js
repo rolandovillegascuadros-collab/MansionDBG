@@ -351,15 +351,24 @@ function myPlayer() {
   return state.players.find((player) => player.uid && player.uid === state.currentUser?.uid) || state.players.find((player) => player.name === "Tu") || state.players[0];
 }
 
+function isOpeningRollActive() {
+  return Boolean(state.started && state.diceRoll?.rolling);
+}
+
 function isMyTurn() {
   const current = currentPlayer();
   if (!state.started || !current) return true;
+  if (isOpeningRollActive()) return false;
   if (!isOnlineRoomActive()) return true;
   return current.uid === state.currentUser?.uid;
 }
 
 function requireMyTurn() {
   if (isMyTurn()) return true;
+  if (isOpeningRollActive()) {
+    notify("Dado inicial", "Espera a que termine la tirada inicial.", "error");
+    return false;
+  }
   notify("Espera tu turno", `Ahora juega ${currentPlayer()?.name || "otro jugador"}.`, "error");
   return false;
 }
@@ -1076,7 +1085,7 @@ function renderGame() {
   $("#mansion-count").textContent = mode === "versus" ? "Sin mansion" : `${state.mansion.length} cartas`;
   $("#sound-toggle").textContent = state.sound ? "Sonido" : "Silencio";
   $("#sound-toggle").setAttribute("aria-pressed", String(state.sound));
-  if (state.started && !state.turnTimerId) startTurnTimer();
+  if (state.started && !isOpeningRollActive() && !state.turnTimerId) startTurnTimer();
   if (!state.started && state.turnTimerId) stopTurnTimer();
   $("#game-status").textContent = state.started
     ? `${current.name} esta jugando. ${getMode().objective}`
@@ -1155,6 +1164,8 @@ function runOpeningDiceRoll() {
     rolling: true,
   };
   renderDiceRoll();
+  renderTurnTimer();
+  renderTurnControls();
   schedulePublishRoomState();
   let ticks = 0;
   const spin = window.setInterval(() => {
@@ -1199,6 +1210,10 @@ function renderTurnControls() {
 
 function renderTurnTimer() {
   const timer = $("#turn-timer");
+  if (isOpeningRollActive()) {
+    timer.textContent = "Dado";
+    return;
+  }
   if (!state.started || !state.turnEndsAt) {
     timer.textContent = "04:00";
     return;
@@ -1744,6 +1759,7 @@ window.addEventListener("popstate", async () => {
 });
 
 function startTurnTimer() {
+  if (isOpeningRollActive()) return;
   clearInterval(state.turnTimerId);
   state.turnEndsAt ||= Date.now() + 4 * 60 * 1000;
   state.turnTimerId = setInterval(() => {
