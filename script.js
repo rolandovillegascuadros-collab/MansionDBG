@@ -189,6 +189,9 @@ function saveProgress() {
   localStorage.setItem("mdbg-match-history", JSON.stringify(state.matchHistory));
   localStorage.setItem("mdbg-sound", state.sound ? "on" : "off");
   localStorage.setItem("mdbg-friends", JSON.stringify(state.friends));
+  localStorage.setItem("mdbg-session-type", state.sessionType);
+  if (state.roomId) localStorage.setItem("mdbg-room-id", state.roomId);
+  else localStorage.removeItem("mdbg-room-id");
   if (state.currentUser) localStorage.setItem("mdbg-current-user", JSON.stringify(state.currentUser));
   else localStorage.removeItem("mdbg-current-user");
 }
@@ -375,6 +378,7 @@ async function ensureOnlineRoom() {
       scenario: $("#scenario").value,
       sessionType: state.sessionType,
     });
+    saveProgress();
     watchCurrentRoom();
     notify("Sala online creada", `ID de sala: ${state.roomId}`, "success");
   } catch (error) {
@@ -583,28 +587,76 @@ function canStart() {
   return state.entryDone && state.players.length >= mode.min && state.players.length <= mode.max;
 }
 
-function startEntry(provider, user = null) {
-  state.entryDone = true;
-  state.loggedIn = provider !== "Offline";
-  state.provider = provider;
-  state.sessionType = provider === "Offline" ? "offline" : "friends";
-  state.currentUser = publicUser(user || {
-    name: provider === "Offline" ? "Invitado offline" : `Usuario ${provider}`,
-    email: provider === "Offline" ? "offline@demo.local" : `${provider.toLowerCase()}@demo.local`,
-    provider,
-  });
+function applySessionUi(provider) {
   document.body.classList.toggle("offline-mode", provider === "Offline");
   $("#entry-screen").classList.add("hidden");
   $("#player-name").textContent = state.currentUser.name;
   $("#login-provider").textContent = provider === "Offline" ? "Modo offline de prueba" : "Sesion iniciada con cuenta del sitio";
   $("#avatar").textContent = provider === "Offline" ? "OFF" : initials(state.currentUser.name);
   $$("[data-session]").forEach((item) => item.classList.toggle("active", item.dataset.session === state.sessionType));
+}
+
+function startEntry(provider, user = null, options = {}) {
+  state.entryDone = true;
+  state.loggedIn = provider !== "Offline";
+  state.provider = provider;
+  state.sessionType = options.sessionType || (provider === "Offline" ? "offline" : "friends");
+  state.currentUser = publicUser(user || {
+    name: provider === "Offline" ? "Invitado offline" : `Usuario ${provider}`,
+    email: provider === "Offline" ? "offline@demo.local" : `${provider.toLowerCase()}@demo.local`,
+    provider,
+  });
+  applySessionUi(provider);
   saveProgress();
   sound("click");
   renderAuth();
   renderSiteUsers();
-  resetRoom();
+  if (!options.keepRoom) resetRoom();
   if (provider !== "Offline") syncOnlineDirectory();
+}
+
+async function restoreSavedSession() {
+  if (state.entryDone) return;
+  const storedUser = JSON.parse(localStorage.getItem("mdbg-current-user") || "null");
+  if (!storedUser?.uid || storedUser.email?.endsWith("@demo.local")) return;
+  const backend = getOnlineBackend();
+  if (!backend?.getCurrentUserProfile) return;
+  try {
+    const firebaseUser = await backend.getCurrentUserProfile();
+    if (!firebaseUser?.uid || firebaseUser.uid !== storedUser.uid) return;
+    state.entryDone = true;
+    state.loggedIn = true;
+    state.provider = firebaseUser.provider || "Correo";
+    state.sessionType = localStorage.getItem("mdbg-session-type") || "friends";
+    state.currentUser = publicUser(firebaseUser);
+    state.roomId = localStorage.getItem("mdbg-room-id") || "";
+    applySessionUi(state.provider);
+    buildResourceArea();
+    if (state.roomId && backend.getRoom) {
+      const room = await backend.getRoom(state.roomId);
+      if (room?.players?.some((player) => player.uid === state.currentUser.uid)) {
+        state.sessionType = room.sessionType || state.sessionType;
+        $("#mode").value = room.mode || $("#mode").value;
+        populateScenarios();
+        if (room.scenario) $("#scenario").value = room.scenario;
+        syncPlayersFromRoom(room.players || []);
+        watchCurrentRoom();
+      } else {
+        state.roomId = "";
+        resetRoom();
+      }
+    } else {
+      resetRoom();
+    }
+    startOnlineSubscriptions();
+    await syncOnlineDirectory();
+    renderRoom();
+    renderGame();
+    renderAchievements();
+    notify("Sesion restaurada", "Volviste a tu cuenta online.", "success");
+  } catch (error) {
+    notify("Sesion no restaurada", error.message, "error");
+  }
 }
 
 function initials(name) {
@@ -1150,6 +1202,9 @@ async function acceptRoomInvitation(invitation) {
     if (room) {
       state.sessionType = room.sessionType || "friends";
       state.roomId = room.id;
+      state.entryDone = true;
+      state.loggedIn = true;
+      state.provider = state.currentUser.provider || "Correo";
       $("#mode").value = room.mode || $("#mode").value;
       populateScenarios();
       if (room.scenario) $("#scenario").value = room.scenario;
@@ -1158,6 +1213,7 @@ async function acceptRoomInvitation(invitation) {
       $("#entry-screen").classList.add("hidden");
       document.body.classList.toggle("offline-mode", false);
       watchCurrentRoom();
+      saveProgress();
       renderRoom();
       renderGame();
     }
@@ -2013,9 +2069,10 @@ $("#site-name").style.display = "none";
   $(selector).style.display = "none";
 });
 
-window.addEventListener("online-backend-ready", (event) => {
+window.addEventListener("online-backend-ready", async (event) => {
   state.onlineReady = event.detail?.isEnabled?.() || false;
   addEntryMessage(state.onlineReady ? "Online real listo: cuentas del sitio, usuarios, amigos y salas usan Firebase." : "Modo demo activo. Para online real configura Firebase en firebase-config.js.");
+  await restoreSavedSession();
   if (state.loggedIn) syncOnlineDirectory();
   renderRoom();
 });

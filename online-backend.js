@@ -98,6 +98,29 @@ async function createBackend() {
     await sendPasswordResetEmail(auth, email);
   }
 
+  function waitForAuthUser(timeout = 2500) {
+    if (auth.currentUser) return Promise.resolve(auth.currentUser);
+    return new Promise((resolve) => {
+      const timer = window.setTimeout(() => {
+        unsubscribe();
+        resolve(auth.currentUser);
+      }, timeout);
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        window.clearTimeout(timer);
+        unsubscribe();
+        resolve(user);
+      });
+    });
+  }
+
+  async function getCurrentUserProfile() {
+    const user = await waitForAuthUser();
+    if (!user) return null;
+    const snapshot = await getDoc(doc(db, "users", user.uid));
+    if (snapshot.exists()) return publicUserFromDoc(snapshot);
+    return saveUserProfile(user, { provider: "Correo" });
+  }
+
   async function listUsers() {
     const usersQuery = query(collection(db, "users"), orderBy("name"), limit(80));
     const snapshot = await getDocs(usersQuery);
@@ -209,6 +232,12 @@ async function createBackend() {
     await updateDoc(doc(db, "rooms", roomId), { ...patch, updatedAt: serverTimestamp() });
   }
 
+  async function getRoom(roomId) {
+    if (!roomId) return null;
+    const snapshot = await getDoc(doc(db, "rooms", roomId));
+    return snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } : null;
+  }
+
   async function acceptRoomInvite(inviteId, user) {
     if (!inviteId || !user?.uid) return null;
     const inviteRef = doc(db, "roomInvitations", inviteId);
@@ -300,6 +329,7 @@ async function createBackend() {
     register,
     login,
     resetPassword,
+    getCurrentUserProfile,
     listUsers,
     getMyFriends,
     findUser,
@@ -311,6 +341,7 @@ async function createBackend() {
     createRoom,
     inviteToRoom,
     updateRoom,
+    getRoom,
     acceptRoomInvite,
     rejectRoomInvite,
     watchFriendRequests,
