@@ -125,6 +125,8 @@ const state = {
   lastRevealed: null,
   turn: freshTurn(),
   sound: localStorage.getItem("mdbg-sound") !== "off",
+  ambientVolume: Number(localStorage.getItem("mdbg-ambient-volume") || 32),
+  gameVolume: Number(localStorage.getItem("mdbg-game-volume") || 75),
   audio: null,
   achievements: JSON.parse(localStorage.getItem("mdbg-achievements") || "[]"),
   wins: Number(localStorage.getItem("mdbg-wins") || 0),
@@ -195,6 +197,8 @@ function saveProgress() {
   localStorage.setItem("mdbg-losses", String(state.losses));
   localStorage.setItem("mdbg-match-history", JSON.stringify(state.matchHistory));
   localStorage.setItem("mdbg-sound", state.sound ? "on" : "off");
+  localStorage.setItem("mdbg-ambient-volume", String(state.ambientVolume));
+  localStorage.setItem("mdbg-game-volume", String(state.gameVolume));
   localStorage.setItem("mdbg-friends", JSON.stringify(state.friends));
   localStorage.setItem("mdbg-session-type", state.sessionType);
   if (state.roomId) localStorage.setItem("mdbg-room-id", state.roomId);
@@ -569,11 +573,6 @@ function calculateAge(birthdate) {
   return age;
 }
 
-function toggleEntryMusic() {
-  if (state.musicOn) stopAmbient();
-  else playAmbient();
-}
-
 function sound(name) {
   if (!state.sound) return;
   const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -592,10 +591,12 @@ function sound(name) {
     voice: [380, 0.12, 0.05, "sine"],
   };
   const [freq, length, volume, type] = presets[name] || presets.click;
+  const finalVolume = volume * (state.gameVolume / 100);
+  if (finalVolume <= 0) return;
   osc.type = type;
   osc.frequency.setValueAtTime(freq, now);
   osc.frequency.exponentialRampToValueAtTime(Math.max(40, freq * 0.55), now + length);
-  gain.gain.setValueAtTime(volume, now);
+  gain.gain.setValueAtTime(finalVolume, now);
   gain.gain.exponentialRampToValueAtTime(0.001, now + length);
   osc.connect(gain).connect(ctx.destination);
   osc.start(now);
@@ -603,25 +604,35 @@ function sound(name) {
 }
 
 function playAudio(file, volume = 0.75) {
+  if (!state.sound || state.gameVolume <= 0) return;
   const audio = new Audio(`${AUDIO_PATH}${file}`);
-  audio.volume = volume;
+  audio.volume = Math.min(1, Math.max(0, volume * (state.gameVolume / 100)));
   audio.currentTime = 0;
   audio.play().catch(() => {});
+}
+
+function syncAmbientVolume() {
+  const audio = $("#ambient-audio");
+  if (!audio) return;
+  audio.volume = state.sound ? Math.min(1, Math.max(0, state.ambientVolume / 100)) : 0;
 }
 
 function playAmbient() {
   const audio = $("#ambient-audio");
   if (!audio) return;
-  audio.volume = 0.32;
+  syncAmbientVolume();
+  if (!state.sound || state.ambientVolume <= 0) {
+    audio.pause();
+    state.musicOn = false;
+    return;
+  }
   audio.play()
     .then(() => {
       state.musicOn = true;
       state.ambientBlocked = false;
-      $("#entry-music").textContent = "Detener musica ambiente";
     })
     .catch(() => {
       state.ambientBlocked = true;
-      $("#entry-music").textContent = "Activar musica ambiente";
     });
 }
 
@@ -630,7 +641,41 @@ function stopAmbient() {
   if (!audio) return;
   audio.pause();
   state.musicOn = false;
-  $("#entry-music").textContent = "Activar musica ambiente";
+}
+
+function renderSoundControls() {
+  const soundButton = $("#sound-toggle");
+  const ambientInput = $("#ambient-volume");
+  const gameInput = $("#game-volume");
+  if (soundButton) {
+    soundButton.textContent = state.sound ? "Sonido" : "Silencio";
+    soundButton.setAttribute("aria-pressed", String(state.sound));
+  }
+  if (ambientInput && document.activeElement !== ambientInput) ambientInput.value = String(state.ambientVolume);
+  if (gameInput && document.activeElement !== gameInput) gameInput.value = String(state.gameVolume);
+  syncAmbientVolume();
+}
+
+function setSoundEnabled(enabled) {
+  state.sound = enabled;
+  if (state.sound) playAmbient();
+  else stopAmbient();
+  saveProgress();
+  renderSoundControls();
+}
+
+function setAmbientVolume(value) {
+  state.ambientVolume = Math.max(0, Math.min(100, Number(value) || 0));
+  saveProgress();
+  renderSoundControls();
+  if (state.sound && state.ambientVolume > 0) playAmbient();
+  if (state.ambientVolume <= 0) stopAmbient();
+}
+
+function setGameVolume(value) {
+  state.gameVolume = Math.max(0, Math.min(100, Number(value) || 0));
+  saveProgress();
+  renderSoundControls();
 }
 
 function addChat(author, text) {
@@ -1083,8 +1128,7 @@ function renderGame() {
   $("#turn-pill").textContent = state.started ? `Ronda ${state.round}` : "Turno 0";
   $("#current-player").textContent = current ? current.name : "Sin jugador";
   $("#mansion-count").textContent = mode === "versus" ? "Sin mansion" : `${state.mansion.length} cartas`;
-  $("#sound-toggle").textContent = state.sound ? "Sonido" : "Silencio";
-  $("#sound-toggle").setAttribute("aria-pressed", String(state.sound));
+  renderSoundControls();
   if (state.started && !isOpeningRollActive() && !state.turnTimerId) startTurnTimer();
   if (!state.started && state.turnTimerId) stopTurnTimer();
   $("#game-status").textContent = state.started
@@ -2381,7 +2425,6 @@ function renderMatchHistory() {
 }
 
 $("#offline-entry").addEventListener("click", () => startEntry("Offline"));
-$("#entry-music").addEventListener("click", toggleEntryMusic);
 $("#firebase-test").addEventListener("click", testFirebaseConnection);
 $("#firebase-test-panel").addEventListener("click", testFirebaseConnection);
 $("#site-birthdate").addEventListener("change", () => {
@@ -2406,7 +2449,7 @@ $("#reset-password").addEventListener("click", async () => {
 });
 $("#availability-toggle").addEventListener("change", (event) => setCurrentAvailability(event.target.checked));
 document.addEventListener("pointerdown", () => {
-  if (!state.musicOn && state.ambientBlocked) playAmbient();
+  if (!state.musicOn && (state.ambientBlocked || state.sound)) playAmbient();
 }, { once: true });
 $("#site-auth-form").addEventListener("submit", handleSiteAuth);
 $$("[data-auth-tab]").forEach((button) => {
@@ -2469,11 +2512,12 @@ $("#end-turn").addEventListener("click", endTurn);
 $("#request-end-game").addEventListener("click", requestEndGameVote);
 $("#voice-toggle").addEventListener("click", toggleVoice);
 $("#sound-toggle").addEventListener("click", () => {
-  state.sound = !state.sound;
-  saveProgress();
+  setSoundEnabled(!state.sound);
   renderGame();
   sound("click");
 });
+$("#ambient-volume").addEventListener("input", (event) => setAmbientVolume(event.target.value));
+$("#game-volume").addEventListener("input", (event) => setGameVolume(event.target.value));
 $("#clear-progress").addEventListener("click", () => {
   state.achievements = [];
   state.wins = 0;

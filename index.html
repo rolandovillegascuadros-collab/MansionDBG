@@ -96,7 +96,6 @@
             <p class="permission-note" id="permission-note">Ingresa con tu correo y clave del sitio, o crea una cuenta nueva para jugar online.</p>
             <button class="ghost-button firebase-test-button" type="button" id="firebase-test">Probar Firebase</button>
             <button class="offline-entry" type="button" id="offline-entry">Probar offline</button>
-            <button class="ghost-button music-toggle" type="button" id="entry-music">Musica ambiente</button>
           </div>
         </section>
       </div>
@@ -189,6 +188,16 @@
           </div>
           <div class="top-actions">
             <button class="sound-button" type="button" id="sound-toggle" aria-pressed="true">Sonido</button>
+            <div class="volume-controls" aria-label="Controles de volumen">
+              <label>
+                <span>Ambiente</span>
+                <input id="ambient-volume" type="range" min="0" max="100" step="5" value="32" />
+              </label>
+              <label>
+                <span>Juego</span>
+                <input id="game-volume" type="range" min="0" max="100" step="5" value="75" />
+              </label>
+            </div>
             <div class="turn-pill" id="turn-pill">Turno 0</div>
           </div>
         </div>

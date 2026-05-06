@@ -247,11 +247,6 @@ body {
   line-height: 1.35;
 }
 
-.music-toggle {
-  width: 100%;
-  margin-top: 10px;
-}
-
 .firebase-test-button {
   width: 100%;
   margin-top: 10px;
@@ -494,6 +489,33 @@ input {
 .sound-button[aria-pressed="true"] {
   color: #10141b;
   background: var(--accent);
+}
+
+.volume-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(118px, 1fr));
+  gap: 8px;
+  min-width: min(360px, 42vw);
+}
+
+.volume-controls label {
+  display: grid;
+  gap: 4px;
+  padding: 6px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.volume-controls span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.volume-controls input {
+  width: 100%;
+  accent-color: var(--accent);
 }
 
 .section-title,
@@ -1806,6 +1828,16 @@ input {
     gap: 6px;
   }
 
+  .volume-controls {
+    min-width: 220px;
+    grid-template-columns: repeat(2, minmax(92px, 1fr));
+    gap: 6px;
+  }
+
+  .volume-controls label {
+    padding: 4px 6px;
+  }
+
   .turn-pill {
     min-width: 76px;
     padding: 8px;
@@ -1962,6 +1994,17 @@ input {
   select,
   input {
     font-size: 0.82rem;
+  }
+
+  .top-actions {
+    flex-wrap: wrap;
+  }
+
+  .volume-controls {
+    order: 3;
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: 1fr;
   }
 
   .brand {
