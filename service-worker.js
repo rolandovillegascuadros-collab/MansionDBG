@@ -1,4 +1,4 @@
-const CACHE_NAME = "mansion-dbg-v58";
+const CACHE_NAME = "mansion-dbg-v59";
 const ASSETS = [
   "./",
   "./index.html",
@@ -6,6 +6,7 @@ const ASSETS = [
   "./script.js",
   "./online-backend.js",
   "./firebase-config.js",
+  "./assets/brand/umbrella-main-board.png",
   "./FIREBASE_SETUP.md",
   "./manifest.webmanifest",
 ];

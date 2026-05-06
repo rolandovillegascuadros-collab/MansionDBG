@@ -1,7 +1,7 @@
 {
-  "name": "Mansion DBG Online",
-  "short_name": "Mansion DBG",
-  "description": "Juego de cartas tipo mansion con salas, bots, matchmaking simulado, chat y logros.",
+  "name": "Resident Evil Deck Building Game Online",
+  "short_name": "RE DBG",
+  "description": "Juego de cartas Resident Evil Deck Building Game con salas, bots, online, chat y logros.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0f1218",
