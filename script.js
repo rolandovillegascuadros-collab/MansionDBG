@@ -148,6 +148,7 @@ const state = {
   applyingRemoteRoom: false,
   publishTimer: null,
   lastPublishedState: "",
+  syncStatus: "",
   chatMessages: [],
   onlineReady: false,
   music: null,
@@ -352,7 +353,7 @@ function isMyTurn() {
   const current = currentPlayer();
   if (!state.started || !current) return true;
   if (!isOnlineRoomActive()) return true;
-  return current.uid === state.currentUser?.uid || current.name === "Tu";
+  return current.uid === state.currentUser?.uid;
 }
 
 function requireMyTurn() {
@@ -368,7 +369,7 @@ function roomGameState() {
     started: state.started,
     activeIndex: state.activeIndex,
     round: state.round,
-    players: state.players,
+    players: playersForSharedState(),
     turn: state.turn,
     mansion: state.mansion,
     lastRevealed: state.lastRevealed,
@@ -385,6 +386,26 @@ function roomGameState() {
   };
 }
 
+function realNameForUid(uid, fallback = "Jugador") {
+  if (uid && uid === state.currentUser?.uid) return state.currentUser.name || fallback;
+  const user = state.siteUsers.find((item) => item.uid === uid);
+  return user?.name || fallback;
+}
+
+function playersForSharedState() {
+  return state.players.map((player) => ({
+    ...player,
+    name: player.uid ? realNameForUid(player.uid, player.name === "Tu" ? state.currentUser?.name : player.name) : player.name,
+  }));
+}
+
+function playersForLocalView(players = []) {
+  return players.map((player) => ({
+    ...player,
+    name: player.uid && player.uid === state.currentUser?.uid ? "Tu" : player.name,
+  }));
+}
+
 function applyRemoteGameState(gameState) {
   if (!gameState) return;
   if (gameState.mode && $("#mode").value !== gameState.mode) {
@@ -395,7 +416,7 @@ function applyRemoteGameState(gameState) {
   state.started = Boolean(gameState.started);
   state.activeIndex = Number(gameState.activeIndex || 0);
   state.round = Number(gameState.round || 0);
-  state.players = gameState.players || state.players;
+  state.players = gameState.players ? playersForLocalView(gameState.players) : state.players;
   state.turn = gameState.turn || freshTurn();
   state.mansion = gameState.mansion || [];
   state.lastRevealed = gameState.lastRevealed || null;
@@ -421,13 +442,12 @@ async function publishRoomState() {
   const gameState = roomGameState();
   const serialized = JSON.stringify(gameState);
   if (serialized === state.lastPublishedState) return;
-  state.lastPublishedState = serialized;
   try {
     await backend.updateRoom(state.roomId, {
       gameState,
-      players: state.players.map((player) => ({
+      players: playersForSharedState().map((player) => ({
         uid: player.uid || "",
-        name: player.uid === state.currentUser?.uid ? state.currentUser.name : player.name,
+        name: player.name,
         email: player.email || "",
         online: true,
       })).filter((player) => player.uid),
@@ -435,7 +455,10 @@ async function publishRoomState() {
       status: state.started ? "playing" : "waiting",
       started: state.started,
     });
+    state.lastPublishedState = serialized;
+    state.syncStatus = "En vivo.";
   } catch (error) {
+    state.syncStatus = `No sincroniza: ${error.message}`;
     notify("Sincronizacion fallida", error.message, "error");
   }
 }
@@ -939,7 +962,7 @@ function renderRoom() {
       ? "Online demo hasta configurar Firebase."
       : "";
   $("#room-status").textContent = state.entryDone
-    ? `Sala con ${state.players.length}/${mode.max}. Minimo: ${mode.min}. ${mode.objective} ${backendLabel}`
+    ? `Sala con ${state.players.length}/${mode.max}. Minimo: ${mode.min}. ${mode.objective} ${backendLabel} ${state.syncStatus}`
     : "Inicia sesion con tu cuenta del sitio o prueba offline para crear una sala.";
   $("#start-game").disabled = !state.started && !canStart();
   $("#start-game").textContent = state.started ? "Partida activa" : "Comenzar partida";
