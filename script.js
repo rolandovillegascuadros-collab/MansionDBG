@@ -167,6 +167,7 @@ const state = {
   allowUnarmedExplore: false,
   tutorialActive: false,
   tutorialStep: 0,
+  cardGuideFilter: "Personaje",
 };
 
 const $ = (selector) => document.querySelector(selector);
@@ -751,6 +752,106 @@ function escapeHtml(value) {
   }[char]));
 }
 
+function cardGuideEffect(card) {
+  if (card.trait) return cleanText(card.trait);
+  if (card.text) return cleanText(card.text);
+  if (card.type === "Municion") return `Entrega ${card.gold || 0} oro y ${card.ammo || 0} municion al salir en mano.`;
+  if (card.type === "Arma") return `Hace ${card.damage || 0} dano. Requiere ${card.ammoCost || 0} municion para atacar.`;
+  if (card.type === "Objeto") {
+    if (card.fullHeal) return "Cura toda la vida del personaje.";
+    if (card.heal) return `Cura ${card.heal} de vida.`;
+    if (card.maxHeal) return `Aumenta vida maxima en ${card.maxHeal}.`;
+  }
+  if (card.type === "Infectado" || card.type === "Jefe") return `Vida ${card.health}. Si no lo derrotas recibes ${card.damage} dano. Otorga ${card.decorations} medallas.`;
+  if (card.type === "Bonus") return card.bonusTurns ? `Reduce el contador mercenario en ${card.bonusTurns} turno.` : `Otorga ${card.decorations || 0} medallas.`;
+  return "Carta con efecto especial.";
+}
+
+function homeGuideCards() {
+  return [
+    ...characters.map((card) => ({ ...card, type: "Personaje", cost: "", guideGroup: "Personaje" })),
+    ...Object.values(catalog).map((card) => ({ ...card, guideGroup: card.type })),
+    ...mansionStory.map((card) => ({ ...card, guideGroup: "Mansion" })),
+    ...mercenaryBonus.map((card) => ({ ...card, guideGroup: "Mansion" })),
+  ];
+}
+
+function renderHomeCardGuide() {
+  const grid = $("#home-card-guide");
+  if (!grid) return;
+  const cards = homeGuideCards().filter((card) => card.guideGroup === state.cardGuideFilter).slice(0, 12);
+  grid.innerHTML = "";
+  cards.forEach((card) => {
+    const item = document.createElement("article");
+    item.className = "guide-card";
+    item.innerHTML = `
+      <img src="${card.image}" alt="${escapeHtml(card.name)}" loading="lazy" />
+      <div>
+        <strong>${escapeHtml(card.name)}</strong>
+        <span>${escapeHtml(card.type)}${card.cost ? ` / ${card.cost} oro` : ""}</span>
+        <p>${escapeHtml(cardGuideEffect(card))}</p>
+      </div>
+    `;
+    grid.append(item);
+  });
+}
+
+function buttonIcon(button) {
+  if (button.id === "site-auth-submit") return "↪";
+  if (button.id === "reset-password") return "?";
+  if (button.id === "firebase-test" || button.id === "firebase-test-panel") return "◆";
+  if (button.id === "offline-entry") return "▶";
+  if (button.id === "add-user-form") return "+";
+  if (button.id === "reset-room") return "↻";
+  if (button.id === "fill-room") return "+";
+  if (button.id === "start-game") return "▶";
+  if (button.id === "home-button") return "⌂";
+  if (button.id === "logout-button") return "⇥";
+  if (button.id === "tutorial-start") return "?";
+  if (button.id === "sound-toggle") return "♪";
+  if (button.id === "voice-toggle") return "◉";
+  if (button.id === "voice-message") return "●";
+  if (button.id === "explore" || button.id === "mansion-card") return "⌖";
+  if (button.id === "buy-resource") return "$";
+  if (button.id === "play-action") return "✦";
+  if (button.id === "use-item") return "+";
+  if (button.id === "character-effect") return "★";
+  if (button.id === "end-turn") return "→";
+  if (button.id === "request-end-game") return "✓";
+  if (button.matches("[data-auth-tab='login']")) return "↪";
+  if (button.matches("[data-auth-tab='register']")) return "+";
+  if (button.matches("[data-session='friends']")) return "☷";
+  if (button.matches("[data-session='matchmaking']")) return "◎";
+  if (button.matches("[data-session='offline']")) return "▣";
+  if (button.matches("[data-card-guide]")) return "▤";
+  const text = button.textContent.trim().toLowerCase();
+  if (text.includes("agregar")) return "+";
+  if (text.includes("enviar")) return "↑";
+  if (text.includes("acept")) return "✓";
+  if (text.includes("rechaz")) return "×";
+  if (text.includes("ver mas")) return "↓";
+  return "";
+}
+
+function enhanceButtonIcons(root = document) {
+  root.querySelectorAll("button").forEach((button) => {
+    if (button.dataset.iconized || button.querySelector(".card-face") || button.closest(".chat-reactions")) return;
+    const icon = buttonIcon(button);
+    if (!icon) return;
+    button.dataset.icon = icon;
+    button.dataset.iconized = "true";
+  });
+}
+
+function cleanText(value) {
+  return String(value || "")
+    .replaceAll("daÃ±o", "daño")
+    .replaceAll("municiÃ³n", "munición")
+    .replaceAll("acciÃ³n", "acción")
+    .replaceAll("exploraciÃ³n", "exploración")
+    .replaceAll("mansiÃ³n", "mansión");
+}
+
 function addChat(author, text, extra = {}) {
   const message = {
     id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
@@ -1280,6 +1381,7 @@ function renderRoom() {
   renderFriends();
   renderPlayers();
   renderResources();
+  enhanceButtonIcons();
   if (state.tutorialActive) renderTutorial();
 }
 
@@ -1397,6 +1499,7 @@ function renderGame() {
   renderResources();
   renderTurnControls();
   schedulePublishRoomState();
+  enhanceButtonIcons();
   if (state.tutorialActive) renderTutorial();
 }
 
@@ -2678,6 +2781,22 @@ function renderMatchHistory() {
 }
 
 $("#offline-entry").addEventListener("click", () => startEntry("Offline"));
+$("#rules-more").addEventListener("click", () => {
+  const details = $("#rules-details");
+  const visible = !details.classList.toggle("hidden");
+  $("#rules-more").textContent = visible ? "Ver menos" : "Ver mas";
+  sound("click");
+  enhanceButtonIcons();
+});
+$$("[data-card-guide]").forEach((button) => {
+  button.addEventListener("click", () => {
+    state.cardGuideFilter = button.dataset.cardGuide;
+    $$("[data-card-guide]").forEach((item) => item.classList.toggle("active", item === button));
+    renderHomeCardGuide();
+    enhanceButtonIcons();
+    sound("click");
+  });
+});
 $("#firebase-test").addEventListener("click", testFirebaseConnection);
 $("#firebase-test-panel").addEventListener("click", testFirebaseConnection);
 $("#site-birthdate").addEventListener("change", () => {
@@ -2819,6 +2938,8 @@ $("#add-user-form").addEventListener("submit", async (event) => {
 if ("serviceWorker" in navigator) navigator.serviceWorker.register("service-worker.js").catch(() => {});
 
 populateScenarios();
+renderHomeCardGuide();
+enhanceButtonIcons();
 buildResourceArea();
 protectNavigationDuringMatch();
 renderAuth();

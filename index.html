@@ -57,7 +57,10 @@
             </div>
 
             <div class="rules-preview" aria-label="Reglas del juego">
-              <h2>Reglas principales</h2>
+              <div class="section-title">
+                <h2>Reglas principales</h2>
+                <button class="ghost-button compact-button" type="button" id="rules-more">Ver mas</button>
+              </div>
               <ul>
                 <li>Empiezas con un mazo inicial de 10 cartas y robas 5 cartas por turno.</li>
                 <li>En tu turno puedes realizar accion, compra, exploracion, usar objetos y habilidades.</li>
@@ -65,6 +68,41 @@
                 <li>Al explorar la mansion derrotas infectados para ganar condecoraciones o recibes dano.</li>
                 <li>Gana quien consiga mas condecoraciones cuando termina la partida o al caer el jefe.</li>
               </ul>
+              <div class="rules-details hidden" id="rules-details">
+                <div class="rules-sim">
+                  <img src="assets/cards/AM-001.jpg" alt="Carta de municion simulada" />
+                  <span>+</span>
+                  <img src="assets/cards/WE-009.jpg" alt="Carta de arma simulada" />
+                  <span>→</span>
+                  <img src="assets/cards/MA-001.jpg" alt="Carta de mansion simulada" />
+                </div>
+                <ol>
+                  <li>Prepara la sala, elige modo y escenario. En online invita jugadores reales conectados.</li>
+                  <li>Al comenzar, todos reciben personaje y mazo inicial. El dado inicial define quien parte.</li>
+                  <li>Al iniciar tu turno robas 5 cartas. Las cartas de municion suman oro y municion automaticamente.</li>
+                  <li>Usa acciones para ganar dano, oro, municion, compras, exploraciones o robo de cartas.</li>
+                  <li>Selecciona armas pagando su requisito de municion. El dano disponible se acumula en el turno.</li>
+                  <li>Explora la mansion: si tu dano alcanza la vida del enemigo, ganas medallas; si no, recibes dano.</li>
+                  <li>Compra recursos con oro para mejorar tu mazo. Las cartas compradas van al descarte.</li>
+                  <li>Finaliza turno para descartar mano/jugadas, robar una nueva mano y pasar al siguiente jugador.</li>
+                  <li>Termina la partida al derrotar jefe, cumplir modo, quedar un jugador activo o por voto de todos.</li>
+                </ol>
+              </div>
+            </div>
+
+            <div class="card-guide" aria-label="Guia de cartas">
+              <div class="section-title">
+                <h2>Cartas y efectos</h2>
+                <span>Vista rapida</span>
+              </div>
+              <div class="card-guide-tabs" role="group" aria-label="Categorias de cartas">
+                <button class="active" type="button" data-card-guide="Personaje">Personajes</button>
+                <button type="button" data-card-guide="Arma">Armas</button>
+                <button type="button" data-card-guide="Accion">Acciones</button>
+                <button type="button" data-card-guide="Objeto">Objetos</button>
+                <button type="button" data-card-guide="Mansion">Mansion</button>
+              </div>
+              <div class="card-guide-grid" id="home-card-guide"></div>
             </div>
           </div>
 
