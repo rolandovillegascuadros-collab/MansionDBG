@@ -161,11 +161,66 @@ const state = {
   turnTimerId: null,
   turnEndsAt: null,
   allowUnarmedExplore: false,
+  tutorialActive: false,
+  tutorialStep: 0,
 };
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 let cardInstanceSequence = 0;
+
+const tutorialSteps = [
+  {
+    selector: ".room-panel",
+    title: "Prepara la sala",
+    text: "Elige modo y escenario. En offline puedes completar con bots; en online debes invitar jugadores reales disponibles antes de comenzar.",
+  },
+  {
+    selector: "#players",
+    title: "Jugadores y personajes",
+    text: "Aqui ves vida, personaje, nivel, medallas y de quien es el turno. El jugador marcado como Turno es el unico que debe actuar.",
+  },
+  {
+    selector: "#start-game",
+    title: "Comenzar partida",
+    text: "Al iniciar, el juego reparte personajes y mazos. Luego aparece el dado inicial: quien saque el numero mas alto comienza.",
+  },
+  {
+    selector: "#hand",
+    title: "Tu mano",
+    text: "Cada turno robas 5 cartas. La municion de tu mano suma oro y municion automaticamente; las acciones, objetos y armas se usan tocando la carta.",
+  },
+  {
+    selector: ".controls-panel",
+    title: "Acciones del turno",
+    text: "Puedes jugar acciones, comprar, explorar, usar objeto, activar personaje y finalizar turno. Si algo no se puede hacer, el juego te dira por que.",
+  },
+  {
+    selector: "#weapon-list",
+    title: "Armas y daño",
+    text: "Selecciona armas antes de explorar o atacar. Cada arma requiere municion; el daño total se muestra en los indicadores del turno.",
+  },
+  {
+    selector: ".mansion-panel",
+    title: "Explorar mansion",
+    text: "Explorar revela una carta de mansion. Si tu daño alcanza la vida del enemigo, ganas medallas; si no, recibes daño y el enemigo vuelve al mazo.",
+  },
+  {
+    selector: "#resource-area",
+    title: "Comprar recursos",
+    text: "Usa el oro del turno para comprar cartas del mercado. Las compras van al descarte y apareceran en turnos futuros cuando barajes.",
+  },
+  {
+    selector: ".chat-panel",
+    title: "Online, chat y voz",
+    text: "En online puedes hablar por chat y activar voz con la sala. Los movimientos se sincronizan para que todos vean el estado de la partida.",
+  },
+  {
+    selector: "#request-end-game",
+    title: "Terminar partida",
+    text: "Si todos aceptan terminar, gana quien tenga mas medallas; si hay empate, gana quien tenga mas vida.",
+  },
+];
 
 function freshTurn() {
   return {
@@ -720,6 +775,63 @@ function notify(title, text = "", type = "info") {
   window.setTimeout(() => toast.remove(), 4200);
 }
 
+function tutorialTarget(step) {
+  const preferred = step?.selector ? $(step.selector) : null;
+  if (preferred && preferred.offsetParent !== null) return preferred;
+  return $(".game-surface") || $(".app-shell") || document.body;
+}
+
+function clearTutorialFocus() {
+  $$(".tutorial-focus").forEach((item) => item.classList.remove("tutorial-focus"));
+}
+
+function renderTutorial() {
+  const overlay = $("#tutorial-overlay");
+  if (!overlay) return;
+  overlay.classList.toggle("hidden", !state.tutorialActive);
+  clearTutorialFocus();
+  if (!state.tutorialActive) return;
+  const step = tutorialSteps[state.tutorialStep] || tutorialSteps[0];
+  const target = tutorialTarget(step);
+  target.classList.add("tutorial-focus");
+  target.scrollIntoView({ block: "center", inline: "center", behavior: "smooth" });
+  $("#tutorial-count").textContent = `Paso ${state.tutorialStep + 1}/${tutorialSteps.length}`;
+  $("#tutorial-title").textContent = step.title;
+  $("#tutorial-text").textContent = step.text;
+  $("#tutorial-prev").disabled = state.tutorialStep === 0;
+  $("#tutorial-next").textContent = state.tutorialStep === tutorialSteps.length - 1 ? "Finalizar" : "Siguiente";
+}
+
+function startTutorial() {
+  state.tutorialActive = true;
+  state.tutorialStep = 0;
+  renderTutorial();
+  sound("click");
+}
+
+function closeTutorial() {
+  state.tutorialActive = false;
+  clearTutorialFocus();
+  renderTutorial();
+}
+
+function nextTutorialStep() {
+  if (state.tutorialStep >= tutorialSteps.length - 1) {
+    closeTutorial();
+    notify("Tutorial finalizado", "Ya puedes jugar siguiendo las indicaciones de pantalla.", "success");
+    return;
+  }
+  state.tutorialStep += 1;
+  renderTutorial();
+  sound("click");
+}
+
+function previousTutorialStep() {
+  state.tutorialStep = Math.max(0, state.tutorialStep - 1);
+  renderTutorial();
+  sound("click");
+}
+
 function addAchievement(name) {
   if (!state.achievements.includes(name)) {
     state.achievements.push(name);
@@ -1032,6 +1144,7 @@ function renderRoom() {
   renderFriends();
   renderPlayers();
   renderResources();
+  if (state.tutorialActive) renderTutorial();
 }
 
 function renderPlayers() {
@@ -1148,6 +1261,7 @@ function renderGame() {
   renderResources();
   renderTurnControls();
   schedulePublishRoomState();
+  if (state.tutorialActive) renderTutorial();
 }
 
 function renderDiceRoll() {
@@ -2511,6 +2625,10 @@ $("#character-effect").addEventListener("click", useCharacterEffect);
 $("#end-turn").addEventListener("click", endTurn);
 $("#request-end-game").addEventListener("click", requestEndGameVote);
 $("#voice-toggle").addEventListener("click", toggleVoice);
+$("#tutorial-start").addEventListener("click", startTutorial);
+$("#tutorial-close").addEventListener("click", closeTutorial);
+$("#tutorial-next").addEventListener("click", nextTutorialStep);
+$("#tutorial-prev").addEventListener("click", previousTutorialStep);
 $("#sound-toggle").addEventListener("click", () => {
   setSoundEnabled(!state.sound);
   renderGame();
