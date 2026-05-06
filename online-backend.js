@@ -139,6 +139,12 @@ async function createBackend() {
     return result.empty ? null : publicUserFromDoc(result.docs[0]);
   }
 
+  async function getUser(uid) {
+    if (!uid) return null;
+    const snapshot = await getDoc(doc(db, "users", uid));
+    return snapshot.exists() ? publicUserFromDoc(snapshot) : null;
+  }
+
   async function setAvailability(uid, online) {
     if (!uid) return;
     await updateDoc(doc(db, "users", uid), { online: Boolean(online), updatedAt: serverTimestamp() });
@@ -193,6 +199,7 @@ async function createBackend() {
       mode: details.mode,
       scenario: details.scenario,
       sessionType: details.sessionType,
+      maxPlayers: Number(details.maxPlayers || 4),
       status: "waiting",
       players: [{ uid: owner.uid, name: owner.name, email: owner.email || "", online: true }],
       invited: [],
@@ -202,28 +209,51 @@ async function createBackend() {
     return roomRef.id;
   }
 
-  async function inviteToRoom(roomId, friend, sender) {
-    if (!roomId || !friend?.uid) return;
-    const roomSnapshot = await getDoc(doc(db, "rooms", roomId));
-    const room = roomSnapshot.exists() ? roomSnapshot.data() : {};
+  function roomHasPlayer(room, uid) {
+    return (room.players || []).some((player) => player.uid === uid);
+  }
+
+  function roomHasInvite(room, uid) {
+    return (room.invited || []).some((item) => item.uid === uid);
+  }
+
+  async function inviteToRoom(roomId, friend, sender, details = {}) {
+    if (!roomId) throw new Error("Sala invalida: crea una sala online antes de invitar.");
+    if (!friend?.uid) throw new Error("Invitado invalido: el usuario debe existir en Firebase.");
+    if (!sender?.uid) throw new Error("Sesion invalida: inicia sesion nuevamente.");
+    if (friend.uid === sender.uid) throw new Error("No puedes invitarte a ti mismo.");
+    const [roomSnapshot, friendProfile] = await Promise.all([
+      getDoc(doc(db, "rooms", roomId)),
+      getUser(friend.uid),
+    ]);
+    if (!roomSnapshot.exists()) throw new Error("La sala online ya no existe. Crea una sala nueva.");
+    if (!friendProfile?.email) throw new Error("El usuario invitado no tiene correo real en Firebase.");
+    if (!friendProfile.online) throw new Error(`${friendProfile.name} no esta disponible online ahora.`);
+    const room = roomSnapshot.data();
+    if (!roomHasPlayer(room, sender.uid)) throw new Error("Tu usuario no pertenece a esta sala online.");
+    if (room.status === "playing" || room.started) throw new Error("La partida ya comenzo. No se pueden unir nuevos jugadores.");
+    const maxPlayers = Number(details.maxPlayers || room.maxPlayers || 4);
+    if ((room.players || []).length >= maxPlayers) throw new Error("La sala ya esta completa.");
     const inviteId = `${roomId}_${friend.uid}`;
+    const existingInvite = await getDoc(doc(db, "roomInvitations", inviteId));
+    if (existingInvite.exists() && existingInvite.data().status === "pending") {
+      throw new Error(`${friendProfile.name} ya tiene una invitacion pendiente.`);
+    }
+    if (roomHasPlayer(room, friend.uid)) throw new Error(`${friendProfile.name} ya esta dentro de la sala.`);
     await setDoc(doc(db, "roomInvitations", inviteId), {
       roomId,
-      toUid: friend.uid,
-      toName: friend.name,
-      toEmail: friend.email || "",
-      fromUid: sender?.uid || room.ownerUid || "",
-      fromName: sender?.name || room.ownerName || "Jugador",
+      toUid: friendProfile.uid,
+      toName: friendProfile.name,
+      toEmail: friendProfile.email || "",
+      fromUid: sender.uid,
+      fromName: sender.name || room.ownerName || "Jugador",
       mode: room.mode || "",
       scenario: room.scenario || "",
+      maxPlayers,
       status: "pending",
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     }, { merge: true });
-    await updateDoc(doc(db, "rooms", roomId), {
-      invited: arrayUnion({ uid: friend.uid, name: friend.name, email: friend.email }),
-      updatedAt: serverTimestamp(),
-    });
     return inviteId;
   }
 
@@ -239,14 +269,28 @@ async function createBackend() {
   }
 
   async function acceptRoomInvite(inviteId, user) {
-    if (!inviteId || !user?.uid) return null;
+    if (!inviteId) throw new Error("Invitacion invalida: falta identificador.");
+    if (!user?.uid) throw new Error("Sesion invalida: inicia sesion nuevamente.");
     const inviteRef = doc(db, "roomInvitations", inviteId);
     const inviteSnapshot = await getDoc(inviteRef);
-    if (!inviteSnapshot.exists()) return null;
+    if (!inviteSnapshot.exists()) throw new Error("Invitacion invalida o expirada.");
     const invitation = inviteSnapshot.data();
+    if (invitation.status !== "pending") throw new Error("Esta invitacion ya fue respondida.");
+    if (invitation.toUid !== user.uid) throw new Error("Esta invitacion pertenece a otro usuario.");
+    const roomRef = doc(db, "rooms", invitation.roomId);
+    const currentRoomSnapshot = await getDoc(roomRef);
+    if (!currentRoomSnapshot.exists()) throw new Error("La sala invitada ya no existe.");
+    const currentRoom = currentRoomSnapshot.data();
+    const maxPlayers = Number(invitation.maxPlayers || currentRoom.maxPlayers || 4);
+    if (currentRoom.status === "playing" || currentRoom.started) throw new Error("La partida ya comenzo. No puedes unirte ahora.");
+    if (roomHasPlayer(currentRoom, user.uid)) {
+      await updateDoc(inviteRef, { status: "accepted", updatedAt: serverTimestamp() });
+      return { id: currentRoomSnapshot.id, ...currentRoom };
+    }
+    if ((currentRoom.players || []).length >= maxPlayers) throw new Error("La sala ya esta completa.");
     const player = { uid: user.uid, name: user.name, email: user.email || "", online: true };
     await Promise.all([
-      updateDoc(doc(db, "rooms", invitation.roomId), {
+      updateDoc(roomRef, {
         players: arrayUnion(player),
         invited: arrayRemove({ uid: invitation.toUid, name: invitation.toName, email: invitation.toEmail || "" }),
         updatedAt: serverTimestamp(),
@@ -259,7 +303,17 @@ async function createBackend() {
 
   async function rejectRoomInvite(inviteId) {
     if (!inviteId) return;
-    await updateDoc(doc(db, "roomInvitations", inviteId), { status: "rejected", updatedAt: serverTimestamp() });
+    const inviteRef = doc(db, "roomInvitations", inviteId);
+    const inviteSnapshot = await getDoc(inviteRef);
+    if (!inviteSnapshot.exists()) return;
+    const invitation = inviteSnapshot.data();
+    await Promise.all([
+      updateDoc(inviteRef, { status: "rejected", updatedAt: serverTimestamp() }),
+      updateDoc(doc(db, "rooms", invitation.roomId), {
+        invited: arrayRemove({ uid: invitation.toUid, name: invitation.toName, email: invitation.toEmail || "" }),
+        updatedAt: serverTimestamp(),
+      }).catch(() => {}),
+    ]);
   }
 
   function watchFriendRequests(uid, callback) {
@@ -333,6 +387,7 @@ async function createBackend() {
     listUsers,
     getMyFriends,
     findUser,
+    getUser,
     addFriend,
     sendFriendRequest,
     acceptFriendRequest,

@@ -377,6 +377,7 @@ async function ensureOnlineRoom() {
       mode: getModeKey(),
       scenario: $("#scenario").value,
       sessionType: state.sessionType,
+      maxPlayers: getMode().max,
     });
     saveProgress();
     watchCurrentRoom();
@@ -1152,19 +1153,22 @@ function cardIcon(card) {
 async function inviteFriend(friend) {
   const mode = getMode();
   if (!state.loggedIn) return notify("Inicia sesiÃ³n", "Debes ingresar con una cuenta del sitio para invitar jugadores.", "error");
-  if (!friend.online) return notify("Jugador no disponible", `${friend.name} no estÃ¡ online o no desea recibir invitaciones.`, "error");
-  if (state.players.length >= mode.max) return notify("Sala completa", "No hay espacio para mÃ¡s jugadores en esta sala.", "error");
-  if (state.players.some((player) => player.uid === friend.uid || player.email === friend.email)) {
-    return notify("Ya esta en sala", `${friend.name} ya participa en esta sala.`, "success");
-  }
   const backend = getOnlineBackend();
   if (!backend || !friend.uid) return notify("Firebase requerido", "Las invitaciones online requieren usuarios reales de Firebase.", "error");
+  const freshFriend = backend.getUser ? await backend.getUser(friend.uid) : friend;
+  if (!freshFriend?.uid || !freshFriend.email) return notify("Invitado invalido", "Este usuario ya no existe en Firebase.", "error");
+  if (!freshFriend.online) return notify("Jugador no disponible", `${freshFriend.name} no esta online o no desea recibir invitaciones.`, "error");
+  if (state.players.length >= mode.max) return notify("Sala completa", "No hay espacio para mÃ¡s jugadores en esta sala.", "error");
+  if (state.players.some((player) => player.uid === freshFriend.uid || player.email === freshFriend.email)) {
+    return notify("Ya esta en sala", `${freshFriend.name} ya participa en esta sala.`, "success");
+  }
   await ensureOnlineRoom();
   if (state.roomId) {
     try {
-      await backend.inviteToRoom(state.roomId, friend, state.currentUser);
+      await backend.inviteToRoom(state.roomId, freshFriend, state.currentUser, { maxPlayers: mode.max });
       sound("card");
-      notify("Invitacion enviada", `${friend.name} puede aceptar o rechazar la sala.`, "success");
+      await syncOnlineDirectory();
+      notify("Invitacion enviada", `${freshFriend.name} puede aceptar o rechazar la sala.`, "success");
     } catch (error) {
       notify("Invitacion no enviada", error.message, "error");
     }

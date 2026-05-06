@@ -13,7 +13,10 @@ Esta PWA ya tiene una capa opcional de Firebase para login real, base de datos, 
 Colecciones usadas:
 
 - `users`: perfil publico, correo, usuario, edad, fecha de nacimiento, proveedor, estado online y amigos.
+- `friendRequests`: solicitudes de amistad pendientes, aceptadas o rechazadas.
 - `rooms`: salas creadas, modo, escenario, jugadores e invitados.
+- `roomInvitations`: invitaciones a una sala online que el destinatario puede aceptar o rechazar.
+- `rooms/{roomId}/voiceConnections`: senalizacion WebRTC para voz de la sala.
 
 Reglas Firestore recomendadas para pruebas controladas:
 
@@ -26,6 +29,15 @@ service cloud.firestore {
       allow create, update: if request.auth != null && request.auth.uid == userId;
     }
     match /rooms/{roomId} {
+      allow read, create, update: if request.auth != null;
+      match /voiceConnections/{connectionId} {
+        allow read, create, update: if request.auth != null;
+      }
+    }
+    match /friendRequests/{requestId} {
+      allow read, create, update: if request.auth != null;
+    }
+    match /roomInvitations/{inviteId} {
       allow read, create, update: if request.auth != null;
     }
   }
