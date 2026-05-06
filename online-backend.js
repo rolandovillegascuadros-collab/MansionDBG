@@ -46,6 +46,7 @@ async function createBackend() {
   } = authModule;
   const {
     addDoc,
+    arrayRemove,
     arrayUnion,
     collection,
     doc,
@@ -53,6 +54,7 @@ async function createBackend() {
     getDocs,
     getFirestore,
     limit,
+    onSnapshot,
     orderBy,
     query,
     serverTimestamp,
@@ -121,7 +123,44 @@ async function createBackend() {
 
   async function addFriend(myUid, friendUid) {
     if (!myUid || !friendUid || myUid === friendUid) return;
-    await updateDoc(doc(db, "users", myUid), { friends: arrayUnion(friendUid), updatedAt: serverTimestamp() });
+    await Promise.all([
+      updateDoc(doc(db, "users", myUid), { friends: arrayUnion(friendUid), updatedAt: serverTimestamp() }),
+      updateDoc(doc(db, "users", friendUid), { friends: arrayUnion(myUid), updatedAt: serverTimestamp() }),
+    ]);
+  }
+
+  async function sendFriendRequest(fromUser, toUser) {
+    if (!fromUser?.uid || !toUser?.uid || fromUser.uid === toUser.uid) return "";
+    const requestId = `${fromUser.uid}_${toUser.uid}`;
+    await setDoc(doc(db, "friendRequests", requestId), {
+      fromUid: fromUser.uid,
+      fromName: fromUser.name,
+      fromEmail: fromUser.email || "",
+      toUid: toUser.uid,
+      toName: toUser.name,
+      toEmail: toUser.email || "",
+      status: "pending",
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    }, { merge: true });
+    return requestId;
+  }
+
+  async function acceptFriendRequest(requestId) {
+    if (!requestId) return;
+    const requestRef = doc(db, "friendRequests", requestId);
+    const snapshot = await getDoc(requestRef);
+    if (!snapshot.exists()) return;
+    const request = snapshot.data();
+    await Promise.all([
+      addFriend(request.toUid, request.fromUid),
+      updateDoc(requestRef, { status: "accepted", updatedAt: serverTimestamp() }),
+    ]);
+  }
+
+  async function rejectFriendRequest(requestId) {
+    if (!requestId) return;
+    await updateDoc(doc(db, "friendRequests", requestId), { status: "rejected", updatedAt: serverTimestamp() });
   }
 
   async function createRoom(owner, details) {
@@ -132,7 +171,7 @@ async function createBackend() {
       scenario: details.scenario,
       sessionType: details.sessionType,
       status: "waiting",
-      players: [{ uid: owner.uid, name: owner.name, online: true }],
+      players: [{ uid: owner.uid, name: owner.name, email: owner.email || "", online: true }],
       invited: [],
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
@@ -140,18 +179,116 @@ async function createBackend() {
     return roomRef.id;
   }
 
-  async function inviteToRoom(roomId, friend) {
+  async function inviteToRoom(roomId, friend, sender) {
     if (!roomId || !friend?.uid) return;
+    const roomSnapshot = await getDoc(doc(db, "rooms", roomId));
+    const room = roomSnapshot.exists() ? roomSnapshot.data() : {};
+    const inviteId = `${roomId}_${friend.uid}`;
+    await setDoc(doc(db, "roomInvitations", inviteId), {
+      roomId,
+      toUid: friend.uid,
+      toName: friend.name,
+      toEmail: friend.email || "",
+      fromUid: sender?.uid || room.ownerUid || "",
+      fromName: sender?.name || room.ownerName || "Jugador",
+      mode: room.mode || "",
+      scenario: room.scenario || "",
+      status: "pending",
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    }, { merge: true });
     await updateDoc(doc(db, "rooms", roomId), {
       invited: arrayUnion({ uid: friend.uid, name: friend.name, email: friend.email }),
-      players: arrayUnion({ uid: friend.uid, name: friend.name, online: friend.online }),
       updatedAt: serverTimestamp(),
     });
+    return inviteId;
   }
 
   async function updateRoom(roomId, patch) {
     if (!roomId) return;
     await updateDoc(doc(db, "rooms", roomId), { ...patch, updatedAt: serverTimestamp() });
+  }
+
+  async function acceptRoomInvite(inviteId, user) {
+    if (!inviteId || !user?.uid) return null;
+    const inviteRef = doc(db, "roomInvitations", inviteId);
+    const inviteSnapshot = await getDoc(inviteRef);
+    if (!inviteSnapshot.exists()) return null;
+    const invitation = inviteSnapshot.data();
+    const player = { uid: user.uid, name: user.name, email: user.email || "", online: true };
+    await Promise.all([
+      updateDoc(doc(db, "rooms", invitation.roomId), {
+        players: arrayUnion(player),
+        invited: arrayRemove({ uid: invitation.toUid, name: invitation.toName, email: invitation.toEmail || "" }),
+        updatedAt: serverTimestamp(),
+      }),
+      updateDoc(inviteRef, { status: "accepted", updatedAt: serverTimestamp() }),
+    ]);
+    const roomSnapshot = await getDoc(doc(db, "rooms", invitation.roomId));
+    return roomSnapshot.exists() ? { id: roomSnapshot.id, ...roomSnapshot.data() } : null;
+  }
+
+  async function rejectRoomInvite(inviteId) {
+    if (!inviteId) return;
+    await updateDoc(doc(db, "roomInvitations", inviteId), { status: "rejected", updatedAt: serverTimestamp() });
+  }
+
+  function watchFriendRequests(uid, callback) {
+    if (!uid) return () => {};
+    const requestsQuery = query(collection(db, "friendRequests"), where("toUid", "==", uid));
+    return onSnapshot(requestsQuery, (snapshot) => {
+      callback(snapshot.docs.map((item) => ({ id: item.id, ...item.data() })).filter((item) => item.status === "pending"));
+    });
+  }
+
+  function watchRoomInvitations(uid, callback) {
+    if (!uid) return () => {};
+    const invitationsQuery = query(collection(db, "roomInvitations"), where("toUid", "==", uid));
+    return onSnapshot(invitationsQuery, (snapshot) => {
+      callback(snapshot.docs.map((item) => ({ id: item.id, ...item.data() })).filter((item) => item.status === "pending"));
+    });
+  }
+
+  function watchRoom(roomId, callback) {
+    if (!roomId) return () => {};
+    return onSnapshot(doc(db, "rooms", roomId), (snapshot) => {
+      callback(snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } : null);
+    });
+  }
+
+  async function createVoiceOffer(roomId, connectionId, payload) {
+    if (!roomId || !connectionId) return;
+    await setDoc(doc(db, "rooms", roomId, "voiceConnections", connectionId), {
+      ...payload,
+      status: "offer",
+      updatedAt: serverTimestamp(),
+      createdAt: serverTimestamp(),
+    }, { merge: true });
+  }
+
+  async function answerVoiceOffer(roomId, connectionId, answer) {
+    if (!roomId || !connectionId) return;
+    await updateDoc(doc(db, "rooms", roomId, "voiceConnections", connectionId), {
+      answer,
+      status: "answered",
+      updatedAt: serverTimestamp(),
+    });
+  }
+
+  async function addVoiceCandidate(roomId, connectionId, candidate) {
+    if (!roomId || !connectionId || !candidate) return;
+    await updateDoc(doc(db, "rooms", roomId, "voiceConnections", connectionId), {
+      candidates: arrayUnion(candidate),
+      updatedAt: serverTimestamp(),
+    });
+  }
+
+  function watchVoiceConnections(roomId, uid, callback) {
+    if (!roomId || !uid) return () => {};
+    const voiceQuery = query(collection(db, "rooms", roomId, "voiceConnections"), where("participants", "array-contains", uid));
+    return onSnapshot(voiceQuery, (snapshot) => {
+      callback(snapshot.docs.map((item) => ({ id: item.id, ...item.data() })));
+    });
   }
 
   onAuthStateChanged(auth, (user) => {
@@ -167,10 +304,22 @@ async function createBackend() {
     getMyFriends,
     findUser,
     addFriend,
+    sendFriendRequest,
+    acceptFriendRequest,
+    rejectFriendRequest,
     setAvailability,
     createRoom,
     inviteToRoom,
     updateRoom,
+    acceptRoomInvite,
+    rejectRoomInvite,
+    watchFriendRequests,
+    watchRoomInvitations,
+    watchRoom,
+    createVoiceOffer,
+    answerVoiceOffer,
+    addVoiceCandidate,
+    watchVoiceConnections,
   };
 }
 

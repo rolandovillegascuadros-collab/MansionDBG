@@ -105,19 +105,7 @@ const mercenaryBonus = [
   { name: "Combo Bonus", type: "Bonus", health: 0, damage: 0, decorations: 2, art: "action", image: `${CARD_PATH}MA-019.jpg` },
 ];
 
-const friends = [
-  { name: "Camila", online: true },
-  { name: "Diego", online: true },
-  { name: "Valentina", online: false },
-  { name: "Mateo", online: true },
-];
-
-const defaultSiteUsers = [
-  { name: "Camila", email: "camila@demo.local", online: true },
-  { name: "Diego", email: "diego@demo.local", online: true },
-  { name: "Valentina", email: "valentina@demo.local", online: false },
-  { name: "Mateo", email: "mateo@demo.local", online: true },
-];
+localStorage.removeItem("mdbg-site-users");
 
 const state = {
   loggedIn: false,
@@ -145,9 +133,18 @@ const state = {
   matchRecorded: false,
   authMode: "login",
   currentUser: JSON.parse(localStorage.getItem("mdbg-current-user") || "null"),
-  siteUsers: JSON.parse(localStorage.getItem("mdbg-site-users") || JSON.stringify(defaultSiteUsers)),
+  siteUsers: [],
   friends: JSON.parse(localStorage.getItem("mdbg-friends") || "[]"),
   roomId: "",
+  pendingFriendRequests: [],
+  pendingRoomInvitations: [],
+  unsubFriendRequests: null,
+  unsubRoomInvitations: null,
+  unsubRoom: null,
+  unsubVoice: null,
+  voiceStream: null,
+  voicePeers: {},
+  voiceCandidatesSeen: {},
   onlineReady: false,
   music: null,
   musicOn: false,
@@ -191,7 +188,6 @@ function saveProgress() {
   localStorage.setItem("mdbg-losses", String(state.losses));
   localStorage.setItem("mdbg-match-history", JSON.stringify(state.matchHistory));
   localStorage.setItem("mdbg-sound", state.sound ? "on" : "off");
-  localStorage.setItem("mdbg-site-users", JSON.stringify(state.siteUsers));
   localStorage.setItem("mdbg-friends", JSON.stringify(state.friends));
   if (state.currentUser) localStorage.setItem("mdbg-current-user", JSON.stringify(state.currentUser));
   else localStorage.removeItem("mdbg-current-user");
@@ -280,8 +276,72 @@ async function testFirebaseConnection() {
 
 function mergeSiteUsers(users) {
   const merged = new Map(state.siteUsers.map((user) => [user.uid || user.email, user]));
-  users.map(publicUser).forEach((user) => merged.set(user.uid || user.email, { ...merged.get(user.uid || user.email), ...user }));
+  users
+    .map(publicUser)
+    .filter((user) => user.uid && user.email && !user.email.endsWith("@demo.local"))
+    .forEach((user) => merged.set(user.uid || user.email, { ...merged.get(user.uid || user.email), ...user }));
   state.siteUsers = [...merged.values()];
+}
+
+function stopOnlineSubscriptions() {
+  ["unsubFriendRequests", "unsubRoomInvitations", "unsubRoom", "unsubVoice"].forEach((key) => {
+    if (typeof state[key] === "function") state[key]();
+    state[key] = null;
+  });
+  Object.values(state.voicePeers).forEach((peer) => peer.close?.());
+  state.voicePeers = {};
+  state.voiceCandidatesSeen = {};
+  state.voiceStream?.getTracks?.().forEach((track) => track.stop());
+  state.voiceStream = null;
+}
+
+function startOnlineSubscriptions() {
+  const backend = getOnlineBackend();
+  if (!backend || !state.currentUser?.uid) return;
+  if (!state.unsubFriendRequests && backend.watchFriendRequests) {
+    state.unsubFriendRequests = backend.watchFriendRequests(state.currentUser.uid, (requests) => {
+      state.pendingFriendRequests = requests;
+      renderInvitations();
+    });
+  }
+  if (!state.unsubRoomInvitations && backend.watchRoomInvitations) {
+    state.unsubRoomInvitations = backend.watchRoomInvitations(state.currentUser.uid, (invitations) => {
+      state.pendingRoomInvitations = invitations;
+      renderInvitations();
+    });
+  }
+}
+
+function watchCurrentRoom() {
+  const backend = getOnlineBackend();
+  if (typeof state.unsubRoom === "function") state.unsubRoom();
+  state.unsubRoom = null;
+  if (!backend?.watchRoom || !state.roomId) return;
+  state.unsubRoom = backend.watchRoom(state.roomId, (room) => {
+    if (!room?.players) return;
+    syncPlayersFromRoom(room.players);
+    if (state.voiceStream) startRoomVoice().catch(() => {});
+    renderRoom();
+    renderGame();
+  });
+}
+
+function syncPlayersFromRoom(roomPlayers = []) {
+  const mode = getMode();
+  const realPlayers = roomPlayers.slice(0, mode.max);
+  const existing = new Map(state.players.map((player) => [player.uid || player.email || player.name, player]));
+  state.players = realPlayers.map((roomPlayer, index) => {
+    const key = roomPlayer.uid || roomPlayer.email || roomPlayer.name;
+    const fallbackName = index === 0 && roomPlayer.uid === state.currentUser?.uid ? "Tu" : roomPlayer.name;
+    return {
+      ...(existing.get(key) || createPlayer(fallbackName, false, roomPlayer.uid !== state.currentUser?.uid)),
+      uid: roomPlayer.uid,
+      email: roomPlayer.email || "",
+      name: roomPlayer.uid === state.currentUser?.uid ? "Tu" : roomPlayer.name,
+      isBot: false,
+      isFriend: roomPlayer.uid !== state.currentUser?.uid,
+    };
+  });
 }
 
 async function syncOnlineDirectory() {
@@ -292,8 +352,10 @@ async function syncOnlineDirectory() {
       backend.listUsers(),
       backend.getMyFriends(state.currentUser.uid),
     ]);
+    state.siteUsers = [];
     mergeSiteUsers(users);
     state.friends = friendIds;
+    startOnlineSubscriptions();
     saveProgress();
     renderSiteUsers();
     renderFriends();
@@ -313,6 +375,7 @@ async function ensureOnlineRoom() {
       scenario: $("#scenario").value,
       sessionType: state.sessionType,
     });
+    watchCurrentRoom();
     notify("Sala online creada", `ID de sala: ${state.roomId}`, "success");
   } catch (error) {
     notify("Sala online no creada", error.message, "error");
@@ -322,21 +385,21 @@ async function ensureOnlineRoom() {
 
 async function addFriendByUser(user) {
   if (!user) return;
-  const id = user.uid || user.email;
-  if (!state.friends.includes(id)) state.friends.push(id);
-  mergeSiteUsers([user]);
-  saveProgress();
-  renderSiteUsers();
-  renderFriends();
   const backend = getOnlineBackend();
-  if (backend && state.currentUser?.uid && user.uid) {
-    try {
-      await backend.addFriend(state.currentUser.uid, user.uid);
-      await syncOnlineDirectory();
-      notify("Amigo agregado", `${user.name} quedo guardado en tu cuenta.`, "success");
-    } catch (error) {
-      notify("Amigo no guardado online", error.message, "error");
-    }
+  if (!backend || !state.currentUser?.uid || !user.uid) {
+    notify("Firebase requerido", "Solo puedes agregar usuarios reales registrados en Firebase.", "error");
+    return;
+  }
+  const id = user.uid || user.email;
+  if (state.friends.includes(id) || state.friends.includes(user.email)) {
+    notify("Amigo existente", `${user.name} ya esta en tu lista.`, "success");
+    return;
+  }
+  try {
+    await backend.sendFriendRequest(state.currentUser, user);
+    notify("Solicitud enviada", `${user.name} debe aceptar tu invitacion de amistad.`, "success");
+  } catch (error) {
+    notify("Solicitud no enviada", error.message, "error");
   }
 }
 
@@ -530,7 +593,6 @@ function startEntry(provider, user = null) {
     email: provider === "Offline" ? "offline@demo.local" : `${provider.toLowerCase()}@demo.local`,
     provider,
   });
-  if (provider !== "Offline" && state.currentUser.password) saveAccount(state.currentUser);
   document.body.classList.toggle("offline-mode", provider === "Offline");
   $("#entry-screen").classList.add("hidden");
   $("#player-name").textContent = state.currentUser.name;
@@ -628,6 +690,12 @@ function renderSiteUsers() {
   list.innerHTML = "";
   const connected = state.siteUsers.filter((user) => user.online).length;
   $("#users-status").textContent = `${connected} conectados`;
+  if (!state.siteUsers.length) {
+    const empty = document.createElement("div");
+    empty.className = "friend offline";
+    empty.innerHTML = "<div><strong>Sin usuarios Firebase</strong><span>Solo aparecen cuentas reales registradas en Firestore.</span></div>";
+    list.append(empty);
+  }
   state.siteUsers.forEach((user) => {
     const userId = user.uid || user.email;
     if (state.currentUser?.email === user.email || state.currentUser?.uid === user.uid) return;
@@ -640,6 +708,35 @@ function renderSiteUsers() {
     `;
     row.querySelector("button").addEventListener("click", () => addFriendByUser(user));
     list.append(row);
+  });
+  renderInvitations();
+}
+
+function renderInvitations() {
+  const list = $("#invitation-list");
+  if (!list) return;
+  list.innerHTML = "";
+  const items = [
+    ...state.pendingFriendRequests.map((request) => ({ kind: "friend", ...request })),
+    ...state.pendingRoomInvitations.map((invite) => ({ kind: "room", ...invite })),
+  ];
+  items.forEach((item) => {
+    const card = document.createElement("div");
+    card.className = "invitation-card";
+    const isRoom = item.kind === "room";
+    card.innerHTML = `
+      <div>
+        <strong>${isRoom ? "Invitacion a sala" : "Solicitud de amistad"}</strong>
+        <span>${isRoom ? `${item.fromName} te invita a jugar ${item.mode || "online"}` : `${item.fromName} quiere agregarte como amigo`}</span>
+      </div>
+      <div class="invite-actions">
+        <button type="button" data-action="accept">Aceptar</button>
+        <button type="button" data-action="reject">Rechazar</button>
+      </div>
+    `;
+    card.querySelector('[data-action="accept"]').addEventListener("click", () => isRoom ? acceptRoomInvitation(item) : acceptFriendInvitation(item));
+    card.querySelector('[data-action="reject"]').addEventListener("click", () => isRoom ? rejectRoomInvitation(item) : rejectFriendInvitation(item));
+    list.append(card);
   });
 }
 
@@ -1005,20 +1102,79 @@ async function inviteFriend(friend) {
   if (!state.loggedIn) return notify("Inicia sesiÃ³n", "Debes ingresar con una cuenta del sitio para invitar jugadores.", "error");
   if (!friend.online) return notify("Jugador no disponible", `${friend.name} no estÃ¡ online o no desea recibir invitaciones.`, "error");
   if (state.players.length >= mode.max) return notify("Sala completa", "No hay espacio para mÃ¡s jugadores en esta sala.", "error");
-  if (!state.players.some((player) => player.name === friend.name)) {
-    state.players.push(createPlayer(friend.name, false, true));
-    sound("card");
-    await ensureOnlineRoom();
-    const backend = getOnlineBackend();
-    if (backend && state.roomId) {
-      try {
-        await backend.inviteToRoom(state.roomId, friend);
-      } catch (error) {
-        notify("Invitacion local", `No se pudo guardar online: ${error.message}`, "error");
-      }
+  if (state.players.some((player) => player.uid === friend.uid || player.email === friend.email)) {
+    return notify("Ya esta en sala", `${friend.name} ya participa en esta sala.`, "success");
+  }
+  const backend = getOnlineBackend();
+  if (!backend || !friend.uid) return notify("Firebase requerido", "Las invitaciones online requieren usuarios reales de Firebase.", "error");
+  await ensureOnlineRoom();
+  if (state.roomId) {
+    try {
+      await backend.inviteToRoom(state.roomId, friend, state.currentUser);
+      sound("card");
+      notify("Invitacion enviada", `${friend.name} puede aceptar o rechazar la sala.`, "success");
+    } catch (error) {
+      notify("Invitacion no enviada", error.message, "error");
     }
-    notify("InvitaciÃ³n enviada", `${friend.name} entrÃ³ a la sala.`, "success");
-    renderRoom();
+  }
+}
+
+async function acceptFriendInvitation(request) {
+  const backend = getOnlineBackend();
+  if (!backend?.acceptFriendRequest) return;
+  try {
+    await backend.acceptFriendRequest(request.id);
+    notify("Amigo agregado", `${request.fromName} quedo en tu lista.`, "success");
+    await syncOnlineDirectory();
+  } catch (error) {
+    notify("No se pudo aceptar", error.message, "error");
+  }
+}
+
+async function rejectFriendInvitation(request) {
+  const backend = getOnlineBackend();
+  if (!backend?.rejectFriendRequest) return;
+  try {
+    await backend.rejectFriendRequest(request.id);
+    notify("Solicitud rechazada", `${request.fromName} no fue agregado.`, "success");
+  } catch (error) {
+    notify("No se pudo rechazar", error.message, "error");
+  }
+}
+
+async function acceptRoomInvitation(invitation) {
+  const backend = getOnlineBackend();
+  if (!backend?.acceptRoomInvite || !state.currentUser?.uid) return;
+  try {
+    const room = await backend.acceptRoomInvite(invitation.id, state.currentUser);
+    if (room) {
+      state.sessionType = room.sessionType || "friends";
+      state.roomId = room.id;
+      $("#mode").value = room.mode || $("#mode").value;
+      populateScenarios();
+      if (room.scenario) $("#scenario").value = room.scenario;
+      $$("[data-session]").forEach((item) => item.classList.toggle("active", item.dataset.session === state.sessionType));
+      syncPlayersFromRoom(room.players || []);
+      $("#entry-screen").classList.add("hidden");
+      document.body.classList.toggle("offline-mode", false);
+      watchCurrentRoom();
+      renderRoom();
+      renderGame();
+    }
+    notify("Invitacion aceptada", `Entraste a la sala de ${invitation.fromName}.`, "success");
+  } catch (error) {
+    notify("No se pudo entrar", error.message, "error");
+  }
+}
+
+async function rejectRoomInvitation(invitation) {
+  const backend = getOnlineBackend();
+  if (!backend?.rejectRoomInvite) return;
+  try {
+    await backend.rejectRoomInvite(invitation.id);
+    notify("Invitacion rechazada", `No entraste a la sala de ${invitation.fromName}.`, "success");
+  } catch (error) {
+    notify("No se pudo rechazar", error.message, "error");
   }
 }
 
@@ -1034,51 +1190,27 @@ async function handleSiteAuth(event) {
   const profile = { name, email, password, birthdate, age, provider: "Correo", online: true };
   addEntryMessage("Conectando con Firebase...");
   const backend = await onlineBackendForAuth();
+  if (!backend) {
+    addEntryMessage("Firebase es obligatorio para jugar online con usuarios reales. Configura Firebase o usa Probar offline.");
+    return;
+  }
   if (state.authMode === "register") {
     if (password.length < 6) return addEntryMessage("La clave debe tener al menos 6 caracteres para Firebase.");
     try {
-      const user = backend ? await backend.register(profile) : profile;
-      const userWithPassword = { ...user, password };
-      saveAccount({ ...profile, ...userWithPassword });
-      mergeSiteUsers([userWithPassword]);
-      startEntry("Correo", userWithPassword);
-    } catch (error) {
-      saveAccount(profile);
-      mergeSiteUsers([profile]);
-      addEntryMessage(`No se pudo guardar en Firebase: ${error.message}. Cuenta creada en prueba local.`);
-      window.setTimeout(() => startEntry("Correo", profile), 650);
-    }
-    return;
-  }
-  if (backend) {
-    try {
-      const user = await backend.login(email, password);
+      const user = await backend.register(profile);
+      mergeSiteUsers([user]);
       startEntry("Correo", user);
-      return;
     } catch (error) {
-      const localAccount = findAccount(email, password);
-      if (localAccount) {
-        addEntryMessage(`Firebase no respondio: ${error.message}. Entrando con cuenta local de prueba.`);
-        startEntry(localAccount.provider || "Correo", { ...localAccount, online: true });
-        return;
-      }
-      if (!localAccountExists(email)) {
-        saveAccount(profile);
-        mergeSiteUsers([profile]);
-        addEntryMessage(`Firebase aun no permite este ingreso: ${error.message}. Cree una cuenta local de prueba y entre al juego.`);
-        window.setTimeout(() => startEntry("Correo", profile), 650);
-        return;
-      }
-      addEntryMessage(`No se pudo ingresar: ${error.message}. Si aun no existe, crea la cuenta primero.`);
-      return;
+      addEntryMessage(`No se pudo crear la cuenta en Firebase: ${error.message}`);
     }
-  }
-  const account = findAccount(email, password);
-  if (!account) {
-    addEntryMessage("Cuenta no encontrada. Crea la cuenta o revisa la clave demo.");
     return;
   }
-  startEntry(account.provider || "Correo", { ...account, online: true });
+  try {
+    const user = await backend.login(email, password);
+    startEntry("Correo", user);
+  } catch (error) {
+    addEntryMessage(`No se pudo ingresar: ${error.message}. Debes usar una cuenta real de Firebase.`);
+  }
 }
 
 function addEntryMessage(text) {
@@ -1105,7 +1237,11 @@ function fillRoom() {
 
 function resetRoom() {
   state.roomId = "";
-  state.players = state.entryDone ? [createPlayer("Tu", false)] : [];
+  state.players = state.entryDone ? [{
+    ...createPlayer("Tu", false),
+    uid: state.currentUser?.uid || "",
+    email: state.currentUser?.email || "",
+  }] : [];
   state.started = false;
   state.activeIndex = 0;
   state.round = 0;
@@ -1129,13 +1265,13 @@ function resetRoom() {
   if (state.loggedIn && state.sessionType !== "offline") ensureOnlineRoom();
 }
 
-function startGame() {
+async function startGame() {
   if (state.started) {
     notify("Ya estan jugando", "Termina tu partida antes de comenzar una nueva.", "error");
     return;
   }
   if (!canStart()) return;
-  ensureOnlineRoom();
+  await ensureOnlineRoom();
   state.started = true;
   state.matchRecorded = false;
   state.round = 1;
@@ -1162,6 +1298,12 @@ function startGame() {
   sound("card");
   addAchievement("Primera sala iniciada");
   notify("Partida iniciada", `${getMode().name} - ${getScenario().name}`, "success");
+  const backend = getOnlineBackend();
+  if (backend && state.roomId) {
+    backend.updateRoom(state.roomId, { status: "playing", started: true }).catch((error) => {
+      notify("Sala online no actualizada", error.message, "error");
+    });
+  }
   startTurnTimer();
   renderRoom();
   renderGame();
@@ -1205,7 +1347,12 @@ async function returnHome(options = {}) {
   state.lastRevealed = null;
   state.resourceMarketOpen = false;
   $("#chat-log").innerHTML = "";
-  if (logout) localStorage.removeItem("mdbg-current-user");
+  if (logout) {
+    stopOnlineSubscriptions();
+    state.pendingFriendRequests = [];
+    state.pendingRoomInvitations = [];
+    localStorage.removeItem("mdbg-current-user");
+  }
   $("#entry-screen").classList.remove("hidden");
   document.body.classList.remove("offline-mode");
   $$("[data-session]").forEach((item) => {
@@ -1673,15 +1820,109 @@ function finishGameByScore(reason) {
   renderGame();
 }
 
+function voiceConnectionId(uidA, uidB) {
+  return [uidA, uidB].sort().join("_");
+}
+
+function remoteVoiceAudio(id) {
+  let audio = document.getElementById(`voice-${id}`);
+  if (!audio) {
+    audio = document.createElement("audio");
+    audio.id = `voice-${id}`;
+    audio.autoplay = true;
+    audio.playsInline = true;
+    audio.hidden = true;
+    document.body.append(audio);
+  }
+  return audio;
+}
+
+function createVoicePeer(connectionId, remoteUid) {
+  if (state.voicePeers[connectionId]) return state.voicePeers[connectionId];
+  const backend = getOnlineBackend();
+  const peer = new RTCPeerConnection({ iceServers: [{ urls: "stun:stun.l.google.com:19302" }] });
+  state.voiceStream?.getTracks?.().forEach((track) => peer.addTrack(track, state.voiceStream));
+  peer.ontrack = (event) => {
+    remoteVoiceAudio(remoteUid).srcObject = event.streams[0];
+  };
+  peer.onicecandidate = (event) => {
+    if (!event.candidate || !backend?.addVoiceCandidate) return;
+    backend.addVoiceCandidate(state.roomId, connectionId, {
+      fromUid: state.currentUser.uid,
+      candidate: event.candidate.toJSON(),
+    }).catch(() => {});
+  };
+  state.voicePeers[connectionId] = peer;
+  return peer;
+}
+
+async function handleVoiceConnections(connections) {
+  const backend = getOnlineBackend();
+  if (!backend || !state.voiceStream || !state.currentUser?.uid) return;
+  for (const connection of connections) {
+    const remoteUid = connection.participants.find((uid) => uid !== state.currentUser.uid);
+    if (!remoteUid) continue;
+    const peer = createVoicePeer(connection.id, remoteUid);
+    if (connection.offer && connection.fromUid !== state.currentUser.uid && !peer.remoteDescription) {
+      await peer.setRemoteDescription(new RTCSessionDescription(connection.offer));
+      const answer = await peer.createAnswer();
+      await peer.setLocalDescription(answer);
+      await backend.answerVoiceOffer(state.roomId, connection.id, answer.toJSON());
+    }
+    if (connection.answer && connection.fromUid === state.currentUser.uid && !peer.remoteDescription) {
+      await peer.setRemoteDescription(new RTCSessionDescription(connection.answer));
+    }
+    state.voiceCandidatesSeen[connection.id] ||= new Set();
+    for (const item of connection.candidates || []) {
+      const key = JSON.stringify(item);
+      if (item.fromUid === state.currentUser.uid || state.voiceCandidatesSeen[connection.id].has(key)) continue;
+      state.voiceCandidatesSeen[connection.id].add(key);
+      if (item.candidate) await peer.addIceCandidate(new RTCIceCandidate(item.candidate)).catch(() => {});
+    }
+  }
+}
+
+async function startRoomVoice() {
+  const backend = getOnlineBackend();
+  if (!backend?.watchVoiceConnections || !backend?.createVoiceOffer) {
+    notify("Voz online no disponible", "Firebase debe estar activo para conectar la voz de sala.", "error");
+    return;
+  }
+  if (!state.roomId) await ensureOnlineRoom();
+  if (!state.roomId || !state.currentUser?.uid) {
+    notify("Sin sala online", "Entra o crea una sala online antes de activar voz.", "error");
+    return;
+  }
+  state.voiceStream ||= await navigator.mediaDevices.getUserMedia({ audio: true });
+  if (!state.unsubVoice) {
+    state.unsubVoice = backend.watchVoiceConnections(state.roomId, state.currentUser.uid, (connections) => {
+      handleVoiceConnections(connections).catch((error) => notify("Voz no sincronizada", error.message, "error"));
+    });
+  }
+  const remotePlayers = state.players.filter((player) => player.uid && player.uid !== state.currentUser.uid);
+  for (const player of remotePlayers) {
+    const connectionId = voiceConnectionId(state.currentUser.uid, player.uid);
+    const peer = createVoicePeer(connectionId, player.uid);
+    if (peer.localDescription) continue;
+    const offer = await peer.createOffer();
+    await peer.setLocalDescription(offer);
+    await backend.createVoiceOffer(state.roomId, connectionId, {
+      fromUid: state.currentUser.uid,
+      toUid: player.uid,
+      participants: [state.currentUser.uid, player.uid],
+      offer: offer.toJSON(),
+      candidates: [],
+    });
+  }
+}
+
 function toggleVoice() {
   const button = $("#voice-toggle");
   if (!navigator.mediaDevices?.getUserMedia) return notify("Voz no disponible", "Chat de voz no disponible en este navegador.", "error");
-  navigator.mediaDevices
-    .getUserMedia({ audio: true })
-    .then((stream) => {
-      stream.getTracks().forEach((track) => track.stop());
+  startRoomVoice()
+    .then(() => {
       button.textContent = "Voz lista";
-      notify("MicrÃ³fono habilitado", "Para voz real falta conectar WebRTC al servidor.", "success");
+      notify("Microfono habilitado", "La voz queda disponible para los jugadores reales de esta sala.", "success");
       sound("voice");
     })
     .catch(() => notify("Permiso rechazado", "No se habilitÃ³ el micrÃ³fono.", "error"));
@@ -1848,7 +2089,10 @@ $("#add-user-form").addEventListener("submit", async (event) => {
       notify("Busqueda online fallida", error.message, "error");
     }
   }
-  if (!user) user = { name: term.split("@")[0], email: term.includes("@") ? term : `${term}@demo.local`, online: false };
+  if (!user?.uid || !user.email) {
+    notify("Usuario no encontrado", "Solo puedes agregar correos registrados realmente en Firebase.", "error");
+    return;
+  }
   await addFriendByUser(user);
   $("#friend-email").value = "";
 });

@@ -553,13 +553,15 @@ input {
   background: var(--accent);
 }
 
-.friend-list {
+.friend-list,
+.invitation-list {
   display: grid;
   gap: 6px;
   margin-top: 8px;
 }
 
-.friend {
+.friend,
+.invitation-card {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 8px;
@@ -578,6 +580,16 @@ input {
 
 .friend button {
   min-height: 34px;
+}
+
+.invite-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.invite-actions button {
+  min-height: 32px;
+  padding-inline: 9px;
 }
 
 .friend.offline {
