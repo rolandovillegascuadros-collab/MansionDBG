@@ -1,4 +1,4 @@
-import fs from "node:fs/promises";
+﻿import fs from "node:fs/promises";
 import path from "node:path";
 import vm from "node:vm";
 import { SpreadsheetFile, Workbook } from "@oai/artifact-tool";
@@ -27,12 +27,12 @@ function rangeFor(rows, cols) {
 function cleanText(value) {
   if (value === undefined || value === null) return "";
   return String(value)
-    .replaceAll("daÃ±o", "daño")
-    .replaceAll("acciÃ³n", "acción")
-    .replaceAll("municiÃ³n", "munición")
-    .replaceAll("exploraciÃ³n", "exploración")
-    .replaceAll("mansiÃ³n", "mansión")
-    .replaceAll("MÃ­nimo", "Mínimo");
+    .replaceAll("daÃƒÂ±o", "dano")
+    .replaceAll("acciÃƒÂ³n", "acciÃ³n")
+    .replaceAll("municiÃƒÂ³n", "municiÃ³n")
+    .replaceAll("exploraciÃƒÂ³n", "exploraciÃ³n")
+    .replaceAll("mansiÃƒÂ³n", "mansiÃ³n")
+    .replaceAll("MÃƒÂ­nimo", "MÃ­nimo");
 }
 
 function boolText(value) {
@@ -89,20 +89,123 @@ globalThis.mercenaryBonus = mercenaryBonus;`;
 
 function actionSummary(card) {
   const effects = [];
-  if (card.damageBonus) effects.push(`+${card.damageBonus} daño`);
-  if (card.ammoBonus) effects.push(`+${card.ammoBonus} munición`);
+  if (card.damageBonus) effects.push(`+${card.damageBonus} dano`);
+  if (card.ammoBonus) effects.push(`+${card.ammoBonus} municiÃ³n`);
   if (card.goldBonus) effects.push(`+${card.goldBonus} oro`);
-  if (card.extraAction) effects.push(`+${card.extraAction} acción`);
+  if (card.extraAction) effects.push(`+${card.extraAction} acciÃ³n`);
   if (card.extraBuy) effects.push(`+${card.extraBuy} compra`);
-  if (card.extraExplore) effects.push(`+${card.extraExplore} exploración`);
+  if (card.extraExplore) effects.push(`+${card.extraExplore} exploraciÃ³n`);
   if (card.draw) effects.push(`roba ${card.draw}`);
   if (card.heal) effects.push(`cura ${card.heal}`);
-  if (card.maxHeal) effects.push(`vida máxima +${card.maxHeal}`);
+  if (card.maxHeal) effects.push(`vida mÃ¡xima +${card.maxHeal}`);
   if (card.fullHeal) effects.push("cura completa");
-  if (card.splash) effects.push(`daño splash ${card.splash}`);
-  if (card.damagePerAmmo) effects.push(`daño variable: ${card.damagePerAmmo.damage} por cada ${card.damagePerAmmo.step} munición`);
-  if (card.damageXAmmo) effects.push("daño igual a munición disponible");
+  if (card.splash) effects.push(`dano splash ${card.splash}`);
+  if (card.damagePerAmmo) effects.push(`dano variable: ${card.damagePerAmmo.damage} por cada ${card.damagePerAmmo.step} municiÃ³n`);
+  if (card.damageXAmmo) effects.push("dano igual a municiÃ³n disponible");
   return cleanText(effects.join(" / ") || card.text || "");
+}
+
+function scenarioResourceIds(data, scenario) {
+  const forbidden = new Set(["gatling", "rocket"]);
+  const actionIds = Object.keys(data.catalog).filter((id) => data.catalog[id].type === "Accion");
+  return [...new Set([...data.baseResourceIds, ...(scenario.resources || []), ...actionIds])]
+    .filter((id) => data.catalog[id] && !forbidden.has(id));
+}
+
+function purchaseScenarioNames(data, cardId) {
+  return Object.values(data.scenarios)
+    .filter((scenario) => scenarioResourceIds(data, scenario).includes(cardId))
+    .map((scenario) => scenario.name);
+}
+
+function characterLevelEffects(character) {
+  const name = character.name || "";
+  if (name.includes("Rebecca")) {
+    return {
+      nivel1Medallas: 0,
+      habilidadNivel1: "Cura 20 vida.",
+      nivel2Medallas: 3,
+      habilidadNivel2: "Cura 20 vida.",
+      nivel3Medallas: 5,
+      habilidadNivel3: "Cura 20 vida.",
+      efectoPasivo: "",
+    };
+  }
+  if (name.includes("Leon")) {
+    return {
+      nivel1Medallas: 0,
+      habilidadNivel1: "Recupera 10 vida.",
+      nivel2Medallas: 3,
+      habilidadNivel2: "Recupera 10 vida.",
+      nivel3Medallas: 5,
+      habilidadNivel3: "Recupera 10 vida.",
+      efectoPasivo: "",
+    };
+  }
+  if (name.includes("Barry")) {
+    return {
+      nivel1Medallas: 0,
+      habilidadNivel1: "+10 municion.",
+      nivel2Medallas: 3,
+      habilidadNivel2: "+10 municion.",
+      nivel3Medallas: 5,
+      habilidadNivel3: "+10 municion.",
+      efectoPasivo: "",
+    };
+  }
+  if (name.includes("Claire")) {
+    return {
+      nivel1Medallas: 0,
+      habilidadNivel1: "+5 dano.",
+      nivel2Medallas: 3,
+      habilidadNivel2: "+1 compra.",
+      nivel3Medallas: 5,
+      habilidadNivel3: "+1 compra.",
+      efectoPasivo: "",
+    };
+  }
+  if (name.includes("Ada")) {
+    return {
+      nivel1Medallas: 0,
+      habilidadNivel1: "+5 dano.",
+      nivel2Medallas: 3,
+      habilidadNivel2: "+20 oro.",
+      nivel3Medallas: 5,
+      habilidadNivel3: "+20 oro.",
+      efectoPasivo: "",
+    };
+  }
+  if (name.includes("Jill")) {
+    return {
+      nivel1Medallas: 0,
+      habilidadNivel1: "+5 dano.",
+      nivel2Medallas: 3,
+      habilidadNivel2: "+10 dano.",
+      nivel3Medallas: 5,
+      habilidadNivel3: "+1 exploracion.",
+      efectoPasivo: "",
+    };
+  }
+  if (name.includes("Sheva")) {
+    return {
+      nivel1Medallas: 0,
+      habilidadNivel1: "+5 dano.",
+      nivel2Medallas: 3,
+      habilidadNivel2: "+10 dano.",
+      nivel3Medallas: 5,
+      habilidadNivel3: "+10 dano.",
+      efectoPasivo: "+1 medalla adicional al derrotar jefe.",
+    };
+  }
+  return {
+    nivel1Medallas: 0,
+    habilidadNivel1: "+5 dano.",
+    nivel2Medallas: 3,
+    habilidadNivel2: "+10 dano.",
+    nivel3Medallas: 5,
+    habilidadNivel3: "+10 dano.",
+    efectoPasivo: "",
+  };
 }
 
 function buildRows(data, assets) {
@@ -111,6 +214,7 @@ function buildRows(data, assets) {
   data.characters.forEach((character, index) => {
     const imageFile = basenameFromImage(character.image);
     if (imageFile) seenFiles.add(imageFile);
+    const levelEffects = characterLevelEffects(character);
     rows.push({
       grupo: "Personajes",
       id: `CH-${String(index + 1).padStart(3, "0")}`,
@@ -118,8 +222,8 @@ function buildRows(data, assets) {
       tipo: "Personaje",
       coste: "",
       vida: character.health || "",
-      daño: "",
-      dañoRecibido: "",
+      dano: "",
+      danoRecibido: "",
       medallas: "",
       municion: "",
       oro: "",
@@ -131,6 +235,10 @@ function buildRows(data, assets) {
       imagen: imageFile,
       ruta: character.image || "",
       origen: "characters",
+      disponibleCompra: "",
+      escenariosCompra: "",
+      cantidadMonton: "",
+      ...levelEffects,
       nuevaHabilidad: "",
       notas: "",
     });
@@ -139,6 +247,7 @@ function buildRows(data, assets) {
   Object.values(data.catalog).forEach((card) => {
     const imageFile = basenameFromImage(card.image);
     if (imageFile) seenFiles.add(imageFile);
+    const purchaseScenarios = purchaseScenarioNames(data, card.id);
     rows.push({
       grupo: "Recursos",
       id: card.id,
@@ -146,8 +255,8 @@ function buildRows(data, assets) {
       tipo: cleanText(card.type),
       coste: card.cost ?? "",
       vida: "",
-      daño: card.damage ?? "",
-      dañoRecibido: "",
+      dano: card.damage ?? "",
+      danoRecibido: "",
       medallas: "",
       municion: card.ammo ?? "",
       oro: card.gold ?? "",
@@ -163,6 +272,16 @@ function buildRows(data, assets) {
       imagen: imageFile,
       ruta: card.image || "",
       origen: "catalog",
+      disponibleCompra: purchaseScenarios.length ? "Si" : "No",
+      escenariosCompra: purchaseScenarios.join(", "),
+      cantidadMonton: card.id === "ammo10" ? 28 : 6,
+      nivel1Medallas: "",
+      habilidadNivel1: "",
+      nivel2Medallas: "",
+      habilidadNivel2: "",
+      nivel3Medallas: "",
+      habilidadNivel3: "",
+      efectoPasivo: "",
       nuevaHabilidad: "",
       notas: "",
     });
@@ -178,8 +297,8 @@ function buildRows(data, assets) {
       tipo: cleanText(card.type),
       coste: "",
       vida: card.health ?? "",
-      daño: "",
-      dañoRecibido: card.damage ?? "",
+      dano: "",
+      danoRecibido: card.damage ?? "",
       medallas: card.decorations ?? "",
       municion: "",
       oro: "",
@@ -195,6 +314,16 @@ function buildRows(data, assets) {
       imagen: imageFile,
       ruta: card.image || "",
       origen: "mansionStory",
+      disponibleCompra: "",
+      escenariosCompra: "",
+      cantidadMonton: "",
+      nivel1Medallas: "",
+      habilidadNivel1: "",
+      nivel2Medallas: "",
+      habilidadNivel2: "",
+      nivel3Medallas: "",
+      habilidadNivel3: "",
+      efectoPasivo: "",
       nuevaHabilidad: "",
       notas: "",
     });
@@ -210,8 +339,8 @@ function buildRows(data, assets) {
       tipo: cleanText(card.type),
       coste: "",
       vida: card.health ?? "",
-      daño: "",
-      dañoRecibido: card.damage ?? "",
+      dano: "",
+      danoRecibido: card.damage ?? "",
       medallas: card.decorations ?? "",
       municion: "",
       oro: "",
@@ -223,6 +352,16 @@ function buildRows(data, assets) {
       imagen: imageFile,
       ruta: card.image || "",
       origen: "mercenaryBonus",
+      disponibleCompra: "",
+      escenariosCompra: "",
+      cantidadMonton: "",
+      nivel1Medallas: "",
+      habilidadNivel1: "",
+      nivel2Medallas: "",
+      habilidadNivel2: "",
+      nivel3Medallas: "",
+      habilidadNivel3: "",
+      efectoPasivo: "",
       nuevaHabilidad: "",
       notas: "",
     });
@@ -237,8 +376,8 @@ function buildRows(data, assets) {
       tipo: asset.category,
       coste: "",
       vida: "",
-      daño: "",
-      dañoRecibido: "",
+      dano: "",
+      danoRecibido: "",
       medallas: "",
       municion: "",
       oro: "",
@@ -250,6 +389,16 @@ function buildRows(data, assets) {
       imagen: asset.filename,
       ruta: asset.relativePath,
       origen: "assets/cards",
+      disponibleCompra: "",
+      escenariosCompra: "",
+      cantidadMonton: "",
+      nivel1Medallas: "",
+      habilidadNivel1: "",
+      nivel2Medallas: "",
+      habilidadNivel2: "",
+      nivel3Medallas: "",
+      habilidadNivel3: "",
+      efectoPasivo: "",
       nuevaHabilidad: "",
       notas: "",
     });
@@ -318,15 +467,16 @@ summary.getRange("A10").format = { fill: "#7A1F1F", font: { bold: true, color: "
 summary.getRange("A:D").format.columnWidthPx = 240;
 
 const allHeaders = [
-  "grupo", "id", "nombre", "tipo", "coste", "vida", "daño", "dañoRecibido", "medallas", "municion", "oro",
-  "requisitoMunicion", "curacion", "bonus", "habilidadActual", "flags", "imagen", "ruta", "origen", "nuevaHabilidad", "notas",
+  "grupo", "id", "nombre", "tipo", "coste", "vida", "dano", "danoRecibido", "medallas", "municion", "oro",
+  "requisitoMunicion", "curacion", "bonus", "habilidadActual", "flags", "imagen", "ruta", "origen", "disponibleCompra",
+  "escenariosCompra", "cantidadMonton", "nivel1Medallas", "habilidadNivel1", "nivel2Medallas", "habilidadNivel2",
+  "nivel3Medallas", "habilidadNivel3", "efectoPasivo", "nuevaHabilidad", "notas",
 ];
-addSheet(workbook, "Todas las cartas", allHeaders, allRows, [130, 120, 190, 110, 70, 70, 70, 110, 85, 80, 70, 120, 90, 260, 320, 190, 150, 230, 130, 300, 300]);
-
-addSheet(workbook, "Personajes", allHeaders, allRows.filter((row) => row.grupo === "Personajes"), [130, 120, 190, 110, 70, 70, 70, 110, 85, 80, 70, 120, 90, 260, 320, 190, 150, 230, 130, 300, 300]);
-addSheet(workbook, "Recursos", allHeaders, allRows.filter((row) => row.grupo === "Recursos"), [130, 120, 190, 110, 70, 70, 70, 110, 85, 80, 70, 120, 90, 260, 320, 190, 150, 230, 130, 300, 300]);
-addSheet(workbook, "Mansion", allHeaders, allRows.filter((row) => row.grupo === "Mansion" || row.grupo === "Bonus mercenario"), [130, 120, 190, 110, 70, 70, 70, 110, 85, 80, 70, 120, 90, 260, 320, 190, 150, 230, 130, 300, 300]);
-
+const wideColumns = [130, 120, 190, 110, 70, 70, 70, 110, 85, 80, 70, 120, 90, 260, 320, 190, 150, 230, 130, 120, 320, 100, 110, 260, 110, 260, 110, 260, 260, 300, 300];
+addSheet(workbook, "Todas las cartas", allHeaders, allRows, wideColumns);
+addSheet(workbook, "Personajes", allHeaders, allRows.filter((row) => row.grupo === "Personajes"), wideColumns);
+addSheet(workbook, "Recursos", allHeaders, allRows.filter((row) => row.grupo === "Recursos"), wideColumns);
+addSheet(workbook, "Mansion", allHeaders, allRows.filter((row) => row.grupo === "Mansion" || row.grupo === "Bonus mercenario"), wideColumns);
 const scenarioRows = Object.entries(data.scenarios).map(([id, scenario]) => ({
   id,
   nombre: scenario.name,
@@ -335,6 +485,21 @@ const scenarioRows = Object.entries(data.scenarios).map(([id, scenario]) => ({
   totalRecursos: (scenario.resources || []).length,
 }));
 addSheet(workbook, "Escenarios", ["id", "nombre", "modos", "recursos", "totalRecursos"], scenarioRows, [140, 180, 180, 700, 120]);
+
+const purchaseRows = Object.values(data.catalog).map((card) => {
+  const row = {
+    id: card.id,
+    nombre: card.name,
+    tipo: cleanText(card.type),
+    coste: card.cost ?? "",
+    efecto: actionSummary(card),
+  };
+  Object.entries(data.scenarios).forEach(([id, scenario]) => {
+    row[id] = scenarioResourceIds(data, scenario).includes(card.id) ? "Si" : "";
+  });
+  return row;
+});
+addSheet(workbook, "Compra por escenario", ["id", "nombre", "tipo", "coste", "efecto", ...Object.keys(data.scenarios)], purchaseRows, [120, 190, 110, 70, 340, 120, 120, 120]);
 
 addSheet(workbook, "Assets cartas", ["filename", "category", "relativePath"], assets, [220, 160, 320]);
 
@@ -348,7 +513,7 @@ const errors = await workbook.inspect({
 });
 console.log(errors.ndjson);
 
-for (const sheetName of ["Resumen", "Todas las cartas", "Personajes", "Recursos", "Mansion", "Escenarios", "Assets cartas"]) {
+for (const sheetName of ["Resumen", "Todas las cartas", "Personajes", "Recursos", "Mansion", "Escenarios", "Compra por escenario", "Assets cartas"]) {
   const preview = await workbook.render({ sheetName, autoCrop: "all", scale: 1, format: "png" });
   await fs.writeFile(path.join(outputDir, `${sheetName.replace(/[^A-Za-z0-9]/g, "-")}.png`), new Uint8Array(await preview.arrayBuffer()));
 }
@@ -356,3 +521,5 @@ for (const sheetName of ["Resumen", "Todas las cartas", "Personajes", "Recursos"
 const xlsx = await SpreadsheetFile.exportXlsx(workbook);
 await xlsx.save(outputPath);
 console.log(outputPath);
+
+

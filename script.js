@@ -26,47 +26,48 @@ const modes = {
 };
 
 const characters = [
-  { name: "Albert Wesker", health: 90, trait: "+10 dano con nivel 2", portrait: "scout", image: `${CARD_PATH}CH-001.jpg` },
-  { name: "Leon S. Kennedy", health: 80, trait: "recupera 10 de vida", portrait: "medic", image: `${CARD_PATH}CH-002.jpg` },
-  { name: "Claire Redfield", health: 100, trait: "+1 compra con nivel 2", portrait: "tactician", image: `${CARD_PATH}CH-003.jpg` },
-  { name: "Sheva Alomar", health: 70, trait: "+1 condecoracion contra jefe", portrait: "warden", image: `${CARD_PATH}CH-004.jpg` },
-  { name: "Barry Burton", health: 85, trait: "+10 municion", portrait: "agent", image: `${CARD_PATH}CH-005.jpg` },
-  { name: "Ada Wong", health: 75, trait: "+20 oro con nivel 2", portrait: "operator", image: `${CARD_PATH}CH-006.jpg` },
-  { name: "Jack Krauser", health: 90, trait: "+10 dano", portrait: "scout", image: `${CARD_PATH}CH-007.jpg` },
-  { name: "Chris Redfield", health: 90, trait: "+10 dano a infectados", portrait: "tactician", image: `${CARD_PATH}CH-008.jpg` },
-  { name: "Jill Valentine", health: 80, trait: "+1 exploracion con nivel 3", portrait: "operator", image: `${CARD_PATH}CH-009.jpg` },
-  { name: "Rebecca Chambers", health: 70, trait: "cura 20", portrait: "medic", image: `${CARD_PATH}CH-010.jpg` },
+  { name: "Albert Wesker", health: 90, trait: "Nivel 1 (2 medallas): Cuando Albert wesker aqtaque a un personaje o explore mansion, consigue +20 oro durante este turno. | Nivel 2 (9 medallas): Durante tu turno, elige a un jugador. Ese jugador consigue +1 exploracion y debe explorar ese turno obligatorio.", levels: [{ min: 2, text: "Cuando Albert wesker aqtaque a un personaje o explore mansion, consigue +20 oro durante este turno." }, { min: 9, text: "Durante tu turno, elige a un jugador. Ese jugador consigue +1 exploracion y debe explorar ese turno obligatorio." }], portrait: "scout", image: `${CARD_PATH}CH-001.jpg` },
+  { name: "Leon S. Kennedy", health: 80, trait: "Nivel 1 (2 medallas): Todas mis Armas Pistolas reciben -10 de municion | Nivel 2 (6 medallas): Todas mis Armas Pistolas pueden ser usada dos veces por turno.", levels: [{ min: 2, text: "Todas mis Armas Pistolas reciben -10 de municion" }, { min: 6, text: "Todas mis Armas Pistolas pueden ser usada dos veces por turno." }], portrait: "medic", image: `${CARD_PATH}CH-002.jpg` },
+  { name: "Claire Redfield", health: 100, trait: "Nivel 1 (2 medallas): Cada carta municion otorga +10 municion | Nivel 2 (6 medallas): Cada carta municion otorga +10 oro", levels: [{ min: 2, text: "Cada carta municion otorga +10 municion" }, { min: 6, text: "Cada carta municion otorga +10 oro" }], portrait: "tactician", image: `${CARD_PATH}CH-003.jpg` },
+  { name: "Sheva Alomar", health: 70, trait: "Nivel 1 (2 medallas): Durante tu turno, puedes intercambiar 1 carta de tu mano con la primera de tu inventario. | Nivel 2 (4 medallas): Todas mis Armas Rifles reciben -20 de municion", levels: [{ min: 2, text: "Durante tu turno, puedes intercambiar 1 carta de tu mano con la primera de tu inventario." }, { min: 4, text: "Todas mis Armas Rifles reciben -20 de municion" }], portrait: "warden", image: `${CARD_PATH}CH-004.jpg` },
+  { name: "Barry Burton", health: 85, trait: "Nivel 1 (2 medallas): Cuando ataca a otro personaje o explora, puedes dar +5 dano a un arma. | Nivel 2 (7 medallas): Todas mis Armas Magnun reciben +20 de dano", levels: [{ min: 2, text: "Cuando ataca a otro personaje o explora, puedes dar +5 dano a un arma." }, { min: 7, text: "Todas mis Armas Magnun reciben +20 de dano" }], portrait: "agent", image: `${CARD_PATH}CH-005.jpg` },
+  { name: "Ada Wong", health: 75, trait: "Nivel 1 (4 medallas): Cuando explora, puede mirar la carta superior de la mansion y dejar al principio o al final del  mazo de la mancion. | Nivel 2 (8 medallas): Al principio de tu turno, puedes tener +1 Accion y -1 compra", levels: [{ min: 4, text: "Cuando explora, puede mirar la carta superior de la mansion y dejar al principio o al final del  mazo de la mancion." }, { min: 8, text: "Al principio de tu turno, puedes tener +1 Accion y -1 compra" }], portrait: "operator", image: `${CARD_PATH}CH-006.jpg` },
+  { name: "Jack Krauser", health: 90, trait: "Nivel 1 (1 medallas): Al principio de tu turno, puedes seleccionar un cuchillo, que va a tu pila de descarte. | Nivel 2 (7 medallas): Todos tus  cuchillos consiguen +5 dano", levels: [{ min: 1, text: "Al principio de tu turno, puedes seleccionar un cuchillo, que va a tu pila de descarte." }, { min: 7, text: "Todos tus  cuchillos consiguen +5 dano" }], portrait: "scout", image: `${CARD_PATH}CH-007.jpg` },
+  { name: "Chris Redfield", health: 90, trait: "Nivel 1 (0 medallas): Este jugador No se puede ser curado por ninguna hierba o spray. Desde la mansion si sale una carta que adquiera un spray o hierba. No la tome. | Nivel 2 (3 medallas): Un arma selecionada gana +5 dano por cada infectado que explore en la mansion en este turno.", levels: [{ min: 0, text: "Este jugador No se puede ser curado por ninguna hierba o spray. Desde la mansion si sale una carta que adquiera un spray o hierba. No la tome." }, { min: 3, text: "Un arma selecionada gana +5 dano por cada infectado que explore en la mansion en este turno." }], portrait: "tactician", image: `${CARD_PATH}CH-008.jpg` },
+  { name: "Jill Valentine", health: 80, trait: "Nivel 1 (5 medallas): Todas mis Armas Explosiva reciben +5 de dano | Nivel 2 (8 medallas): Todas mis Armas Explosiva van a la pila de descarte en ves de recurso.", levels: [{ min: 5, text: "Todas mis Armas Explosiva reciben +5 de dano" }, { min: 8, text: "Todas mis Armas Explosiva van a la pila de descarte en ves de recurso." }], portrait: "operator", image: `${CARD_PATH}CH-009.jpg` },
+  { name: "Rebecca Chambers", health: 70, trait: "Nivel 1 (2 medallas): Cuando tengas que devolver alguna carta al area de recurso puedes enviarla a otro jugador a su pila de descarte. | Nivel 2 (3 medallas): Al principio de tu turno, puedes devolver al area de recurso de tu area de pila de descarte", levels: [{ min: 2, text: "Cuando tengas que devolver alguna carta al area de recurso puedes enviarla a otro jugador a su pila de descarte." }, { min: 3, text: "Al principio de tu turno, puedes devolver al area de recurso de tu area de pila de descarte" }], portrait: "medic", image: `${CARD_PATH}CH-010.jpg` },
 ];
 
 const catalog = {
   ammo10: { id: "ammo10", name: "Ammo x10", type: "Municion", ammo: 10, gold: 10, art: "ammo", cost: 0, image: `${CARD_PATH}AM-001.jpg` },
-  ammo20: { id: "ammo20", name: "Ammo x20", type: "Municion", ammo: 20, gold: 20, art: "ammo", cost: 40, image: `${CARD_PATH}AM-002.jpg` },
+  ammo20: { id: "ammo20", name: "Ammo x20", type: "Municion", ammo: 20, gold: 20, art: "ammo", cost: 30, image: `${CARD_PATH}AM-002.jpg` },
   ammo30: { id: "ammo30", name: "Ammo x30", type: "Municion", ammo: 30, gold: 30, art: "ammo", cost: 60, image: `${CARD_PATH}AM-003.jpg` },
   knife: { id: "knife", name: "Combat Knife", type: "Arma", damage: 10, ammoCost: 0, art: "knife", cost: 20, image: `${CARD_PATH}WE-004.jpg` },
   handgun: { id: "handgun", name: "Handgun", type: "Arma", damage: 20, ammoCost: 20, art: "handgun", cost: 40, image: `${CARD_PATH}WE-009.jpg` },
   bow: { id: "bow", name: "Longbow", type: "Arma", damage: 30, ammoCost: 20, art: "handgun", cost: 50, image: `${CARD_PATH}WE-002.jpg` },
-  grenade: { id: "grenade", name: "Grenade", type: "Arma", damage: 40, ammoCost: 20, splash: 10, art: "shotgun", cost: 60, image: `${CARD_PATH}WE-001.jpg`, text: "Hace daÃ±o adicional a otros jugadores si hay mas de uno." },
-  six: { id: "six", name: "Six Shooter", type: "Arma", damage: 40, ammoCost: 30, art: "handgun", cost: 70, image: `${CARD_PATH}WE-006.jpg` },
-  gatling: { id: "gatling", name: "Gatling Gun", type: "Arma", damage: 60, ammoCost: 40, damagePerAmmo: { step: 20, damage: 10 }, art: "shotgun", cost: 90, image: `${CARD_PATH}WE-007.jpg`, text: "DaÃ±o variable segun municion disponible." },
-  rocket: { id: "rocket", name: "Rocket Launcher", type: "Arma", damage: 80, ammoCost: 50, damageXAmmo: true, art: "shotgun", cost: 110, image: `${CARD_PATH}WE-008.jpg`, text: "DaÃ±o X por municion disponible del turno." },
-  green: { id: "green", name: "Green Herb", type: "Objeto", heal: 20, art: "herb", cost: 30, image: `${CARD_PATH}IT-001.jpg` },
-  yellow: { id: "yellow", name: "Yellow Herb", type: "Objeto", maxHeal: 10, art: "herb", cost: 50, image: `${CARD_PATH}IT-002.jpg` },
-  spray: { id: "spray", name: "First Aid Spray", type: "Objeto", fullHeal: true, art: "herb", cost: 70, image: `${CARD_PATH}IT-003.jpg` },
-  action1: { id: "action1", name: "Deadly Aim", type: "Accion", damageBonus: 20, art: "action", cost: 40, image: `${CARD_PATH}AC-001.jpg`, text: "+20 daÃ±o este turno." },
-  action2: { id: "action2", name: "Reload", type: "Accion", ammoBonus: 20, draw: 1, art: "action", cost: 40, image: `${CARD_PATH}AC-002.jpg`, text: "+20 municiÃ³n y roba 1 carta." },
-  action3: { id: "action3", name: "Master of Unlocking", type: "Accion", extraBuy: 1, goldBonus: 20, art: "action", cost: 50, image: `${CARD_PATH}AC-003.jpg`, text: "+1 compra y +20 oro." },
-  action4: { id: "action4", name: "Escape Route", type: "Accion", extraExplore: 1, draw: 1, art: "action", cost: 60, image: `${CARD_PATH}AC-004.jpg`, text: "+1 exploraciÃ³n y roba 1 carta." },
-  action5: { id: "action5", name: "Ominous Battle", type: "Accion", damageBonus: 30, extraAction: 1, art: "action", cost: 70, image: `${CARD_PATH}AC-005.jpg`, text: "+30 daÃ±o y +1 acciÃ³n." },
-  action6: { id: "action6", name: "Quick Reload", type: "Accion", ammoBonus: 30, goldBonus: 10, art: "action", cost: 50, image: `${CARD_PATH}AC-006.jpg`, text: "+30 municiÃ³n y +10 oro." },
-  action7: { id: "action7", name: "Tactical Advance", type: "Accion", extraAction: 1, draw: 1, art: "action", cost: 60, image: `${CARD_PATH}AC-007.jpg`, text: "+1 acciÃ³n y roba 1 carta." },
-  action8: { id: "action8", name: "Resource Sweep", type: "Accion", extraBuy: 1, goldBonus: 30, art: "action", cost: 60, image: `${CARD_PATH}AC-008.jpg`, text: "+1 compra y +30 oro." },
-  action9: { id: "action9", name: "Focused Fire", type: "Accion", damageBonus: 40, ammoBonus: 10, art: "action", cost: 80, image: `${CARD_PATH}AC-009.jpg`, text: "+40 daÃ±o y +10 municiÃ³n." },
-  action10: { id: "action10", name: "Emergency Supply", type: "Accion", draw: 2, goldBonus: 10, art: "action", cost: 70, image: `${CARD_PATH}AC-010.jpg`, text: "Roba 2 cartas y +10 oro." },
-  action11: { id: "action11", name: "Last Stand", type: "Accion", damageBonus: 20, extraExplore: 1, art: "action", cost: 80, image: `${CARD_PATH}AC-011.jpg`, text: "+20 daÃ±o y +1 exploraciÃ³n." },
-  action12: { id: "action12", name: "Field Command", type: "Accion", extraAction: 1, extraBuy: 1, goldBonus: 10, art: "action", cost: 90, image: `${CARD_PATH}AC-012.jpg`, text: "+1 acciÃ³n, +1 compra y +10 oro." },
+  grenade: { id: "grenade", name: "Grenade", type: "Arma", damage: 40, ammoCost: 0, splash: 10, art: "shotgun", cost: 60, image: `${CARD_PATH}WE-001.jpg`, text: "-5 dano a sus puntos de vida de cada jugador de los costado del jugador que explora. Se activa al explorar mansion esta carta." },
+  six: { id: "six", name: "Six Shooter", type: "Arma", damage: 50, ammoCost: 50, art: "handgun", cost: 90, image: `${CARD_PATH}WE-006.jpg` },
+  gatling: { id: "gatling", name: "Gatling Gun", type: "Arma", damage: 0, ammoCost: 0, damagePerAmmo: { step: 20, damage: 10 }, art: "shotgun", cost: 110, image: `${CARD_PATH}WE-007.jpg`, text: "Al explorar con esta arma puedes seleccionar cuanta municion tengas disponible para poder hacer daño." },
+  rocket: { id: "rocket", name: "Rocket Launcher", type: "Arma", damage: 90, ammoCost: 0, damageXAmmo: true, art: "shotgun", cost: 110, image: `${CARD_PATH}WE-008.jpg`, text: "DaÃ±o X por municion disponible del turno." },
+  green: { id: "green", name: "Green Herb", type: "Objeto", heal: 20, art: "herb", cost: 30, image: `${CARD_PATH}IT-001.jpg`, text: "cura 20" },
+  yellow: { id: "yellow", name: "Yellow Herb", type: "Objeto", maxHeal: 10, art: "herb", cost: 50, image: `${CARD_PATH}IT-002.jpg`, text: "vida mÃ¡xima +10" },
+  spray: { id: "spray", name: "First Aid Spray", type: "Objeto", fullHeal: true, art: "herb", cost: 70, image: `${CARD_PATH}IT-003.jpg`, text: "cura completa" },
+  action1: { id: "action1", name: "Mansion Foyer", type: "Accion", art: "action", cost: 30, image: `${CARD_PATH}AC-001.jpg`, text: "roba 2 cartas", draw: 2 },
+  action2: { id: "action2", name: "Deadly Aim", type: "Accion", art: "action", cost: 50, image: `${CARD_PATH}AC-002.jpg`, text: "+20 municion / todas mis armas selecionadad al atacar dan+10 dano", damageBonus: 10, ammoBonus: 20 },
+  action3: { id: "action3", name: "Shattered memories", type: "Accion", art: "action", cost: 20, image: `${CARD_PATH}AC-003.jpg`, text: "Seleciona 2 cartas de tu descarte y devuelvela al area de recurso, esta carta al finalizar el turno es devuelta la zona de recurso." },
+  action4: { id: "action4", name: "Escape from the dead city", type: "Accion", art: "action", cost: 70, image: `${CARD_PATH}AC-004.jpg`, text: "+2 accion / roba 1", extraAction: 2, draw: 1 },
+  action5: { id: "action5", name: "Reload", type: "Accion", art: "action", cost: 50, image: `${CARD_PATH}AC-005.jpg`, text: "+20 municion /+2 accion", ammoBonus: 20, extraAction: 2 },
+  action6: { id: "action6", name: "The Merchant", type: "Accion", art: "action", cost: 50, image: `${CARD_PATH}AC-006.jpg`, text: "+20 oro  / roba 1/ +1 compra", goldBonus: 20, extraBuy: 1, draw: 1 },
+  action7: { id: "action7", name: "Umbrella Corporation", type: "Accion", art: "action", cost: 50, image: `${CARD_PATH}AC-007.jpg`, text: "roba 2 / +1 accion", extraAction: 1, draw: 2 },
+  action8: { id: "action8", name: "Back To Back", type: "Accion", art: "action", cost: 30, image: `${CARD_PATH}AC-008.jpg`, text: "+10 oro / +1 accion", goldBonus: 10, extraAction: 1 },
+  action9: { id: "action9", name: "Item Mangament", type: "Accion", art: "action", cost: 30, image: `${CARD_PATH}AC-009.jpg`, text: "Devuelve al area de recursos 1 carta de municion y puedes conseguir otra carta de municion de hasta 30 de oro mas que la carta devuelta." },
+  action10: { id: "action10", name: "Ominous Battle", type: "Accion", art: "action", cost: 60, image: `${CARD_PATH}AC-010.jpg`, text: "+10 oro / roba 3", goldBonus: 10, draw: 3 },
+  action11: { id: "action11", name: "Master of Unlocking", type: "Accion", art: "action", cost: 30, image: `${CARD_PATH}AC-011.jpg`, text: "+1 accion / los dejamas jugadores entregan la primera carta del maso y si es un arma puedo escogerla y llevarla a mi pila de descarte.", extraAction: 1 },
+  action12: { id: "action12", name: "Struggle for Survival", type: "Accion", art: "action", cost: 30, image: `${CARD_PATH}AC-012.jpg`, text: "+1 accion / +1 exploracion", extraAction: 1, extraExplore: 1 },
 };
 
 const baseResourceIds = ["ammo10", "ammo20", "ammo30", "knife", "handgun", "green"];
+const actionResourceIds = Object.keys(catalog).filter((id) => catalog[id].type === "Accion");
 const scenarios = {
   firstTimer: {
     name: "First Timer",
@@ -86,18 +87,18 @@ const scenarios = {
 };
 
 const mansionStory = [
-  { name: "Majini", type: "Infectado", health: 20, damage: 10, decorations: 1, art: "infected", image: `${CARD_PATH}MA-001.jpg` },
-  { name: "Zombie Male", type: "Infectado", health: 30, damage: 20, decorations: 1, art: "runner", image: `${CARD_PATH}MA-002.jpg` },
-  { name: "Zombie Female", type: "Infectado", health: 30, damage: 20, decorations: 1, art: "runner", image: `${CARD_PATH}MA-003.jpg` },
-  { name: "Zombie Butcher", type: "Infectado", health: 40, damage: 20, decorations: 2, art: "brute", image: `${CARD_PATH}MA-004.jpg` },
-  { name: "Bui Kichwa", type: "Infectado", health: 40, damage: 20, decorations: 2, art: "brute", image: `${CARD_PATH}MA-005.jpg` },
-  { name: "Licker", type: "Infectado", health: 50, damage: 30, decorations: 2, art: "brute", image: `${CARD_PATH}MA-006.jpg` },
-  { name: "Hunter", type: "Infectado", health: 50, damage: 30, decorations: 2, art: "brute", image: `${CARD_PATH}MA-008.jpg` },
-  { name: "Nemesis T-Type", type: "Infectado", health: 60, damage: 40, decorations: 3, nemesis: true, art: "boss", image: `${CARD_PATH}MA-007.jpg` },
+  { name: "Majini", type: "Infectado", health: 15, damage: 10, decorations: 1, art: "infected", image: `${CARD_PATH}MA-001.jpg` },
+  { name: "Zombie Male", type: "Infectado", health: 20, damage: 20, decorations: 1, art: "runner", image: `${CARD_PATH}MA-002.jpg` },
+  { name: "Zombie Female", type: "Infectado", health: 15, damage: 20, decorations: 1, art: "runner", image: `${CARD_PATH}MA-003.jpg` },
+  { name: "Zombie Butcher", type: "Infectado", health: 15, damage: 10, decorations: 1, art: "brute", image: `${CARD_PATH}MA-004.jpg` },
+  { name: "Bui Kichwa", type: "Infectado", health: 10, damage: 10, decorations: 1, art: "brute", image: `${CARD_PATH}MA-005.jpg` },
+  { name: "Licker", type: "Infectado", health: 40, damage: 30, decorations: 3, art: "brute", image: `${CARD_PATH}MA-006.jpg` },
+  { name: "Hunter", type: "Infectado", health: 40, damage: 30, decorations: 4, art: "brute", image: `${CARD_PATH}MA-008.jpg` },
+  { name: "Nemesis T-Type", type: "Infectado", health: 60, damage: 40, decorations: 5, nemesis: true, art: "boss", image: `${CARD_PATH}MA-007.jpg` },
   { name: "Yellow Herb", type: "Objeto", health: 0, damage: 0, decorations: 0, mansionItem: "yellow", art: "herb", image: `${CARD_PATH}IT-002.jpg` },
   { name: "Gatling Case", type: "Objeto", health: 0, damage: 0, decorations: 1, mansionItem: "gatling", art: "shotgun", image: `${CARD_PATH}WE-007.jpg` },
   { name: "Rocket Case", type: "Objeto", health: 0, damage: 0, decorations: 1, mansionItem: "rocket", art: "shotgun", image: `${CARD_PATH}WE-008.jpg` },
-  { name: "Uroboros Aheri", type: "Jefe", health: 70, damage: 40, decorations: 4, boss: true, art: "boss", image: `${CARD_PATH}MA-010.jpg` },
+  { name: "Uroboros Aheri", type: "Jefe", health: 90, damage: 70, decorations: 8, boss: true, art: "boss", image: `${CARD_PATH}MA-010.jpg` },
 ];
 
 const mercenaryBonus = [
@@ -1174,9 +1175,34 @@ function getScenario() {
 }
 
 function levelFor(player) {
-  if (player.decorations >= 5) return 3;
-  if (player.decorations >= 3) return 2;
-  return 1;
+  return activeCharacterLevel(player)?.level || 0;
+}
+
+function characterLevelRules(character) {
+  return (character?.levels?.length ? character.levels : [
+    { min: 0, text: character?.trait || "" },
+    { min: 3, text: character?.trait || "" },
+    { min: 5, text: character?.trait || "" },
+  ])
+    .map((level, index) => ({
+      level: index + 1,
+      min: Number(level.min || 0),
+      text: level.text || "",
+    }))
+    .sort((a, b) => a.min - b.min);
+}
+
+function activeCharacterLevel(player) {
+  const rules = characterLevelRules(player?.character);
+  let active = null;
+  rules.forEach((rule) => {
+    if ((player?.decorations || 0) >= rule.min) active = rule;
+  });
+  return active;
+}
+
+function nextCharacterLevel(player) {
+  return characterLevelRules(player?.character).find((rule) => (player?.decorations || 0) < rule.min);
 }
 
 function canStart() {
@@ -1278,7 +1304,8 @@ function populateScenarios() {
 
 function buildResourceArea() {
   const forbidden = new Set(["gatling", "rocket"]);
-  const ids = [...baseResourceIds, ...getScenario().resources].filter((id) => !forbidden.has(id)).slice(0, 18);
+  const ids = [...new Set([...baseResourceIds, ...getScenario().resources, ...actionResourceIds])]
+    .filter((id) => catalog[id] && !forbidden.has(id));
   while (ids.length < 18) ids.push(baseResourceIds[ids.length % baseResourceIds.length]);
   state.resourceArea = ids.map((id) => ({ card: catalog[id], count: id === "ammo10" ? 28 : 6 }));
   state.selectedResource = 0;
@@ -2535,21 +2562,63 @@ function useSpecificItem(card) {
   }
 }
 
+function applyCharacterAbilityText(player, text) {
+  const source = cleanText(text).toLowerCase();
+  let applied = 0;
+  const numberFor = (pattern) => {
+    const match = source.match(pattern);
+    return match ? Number(match[1]) : 0;
+  };
+  const add = (key, value) => {
+    if (!value) return;
+    state.turn[key] += value;
+    applied += 1;
+  };
+  const heal = numberFor(/cura(?:r|ndo)?\s*(\d+)/);
+  if (heal) {
+    player.health = Math.min(player.maxHealth, player.health + heal);
+    applied += 1;
+  }
+  add("ammo", numberFor(/\+(\d+)\s*municion/));
+  add("gold", numberFor(/\+(\d+)\s*oro/));
+  add("damage", numberFor(/\+(\d+)\s*dano/));
+  add("actions", numberFor(/\+(\d+)\s*accion/));
+  add("buys", numberFor(/\+(\d+)\s*compra/));
+  add("explores", numberFor(/\+(\d+)\s*exploracion/));
+  add("ammo", -numberFor(/-(\d+)\s*municion/));
+  add("gold", -numberFor(/-(\d+)\s*oro/));
+  add("damage", -numberFor(/-(\d+)\s*dano/));
+  add("actions", -numberFor(/-(\d+)\s*accion/));
+  add("buys", -numberFor(/-(\d+)\s*compra/));
+  add("explores", -numberFor(/-(\d+)\s*exploracion/));
+  const draw = numberFor(/roba\s*(\d+)/);
+  if (draw) {
+    drawCards(player, draw);
+    applied += 1;
+  }
+  ["ammo", "gold", "damage", "actions", "buys", "explores"].forEach((key) => {
+    state.turn[key] = Math.max(0, state.turn[key]);
+  });
+  return applied;
+}
+
 function useCharacterEffect() {
   if (!state.started) return;
   if (!requireMyTurn()) return;
   const player = currentPlayer();
   if (state.turn.characterUsed) return notify("Efecto ya usado", "El efecto del personaje ya fue usado este turno.", "error");
-  const level = levelFor(player);
+  const activeLevel = activeCharacterLevel(player);
+  if (!activeLevel) {
+    const nextLevel = nextCharacterLevel(player);
+    const requirement = nextLevel ? `${nextLevel.min} medallas` : "mas medallas";
+    return notify("Habilidad bloqueada", `Necesitas ${requirement} para activar la habilidad del personaje.`, "error");
+  }
   state.turn.characterUsed = true;
-  if (player.character.name.includes("Rebecca")) player.health = Math.min(player.maxHealth, player.health + 20);
-  else if (player.character.name.includes("Leon")) player.health = Math.min(player.maxHealth, player.health + 10);
-  else if (player.character.name.includes("Barry")) state.turn.ammo += 10;
-  else if (player.character.name.includes("Claire") && level >= 2) state.turn.buys += 1;
-  else if (player.character.name.includes("Ada") && level >= 2) state.turn.gold += 20;
-  else if (player.character.name.includes("Jill") && level >= 3) state.turn.explores += 1;
-  else state.turn.damage += level >= 2 ? 10 : 5;
-  notify("Efecto de personaje", `${player.character.name} nivel ${level}: habilidad aplicada.`, "success");
+  const applied = applyCharacterAbilityText(player, activeLevel.text);
+  const message = applied
+    ? `${player.character.name} nivel ${activeLevel.level}: habilidad aplicada.`
+    : `${player.character.name} nivel ${activeLevel.level}: ${activeLevel.text}`;
+  notify("Efecto de personaje", message, applied ? "success" : "info");
   sound("click");
   renderGame();
 }
