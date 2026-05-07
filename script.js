@@ -1776,7 +1776,7 @@ function renderPlayed(current) {
   }
   cards.forEach((card) => {
     const el = document.createElement("div");
-    el.className = `card card-face card-${card.art}`;
+    el.className = `card card-face played-turn-card card-${card.art}`;
     el.innerHTML = cardFace(card, "played");
     played.append(el);
   });
