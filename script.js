@@ -1733,7 +1733,7 @@ function renderActionCards(current) {
   actions.forEach((card) => {
     const item = document.createElement("button");
     item.type = "button";
-    item.className = "action-choice card-face card-action";
+    item.className = "action-choice action-select-card card-face card-action";
     item.innerHTML = `
       ${cardFace(card, "action")}
       <span class="action-effect">${actionEffectText(card)}</span>
