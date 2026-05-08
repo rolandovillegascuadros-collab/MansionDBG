@@ -931,6 +931,420 @@ input {
   }
 }
 
+@media (min-width: 861px) {
+  .play-area {
+    grid-template-columns: clamp(180px, 19vw, 280px) minmax(0, 1fr);
+  }
+
+  .mansion-row {
+    grid-template-rows: minmax(132px, 1fr) auto;
+  }
+
+  .deck-stack {
+    min-height: 132px;
+  }
+
+  .mansion-card,
+  .deck-card {
+    width: min(164px, 90%);
+  }
+
+  .mansion-card.card-face {
+    max-height: none;
+    min-height: 0;
+    height: auto;
+    aspect-ratio: 2.5 / 3.5;
+  }
+
+  .dice-roll-panel {
+    min-height: 34px;
+    margin-top: 4px;
+    padding: 4px 6px;
+    display: grid;
+    grid-template-columns: minmax(92px, auto) minmax(0, 1fr);
+    gap: 6px;
+    align-items: center;
+  }
+
+  .dice-roll-panel.hidden {
+    display: none;
+  }
+
+  .dice-result {
+    padding: 3px;
+  }
+
+  .dice-result strong {
+    width: 24px;
+    height: 24px;
+    font-size: 0.84rem;
+  }
+}
+
+@media (min-width: 861px) and (max-width: 1600px), (min-width: 861px) and (max-height: 900px) {
+  .board {
+    grid-template-rows: clamp(72px, 12dvh, 104px) minmax(0, 1fr);
+  }
+
+  .table-grid .player-card {
+    min-height: 62px;
+    grid-template-columns: 38px minmax(0, 1fr);
+    padding: 4px;
+  }
+
+  .table-grid .player-card .portrait {
+    min-height: 52px;
+  }
+
+  .table-grid .character-read-btn,
+  .table-grid .player-card > span {
+    display: none;
+  }
+
+  .mansion-row {
+    grid-template-rows: minmax(112px, 1fr) auto;
+  }
+
+  .deck-stack {
+    min-height: 112px;
+  }
+
+  .mansion-card,
+  .deck-card {
+    width: min(136px, 92%);
+  }
+
+  .mansion-card.card-face {
+    max-height: none;
+    min-height: 0;
+    height: auto;
+    aspect-ratio: 2.5 / 3.5;
+  }
+
+  .turn-command {
+    min-height: 21px;
+    height: 21px;
+  }
+}
+
+@media (min-width: 861px) {
+  .play-area {
+    grid-template-columns: clamp(180px, 19vw, 280px) minmax(0, 1fr);
+  }
+
+  .mansion-row {
+    grid-template-rows: minmax(132px, 1fr) auto;
+  }
+
+  .deck-stack {
+    min-height: 132px;
+  }
+
+  .mansion-card,
+  .deck-card {
+    width: min(164px, 90%);
+  }
+
+  .dice-roll-panel {
+    min-height: 34px;
+    margin-top: 4px;
+    padding: 4px 6px;
+    display: grid;
+    grid-template-columns: minmax(92px, auto) minmax(0, 1fr);
+    gap: 6px;
+    align-items: center;
+  }
+
+  .dice-roll-panel.hidden {
+    display: none;
+  }
+
+  .dice-result {
+    padding: 3px;
+  }
+
+  .dice-result strong {
+    width: 24px;
+    height: 24px;
+    font-size: 0.84rem;
+  }
+}
+
+@media (min-width: 861px) and (max-width: 1600px), (min-width: 861px) and (max-height: 900px) {
+  .board {
+    grid-template-rows: clamp(72px, 12dvh, 104px) minmax(0, 1fr);
+  }
+
+  .table-grid .player-card {
+    min-height: 62px;
+    grid-template-columns: 38px minmax(0, 1fr);
+    padding: 4px;
+  }
+
+  .table-grid .player-card .portrait {
+    min-height: 52px;
+  }
+
+  .table-grid .character-read-btn,
+  .table-grid .player-card > span {
+    display: none;
+  }
+
+  .mansion-row {
+    grid-template-rows: minmax(112px, 1fr) auto;
+  }
+
+  .deck-stack {
+    min-height: 112px;
+  }
+
+  .mansion-card,
+  .deck-card {
+    width: min(136px, 92%);
+  }
+
+  .turn-command {
+    min-height: 21px;
+    height: 21px;
+  }
+}
+
+@media (min-width: 861px) {
+  .play-area {
+    grid-template-columns: clamp(180px, 19vw, 280px) minmax(0, 1fr);
+  }
+
+  .mansion-row {
+    grid-template-rows: minmax(132px, 1fr) auto;
+  }
+
+  .deck-stack {
+    min-height: 132px;
+  }
+
+  .mansion-card,
+  .deck-card {
+    width: min(164px, 90%);
+  }
+
+  .dice-roll-panel {
+    min-height: 34px;
+    margin-top: 4px;
+    padding: 4px 6px;
+    display: grid;
+    grid-template-columns: minmax(92px, auto) minmax(0, 1fr);
+    gap: 6px;
+    align-items: center;
+  }
+
+  .dice-roll-panel.hidden {
+    display: none;
+  }
+
+  .dice-result {
+    padding: 3px;
+  }
+
+  .dice-result strong {
+    width: 24px;
+    height: 24px;
+    font-size: 0.84rem;
+  }
+}
+
+@media (min-width: 861px) and (max-width: 1600px), (min-width: 861px) and (max-height: 900px) {
+  .board {
+    grid-template-rows: clamp(72px, 12dvh, 104px) minmax(0, 1fr);
+  }
+
+  .table-grid .player-card {
+    min-height: 62px;
+    grid-template-columns: 38px minmax(0, 1fr);
+    padding: 4px;
+  }
+
+  .table-grid .player-card .portrait {
+    min-height: 52px;
+  }
+
+  .table-grid .character-read-btn,
+  .table-grid .player-card > span {
+    display: none;
+  }
+
+  .mansion-row {
+    grid-template-rows: minmax(112px, 1fr) auto;
+  }
+
+  .deck-stack {
+    min-height: 112px;
+  }
+
+  .mansion-card,
+  .deck-card {
+    width: min(136px, 92%);
+  }
+
+  .turn-command {
+    min-height: 21px;
+    height: 21px;
+  }
+}
+
+@media (min-width: 861px) {
+  .board {
+    grid-template-rows: clamp(82px, 13dvh, 122px) minmax(0, 1fr);
+  }
+
+  .table-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: stretch;
+  }
+
+  .table-grid .player-card {
+    min-height: 78px;
+    grid-template-columns: clamp(44px, 18%, 68px) minmax(0, 1fr);
+    column-gap: 5px;
+    padding: 5px;
+  }
+
+  .table-grid .player-card .portrait {
+    min-height: 64px;
+  }
+
+  .table-grid .player-card > span {
+    font-size: clamp(0.5rem, 0.62vw, 0.64rem);
+    line-height: 1.15;
+  }
+
+  .table-grid .character-read-btn {
+    min-height: 18px;
+    height: 18px;
+    padding-inline: 6px;
+    font-size: 0.5rem;
+  }
+
+  .table-grid .player-meta {
+    font-size: clamp(0.5rem, 0.6vw, 0.62rem);
+  }
+
+  .play-area {
+    grid-template-columns: clamp(210px, 20vw, 300px) minmax(0, 1fr);
+  }
+
+  .mansion-card {
+    width: min(176px, 88%);
+  }
+
+  .deck-card {
+    width: min(176px, 86%);
+  }
+
+  .dice-roll-panel {
+    min-height: 34px;
+    margin-top: 4px;
+    padding: 4px 6px;
+    display: grid;
+    grid-template-columns: minmax(92px, auto) minmax(0, 1fr);
+    gap: 6px;
+    align-items: center;
+  }
+
+  .dice-roll-panel.hidden {
+    display: none;
+  }
+
+  .dice-roll-panel .section-title {
+    margin: 0;
+    align-items: center;
+  }
+
+  .dice-roll-panel .section-title h2 {
+    font-size: 0.68rem;
+  }
+
+  #dice-roll-status {
+    font-size: 0.64rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .dice-roll-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+  }
+
+  .dice-result {
+    gap: 2px;
+    padding: 3px;
+  }
+
+  .dice-result strong {
+    width: 24px;
+    height: 24px;
+    font-size: 0.84rem;
+  }
+
+  .dice-result span {
+    font-size: 0.54rem;
+  }
+}
+
+@media (min-width: 861px) and (max-width: 1600px), (min-width: 861px) and (max-height: 900px) {
+  .table-grid .player-card {
+    min-height: 64px;
+    grid-template-columns: 38px minmax(0, 1fr);
+    padding: 4px;
+  }
+
+  .table-grid .player-card .portrait {
+    min-height: 54px;
+  }
+
+  .table-grid .character-read-btn,
+  .table-grid .player-card > span {
+    display: none;
+  }
+
+  .table-grid .player-name-row strong {
+    font-size: 0.62rem;
+  }
+
+  .table-grid .player-name-row em {
+    padding: 2px 5px;
+    font-size: 0.52rem;
+  }
+
+  .table-grid .health-bar {
+    height: 5px;
+    margin: 3px 0;
+  }
+
+  .table-grid .player-meta {
+    font-size: 0.5rem;
+  }
+
+  .mansion-card {
+    width: min(154px, 90%);
+  }
+
+  .deck-card {
+    width: min(154px, 88%);
+  }
+
+  .action-row {
+    gap: 3px;
+    padding: 3px;
+  }
+
+  .turn-command {
+    min-height: 22px;
+    height: 22px;
+    font-size: 0.56rem;
+  }
+}
+
 .table-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(160px, 1fr));
@@ -5017,5 +5431,101 @@ input {
 @media (orientation: landscape) and (min-width: 1001px) and (min-height: 541px) and (max-width: 1368px) and (max-height: 1030px) {
   .right-rail {
     grid-template-rows: minmax(180px, 34dvh) auto minmax(0, 1fr);
+  }
+}
+/* Desktop/offline final visual normalization. */
+@media (min-width: 861px) {
+  .play-area {
+    grid-template-columns: clamp(180px, 19vw, 280px) minmax(0, 1fr);
+  }
+
+  .mansion-row {
+    grid-template-rows: minmax(132px, 1fr) auto;
+  }
+
+  .deck-stack {
+    min-height: 132px;
+  }
+
+  .mansion-card,
+  .deck-card {
+    width: min(164px, 90%);
+  }
+
+  .mansion-card.card-face {
+    max-height: none;
+    min-height: 0;
+    height: auto;
+    aspect-ratio: 2.5 / 3.5;
+  }
+
+  .dice-roll-panel {
+    min-height: 34px;
+    margin-top: 4px;
+    padding: 4px 6px;
+    display: grid;
+    grid-template-columns: minmax(92px, auto) minmax(0, 1fr);
+    gap: 6px;
+    align-items: center;
+  }
+
+  .dice-roll-panel.hidden {
+    display: none;
+  }
+
+  .dice-result {
+    padding: 3px;
+  }
+
+  .dice-result strong {
+    width: 24px;
+    height: 24px;
+    font-size: 0.84rem;
+  }
+}
+
+@media (min-width: 861px) and (max-width: 1600px), (min-width: 861px) and (max-height: 900px) {
+  .board {
+    grid-template-rows: clamp(72px, 12dvh, 104px) minmax(0, 1fr);
+  }
+
+  .table-grid .player-card {
+    min-height: 62px;
+    grid-template-columns: 38px minmax(0, 1fr);
+    padding: 4px;
+  }
+
+  .table-grid .player-card .portrait {
+    min-height: 52px;
+  }
+
+  .table-grid .character-read-btn,
+  .table-grid .player-card > span {
+    display: none;
+  }
+
+  .mansion-row {
+    grid-template-rows: minmax(112px, 1fr) auto;
+  }
+
+  .deck-stack {
+    min-height: 112px;
+  }
+
+  .mansion-card,
+  .deck-card {
+    width: min(136px, 92%);
+  }
+
+  .mansion-card.card-face {
+    max-height: none;
+    min-height: 0;
+    height: auto;
+    aspect-ratio: 2.5 / 3.5;
+  }
+
+  .turn-command {
+    min-height: 21px;
+    height: 21px;
   }
 }
