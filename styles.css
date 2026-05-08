@@ -4278,21 +4278,25 @@ input {
   }
 
   .controls-panel {
-    grid-template-rows: 30px 24px minmax(48px, 1fr) 40px 34px 44px;
-    gap: 3px;
+    grid-template-rows: 30px 22px minmax(38px, 1fr) 34px 34px 36px 34px;
+    gap: 2px;
   }
 
   .action-row {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    grid-row: 6;
-    min-height: 44px;
+    grid-row: 7;
+    min-height: 34px;
     align-self: end;
+    gap: 2px;
   }
 
   .turn-command {
-    min-height: 20px;
-    height: 20px;
-    font-size: 0.5rem;
+    min-height: 15px;
+    height: 15px;
+    padding: 0 3px;
+    border-radius: 5px;
+    font-size: 0.44rem;
+    line-height: 1;
   }
 
   .current-hero {
@@ -4311,7 +4315,6 @@ input {
   }
 
   .hero-read-btn,
-  .player-card-zones,
   .played-row,
   .turn-footer .status {
     display: none;
@@ -4343,6 +4346,8 @@ input {
     grid-row: 3;
     grid-template-columns: repeat(5, minmax(36px, 1fr));
     gap: 3px;
+    max-height: 70px;
+    overflow: hidden auto;
   }
 
   .card-face {
@@ -4355,24 +4360,106 @@ input {
   }
 
   .action-picker {
-    grid-row: 4;
-    height: 40px;
-    max-height: 40px;
+    grid-row: 5;
+    height: 34px;
+    max-height: 34px;
     padding: 3px;
   }
 
   .action-card-list .action-select-card,
   .weapon-list .weapon-select-card {
-    height: 28px;
-    min-height: 28px;
-    max-height: 28px;
+    height: 24px;
+    min-height: 24px;
+    max-height: 24px;
     grid-template-columns: 24px minmax(0, 1fr);
   }
 
   .weapon-picker {
-    grid-row: 5;
+    grid-row: 6;
+    height: 36px;
+    max-height: 36px;
+    padding: 3px;
+  }
+
+  .weapon-list,
+  .action-card-list {
+    max-height: 26px;
+    overflow: hidden auto;
+  }
+
+  .player-card-zones {
+    grid-row: 4;
+    display: grid;
+    grid-template-columns: 0.7fr 1.3fr;
+    gap: 3px;
+    min-height: 34px;
     height: 34px;
-    max-height: 34px;
+    overflow: hidden;
+  }
+
+  .player-zone {
+    padding: 3px;
+    border-radius: 5px;
+  }
+
+  .compact-title {
+    margin-bottom: 1px;
+  }
+
+  .compact-title h2,
+  .compact-title span {
+    font-size: 0.48rem;
+    line-height: 1;
+  }
+
+  .player-stack-zone,
+  .player-discard-zone {
+    min-height: 20px;
+    height: 20px;
+    gap: 3px;
+    overflow: hidden;
+  }
+
+  .mini-stack {
+    width: 34px;
+    height: 20px;
+  }
+
+  .mini-back-card {
+    inset: 2px 8px 1px 2px;
+    border-radius: 3px;
+    transform: translateX(calc(var(--i) * 3px)) translateY(calc(var(--i) * -0.5px)) rotate(calc(var(--i) * 1deg));
+  }
+
+  .mini-stack span {
+    min-width: 15px;
+    padding: 1px 3px;
+    font-size: 0.46rem;
+  }
+
+  .empty-stack {
+    font-size: 0.48rem;
+    line-height: 1;
+  }
+
+  .discard-mini-card {
+    width: 28px;
+    height: 20px;
+    min-height: 20px;
+    grid-template-columns: 12px minmax(0, 1fr);
+    gap: 2px;
+    padding: 2px;
+    border-radius: 4px;
+  }
+
+  .discard-mini-card .card-copy small,
+  .discard-mini-card .card-copy span {
+    display: none;
+  }
+
+  .discard-mini-card .card-copy strong {
+    font-size: 0.38rem;
+    line-height: 1;
   }
 
   .right-rail {
