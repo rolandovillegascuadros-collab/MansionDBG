@@ -932,16 +932,16 @@ input {
 .table-grid .player-card {
   display: grid;
   grid-template-columns: clamp(68px, 22%, 92px) minmax(0, 1fr);
-  grid-template-rows: auto auto auto minmax(0, 1fr);
+  grid-template-rows: auto auto auto auto;
   column-gap: 8px;
-  min-height: 116px;
+  min-height: 104px;
 }
 
 .table-grid .player-card .portrait {
   grid-row: 1 / -1;
   width: 100%;
   height: 100%;
-  min-height: 96px;
+  min-height: 88px;
   margin: 0;
   background: rgba(8, 10, 14, 0.78);
 }
@@ -953,10 +953,30 @@ input {
 
 .table-grid .player-name-row,
 .table-grid .player-card > span,
-.table-grid .player-card > p,
+.table-grid .character-read-btn,
 .table-grid .health-bar,
 .table-grid .player-meta {
   grid-column: 2;
+}
+
+.character-read-btn {
+  justify-self: start;
+  min-height: 22px;
+  height: 22px;
+  margin: 2px 0 4px;
+  padding: 0 8px;
+  border: 1px solid rgba(216, 168, 77, 0.38);
+  border-radius: 999px;
+  color: #f6d47a;
+  background: rgba(216, 168, 77, 0.1);
+  font-size: 0.58rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.character-read-btn:hover {
+  border-color: rgba(216, 168, 77, 0.72);
+  background: rgba(216, 168, 77, 0.18);
 }
 
 .portrait {
@@ -1290,6 +1310,10 @@ input {
   font-size: 0.72rem;
 }
 
+.hero-read-btn {
+  margin-top: 4px;
+}
+
 @media (min-width: 861px) {
   .controls-panel {
     grid-template-rows: auto auto auto minmax(0, 0.9fr) auto auto auto auto;
@@ -1323,16 +1347,23 @@ input {
   }
 
   .live-trackers div {
-    padding: 4px;
+    padding: 4px 5px 4px 22px;
     border-radius: 6px;
   }
 
+  .live-trackers div::before {
+    left: 6px;
+    width: 12px;
+    height: 12px;
+    font-size: 0.5rem;
+  }
+
   .live-trackers span {
-    font-size: 0.52rem;
+    font-size: 0.48rem;
   }
 
   .live-trackers strong {
-    font-size: 0.76rem;
+    font-size: 0.68rem;
   }
 
   .hand {
@@ -1367,16 +1398,46 @@ input {
 .live-trackers {
   display: grid;
   grid-template-columns: repeat(4, minmax(70px, 1fr));
-  gap: 6px;
-  margin-bottom: 8px;
+  gap: 5px;
+  margin-bottom: 6px;
 }
 
 .live-trackers div {
+  position: relative;
   min-width: 0;
-  padding: 6px;
-  border: 1px solid var(--line);
+  padding: 5px 6px 5px 24px;
+  border: 1px solid rgba(216, 168, 77, 0.18);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.045);
+  background:
+    linear-gradient(135deg, rgba(216, 168, 77, 0.09), rgba(79, 191, 138, 0.045)),
+    rgba(255, 255, 255, 0.035);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.live-trackers div::before {
+  position: absolute;
+  left: 7px;
+  top: 50%;
+  width: 13px;
+  height: 13px;
+  display: grid;
+  place-items: center;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  color: #10141b;
+  background: var(--accent);
+  font-size: 0.56rem;
+  font-weight: 900;
+}
+
+.live-trackers div:nth-child(1)::before { content: "+"; background: #57c789; }
+.live-trackers div:nth-child(2)::before { content: "A"; }
+.live-trackers div:nth-child(3)::before { content: "$"; }
+.live-trackers div:nth-child(4)::before { content: "?"; }
+.live-trackers div:nth-child(5)::before { content: "*"; }
+.live-trackers div:nth-child(6)::before { content: "!"; background: #e05656; }
+.live-trackers div:nth-child(7)::before { content: "$"; }
+.live-trackers div:nth-child(8)::before { content: "M"; }
 }
 
 .live-trackers span,
@@ -1386,14 +1447,15 @@ input {
 
 .live-trackers span {
   color: var(--muted);
-  font-size: 0.6rem;
+  font-size: 0.52rem;
   font-weight: 800;
   text-transform: uppercase;
 }
 
 .live-trackers strong {
-  margin-top: 2px;
-  font-size: 0.86rem;
+  margin-top: 1px;
+  font-size: 0.74rem;
+  line-height: 1;
 }
 
 .hand {
@@ -1403,6 +1465,150 @@ input {
   min-height: 0;
   align-items: end;
   overflow: auto;
+}
+
+.player-card-zones {
+  display: grid;
+  grid-template-columns: minmax(120px, 0.8fr) minmax(180px, 1.2fr);
+  gap: 8px;
+  min-height: 74px;
+}
+
+.player-zone {
+  min-width: 0;
+  padding: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: rgba(8, 11, 16, 0.42);
+}
+
+.compact-title {
+  margin-bottom: 5px;
+}
+
+.compact-title h2,
+.compact-title span {
+  font-size: 0.72rem;
+}
+
+.player-stack-zone,
+.player-discard-zone {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+}
+
+.mini-stack {
+  position: relative;
+  width: 68px;
+  height: 46px;
+}
+
+.mini-back-card {
+  position: absolute;
+  inset: 4px 12px 2px 4px;
+  border: 1px solid rgba(216, 168, 77, 0.45);
+  border-radius: 5px;
+  background:
+    linear-gradient(135deg, rgba(71, 25, 25, 0.8), rgba(18, 23, 32, 0.95)),
+    url("assets/cards/ReversoRecursos.jpg") center / cover;
+  transform: translateX(calc(var(--i) * 5px)) translateY(calc(var(--i) * -1px)) rotate(calc(var(--i) * 1deg));
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.35);
+}
+
+.mini-stack span {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  min-width: 22px;
+  padding: 3px 5px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #11151b;
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-align: center;
+}
+
+.mini-stack.dealing .mini-back-card:last-of-type {
+  animation: dealToHand 0.58s ease-out both;
+}
+
+.empty-stack {
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.empty-stack strong {
+  display: block;
+  color: var(--text);
+}
+
+.discard-mini-card {
+  width: 54px;
+  height: 48px;
+  min-height: 48px;
+  aspect-ratio: auto;
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 4px;
+}
+
+.discard-mini-card .card-copy small,
+.discard-mini-card .card-copy span {
+  display: none;
+}
+
+.discard-mini-card .card-copy strong {
+  font-size: 0.52rem;
+}
+
+.used-card {
+  opacity: 0.42;
+  filter: grayscale(0.8);
+}
+
+@keyframes dealToHand {
+  from {
+    transform: translateX(0) translateY(0) rotate(0deg);
+  }
+  to {
+    transform: translateX(180px) translateY(-70px) rotate(8deg);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 860px) {
+  .player-card-zones {
+    grid-template-columns: 1fr 1fr;
+    min-height: 58px;
+  }
+
+  .player-zone {
+    padding: 5px;
+  }
+
+  .player-stack-zone,
+  .player-discard-zone {
+    min-height: 38px;
+  }
+
+  .mini-stack {
+    width: 54px;
+    height: 36px;
+  }
+
+  .discard-mini-card {
+    width: 44px;
+    height: 38px;
+    min-height: 38px;
+  }
+
+  .discard-mini-card .card-copy strong {
+    font-size: 0.46rem;
+  }
 }
 
 .action-picker {
@@ -1848,9 +2054,17 @@ input {
 
 .action-row {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 6px;
-  margin: 8px 0;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+  margin: 5px 0;
+  padding: 5px;
+  min-height: 38px;
+  max-height: 82px;
+  align-items: stretch;
+  border: 1px solid rgba(216, 168, 77, 0.24);
+  border-radius: 8px;
+  background: rgba(8, 11, 16, 0.62);
+  overflow: hidden;
 }
 
 .action-row button {
@@ -1858,9 +2072,29 @@ input {
 }
 
 .turn-command {
-  min-height: 32px;
-  padding: 0 6px;
-  font-size: 0.7rem;
+  width: 100%;
+  min-height: 28px;
+  height: 28px;
+  padding: 0 5px;
+  border-radius: 6px;
+  font-size: 0.62rem;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 1320px) and (min-width: 861px) {
+  .action-row {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    max-height: 74px;
+  }
+
+  .turn-command {
+    min-height: 26px;
+    height: 26px;
+    font-size: 0.6rem;
+  }
 }
 
 .end-command {
@@ -2982,8 +3216,10 @@ input {
   }
 
   .action-row {
-    gap: 5px;
-    margin: 6px 0;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 4px;
+    margin: 4px 0;
+    padding: 4px;
   }
 
   .turn-footer {
@@ -3131,7 +3367,8 @@ input {
   }
 
   .turn-command {
-    min-height: 28px;
+    min-height: 26px;
+    height: 26px;
   }
 }
 

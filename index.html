@@ -313,6 +313,22 @@
                 </div>
               </div>
               <div class="hand" id="hand"></div>
+              <div class="player-card-zones">
+                <div class="player-zone">
+                  <div class="section-title compact-title">
+                    <h2>Tu mazo</h2>
+                    <span id="player-deck-count">0 cartas</span>
+                  </div>
+                  <div class="player-stack-zone" id="player-deck-zone" aria-label="Mazo del jugador"></div>
+                </div>
+                <div class="player-zone">
+                  <div class="section-title compact-title">
+                    <h2>Tu descarte</h2>
+                    <span id="player-discard-count">0 cartas</span>
+                  </div>
+                  <div class="player-discard-zone" id="player-discard-zone" aria-label="Zona de descarte del jugador"></div>
+                </div>
+              </div>
               <div class="action-picker">
                 <div class="section-title">
                   <h2>Acciones en mano</h2>
@@ -339,13 +355,13 @@
                 <select id="versus-target"></select>
               </div>
               <div class="action-row">
-                <button class="turn-command" type="button" id="explore">Explorar / atacar</button>
-                <button class="turn-command" type="button" id="buy-resource">Comprar carta</button>
-                <button class="turn-command" type="button" id="play-action">Jugar accion</button>
-                <button class="turn-command" type="button" id="use-item">Utilizar objeto</button>
-                <button class="turn-command" type="button" id="character-effect">Efecto personaje</button>
-                <button class="turn-command end-command" type="button" id="end-turn">Finalizar turno</button>
-                <button class="turn-command vote-command" type="button" id="request-end-game">Terminar partida</button>
+                <button class="turn-command" type="button" id="explore" aria-label="Explorar o atacar">Explorar</button>
+                <button class="turn-command" type="button" id="buy-resource" aria-label="Comprar carta">Comprar</button>
+                <button class="turn-command" type="button" id="play-action" aria-label="Jugar accion">Accion</button>
+                <button class="turn-command" type="button" id="use-item" aria-label="Utilizar objeto">Objeto</button>
+                <button class="turn-command" type="button" id="character-effect" aria-label="Efecto personaje">Personaje</button>
+                <button class="turn-command end-command" type="button" id="end-turn" aria-label="Finalizar turno">Fin turno</button>
+                <button class="turn-command vote-command" type="button" id="request-end-game" aria-label="Terminar partida">Terminar</button>
               </div>
               <div class="turn-footer">
                 <p class="status" id="game-status">Crea una sala y comienza para repartir personajes al azar.</p>

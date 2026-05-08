@@ -45,10 +45,19 @@ const catalog = {
   knife: { id: "knife", name: "Combat Knife", type: "Arma", damage: 10, ammoCost: 0, art: "knife", cost: 20, image: `${CARD_PATH}WE-004.jpg` },
   handgun: { id: "handgun", name: "Handgun", type: "Arma", damage: 20, ammoCost: 20, art: "handgun", cost: 40, image: `${CARD_PATH}WE-009.jpg` },
   bow: { id: "bow", name: "Longbow", type: "Arma", damage: 30, ammoCost: 20, art: "handgun", cost: 50, image: `${CARD_PATH}WE-002.jpg` },
-  grenade: { id: "grenade", name: "Grenade", type: "Arma", damage: 40, ammoCost: 0, splash: 10, art: "shotgun", cost: 60, image: `${CARD_PATH}WE-001.jpg`, text: "-5 dano a sus puntos de vida de cada jugador de los costado del jugador que explora. Se activa al explorar mansion esta carta." },
+  grenade: { id: "grenade", name: "Grenade", type: "Arma", damage: 40, ammoCost: 0, splash: 10, explosive: true, art: "shotgun", cost: 60, image: `${CARD_PATH}WE-001.jpg`, text: "-5 dano a sus puntos de vida de cada jugador de los costado del jugador que explora. Se activa al explorar mansion esta carta." },
   six: { id: "six", name: "Six Shooter", type: "Arma", damage: 50, ammoCost: 50, art: "handgun", cost: 90, image: `${CARD_PATH}WE-006.jpg` },
   gatling: { id: "gatling", name: "Gatling Gun", type: "Arma", damage: 0, ammoCost: 0, damagePerAmmo: { step: 20, damage: 10 }, art: "shotgun", cost: 110, image: `${CARD_PATH}WE-007.jpg`, text: "Al explorar con esta arma puedes seleccionar cuanta municion tengas disponible para poder hacer daño." },
-  rocket: { id: "rocket", name: "Rocket Launcher", type: "Arma", damage: 90, ammoCost: 0, damageXAmmo: true, art: "shotgun", cost: 110, image: `${CARD_PATH}WE-008.jpg`, text: "DaÃ±o X por municion disponible del turno." },
+  rocket: { id: "rocket", name: "Rocket Launcher", type: "Arma", damage: 90, ammoCost: 0, damageXAmmo: true, explosive: true, art: "shotgun", cost: 110, image: `${CARD_PATH}WE-008.jpg`, text: "DaÃ±o X por municion disponible del turno." },
+  submission: { id: "submission", name: "Submission", type: "Arma", damage: 5, ammoCost: 0, art: "knife", cost: 20, image: `${CARD_PATH}WE-003.jpg`, text: "Si tu vida es 80 o superior, esta arma gana +5 dano.", weaponClass: "cuchillo" },
+  survivalKnife: { id: "survivalKnife", name: "Survival Knife", type: "Arma", damage: 10, ammoCost: 0, art: "knife", cost: 50, image: `${CARD_PATH}WE-005.jpg`, text: "+5 dano por cada otro cuchillo usado este turno.", weaponClass: "cuchillo" },
+  burstHandgun: { id: "burstHandgun", name: "Burst-Fire Handgun", type: "Arma", damage: 20, ammoCost: 30, art: "handgun", cost: 60, image: `${CARD_PATH}WE-010.jpg`, text: "Si atacas con mas de 1 arma, esta pistola gana +20 dano.", weaponClass: "pistola" },
+  assaultMachineGun: { id: "assaultMachineGun", name: "Assault Machine Gun", type: "Arma", damage: 20, ammoCost: 40, art: "shotgun", cost: 30, image: `${CARD_PATH}WE-011.jpg`, weaponClass: "machine gun" },
+  fullBoreMachineGun: { id: "fullBoreMachineGun", name: "Full-Bore Machine Gun", type: "Arma", damage: 40, ammoCost: 70, art: "shotgun", cost: 100, image: `${CARD_PATH}WE-012.jpg`, text: "Si tienes mas de 100 municion, esta arma gana +30 dano.", weaponClass: "machine gun" },
+  pumpShotgun: { id: "pumpShotgun", name: "Pump-Action Shotgun", type: "Arma", damage: 25, ammoCost: 40, extraExplore: 1, art: "shotgun", cost: 40, image: `${CARD_PATH}WE-013.jpg`, text: "+1 exploracion este turno.", weaponClass: "escopeta" },
+  automaticShotgun: { id: "automaticShotgun", name: "Automatic Shotgun", type: "Arma", damage: 50, ammoCost: 80, extraExplore: 1, art: "shotgun", cost: 80, image: `${CARD_PATH}WE-014.jpg`, text: "Si el proximo infectado tiene 40 o menos vida, lo derrotas. +1 exploracion.", weaponClass: "escopeta" },
+  boltRifle: { id: "boltRifle", name: "Bolt-Action Rifle", type: "Arma", damage: 20, ammoCost: 50, art: "handgun", cost: 50, image: `${CARD_PATH}WE-015.jpg`, weaponClass: "rifle" },
+  semiRifle: { id: "semiRifle", name: "Semi-Automatic Rifle", type: "Arma", damage: 30, ammoCost: 70, art: "handgun", cost: 90, image: `${CARD_PATH}WE-016.jpg`, text: "+10 dano por cada accion jugada este turno.", weaponClass: "rifle" },
   green: { id: "green", name: "Green Herb", type: "Objeto", heal: 20, art: "herb", cost: 30, image: `${CARD_PATH}IT-001.jpg`, text: "cura 20" },
   yellow: { id: "yellow", name: "Yellow Herb", type: "Objeto", maxHeal: 10, art: "herb", cost: 50, image: `${CARD_PATH}IT-002.jpg`, text: "vida mÃ¡xima +10" },
   spray: { id: "spray", name: "First Aid Spray", type: "Objeto", fullHeal: true, art: "herb", cost: 70, image: `${CARD_PATH}IT-003.jpg`, text: "cura completa" },
@@ -67,6 +76,7 @@ const catalog = {
 };
 
 const baseResourceIds = ["ammo10", "ammo20", "ammo30", "knife", "handgun", "green"];
+const weaponResourceIds = Object.keys(catalog).filter((id) => catalog[id].type === "Arma" && !["gatling", "rocket"].includes(id));
 const actionResourceIds = Object.keys(catalog).filter((id) => catalog[id].type === "Accion");
 const scenarios = {
   firstTimer: {
@@ -237,6 +247,10 @@ function freshTurn() {
     gold: 0,
     ammo: 0,
     weaponAmmoSpent: 0,
+    weaponUses: {},
+    actionsPlayed: 0,
+    drawAnimation: 0,
+    weaponDamageBonus: 0,
     characterUsed: false,
     autoGold: 0,
     autoAmmo: 0,
@@ -1304,7 +1318,7 @@ function populateScenarios() {
 
 function buildResourceArea() {
   const forbidden = new Set(["gatling", "rocket"]);
-  const ids = [...new Set([...baseResourceIds, ...getScenario().resources, ...actionResourceIds])]
+  const ids = [...new Set([...baseResourceIds, ...getScenario().resources, ...weaponResourceIds, ...actionResourceIds])]
     .filter((id) => catalog[id] && !forbidden.has(id));
   while (ids.length < 18) ids.push(baseResourceIds[ids.length % baseResourceIds.length]);
   state.resourceArea = ids.map((id) => ({ card: catalog[id], count: id === "ammo10" ? 28 : 6 }));
@@ -1453,7 +1467,7 @@ function renderPlayers() {
         <em>${stateLabel}</em>
       </div>
       <span>${player.character.name} - Nivel ${levelFor(player)}</span>
-      <p>${player.character.trait}</p>
+      <button class="character-read-btn" type="button">Leer caracteristicas</button>
       <div class="health-bar"><span style="width:${hpPercent}%"></span></div>
       <div class="player-meta">
         <span>Vida ${player.health}</span>
@@ -1461,8 +1475,17 @@ function renderPlayers() {
         <span>Muertes ${player.deaths || 0}/3</span>
       </div>
     `;
+    card.querySelector(".character-read-btn").addEventListener("click", () => showCharacterDetails(player));
     grid.append(card);
   });
+}
+
+function showCharacterDetails(player) {
+  const rules = characterLevelRules(player.character)
+    .map((rule) => `Nivel ${rule.level}: ${rule.min} medallas - ${rule.text || "Sin texto"}`)
+    .join("\n");
+  const passive = player.character.passive ? `\nPasivo: ${player.character.passive}` : "";
+  window.alert(`${player.character.name}\nVida base: ${player.character.health}\nMedallas actuales: ${player.decorations}\n\n${rules}${passive}`);
 }
 
 function renderResources() {
@@ -1544,6 +1567,7 @@ function renderGame() {
   renderLiveTrackers(current);
   renderMansionCard(mode);
   renderHand(current);
+  renderPlayerCardZones(myPlayer());
   renderActionCards(current);
   renderWeapons(current);
   renderPlayed(current);
@@ -1649,7 +1673,7 @@ function renderTurnControls() {
     button.disabled = state.started && !canAct;
   });
   $("#request-end-game").disabled = !state.started || hasVotedToEnd();
-  $("#request-end-game").textContent = hasVotedToEnd() ? "Voto enviado" : "Terminar partida";
+  $("#request-end-game").textContent = hasVotedToEnd() ? "Votado" : "Terminar";
   $("#mansion-card").disabled = getModeKey() === "versus" || (state.started && !canAct);
   $$("#hand button, #action-card-list button, #weapon-list button").forEach((button) => {
     button.disabled = state.started && !canAct;
@@ -1729,6 +1753,37 @@ function renderHand(current) {
   });
 }
 
+function renderCardBackStack(count, label) {
+  if (count <= 0) return `<div class="empty-stack"><span>${label}</span><strong>Sin cartas</strong></div>`;
+  const visible = Math.min(5, count);
+  const cards = Array.from({ length: visible }, (_, index) => (
+    `<div class="mini-back-card" style="--i:${index}"></div>`
+  )).join("");
+  return `<div class="mini-stack ${state.turn.drawAnimation ? "dealing" : ""}">${cards}<span>${count}</span></div>`;
+}
+
+function renderPlayerCardZones(player) {
+  const deckZone = $("#player-deck-zone");
+  const discardZone = $("#player-discard-zone");
+  if (!deckZone || !discardZone) return;
+  const deckCount = player?.deck?.length || 0;
+  const discard = player?.discard || [];
+  $("#player-deck-count").textContent = `${deckCount} cartas`;
+  $("#player-discard-count").textContent = `${discard.length} cartas`;
+  deckZone.innerHTML = renderCardBackStack(deckCount, "Mazo");
+  discardZone.innerHTML = "";
+  if (!discard.length) {
+    discardZone.innerHTML = "<div class=\"empty-stack\"><span>Descarte</span><strong>Sin cartas</strong></div>";
+    return;
+  }
+  discard.slice(-4).reverse().forEach((card) => {
+    const item = document.createElement("div");
+    item.className = `card card-face discard-mini-card card-${card.art || "ammo"}`;
+    item.innerHTML = cardFace(card, "discard");
+    discardZone.append(item);
+  });
+}
+
 async function setCurrentAvailability(online) {
   if (!state.currentUser) return;
   state.currentUser.online = Boolean(online);
@@ -1782,9 +1837,11 @@ function renderWeapons(current) {
   }
   weapons.forEach((card) => {
     const selectedWeapon = current.selectedWeapons.some((weapon) => weapon.instanceId === card.instanceId);
+    const usedUp = weaponUseCount(card) >= weaponUseLimit(current, card);
     const button = document.createElement("button");
     button.type = "button";
-    button.className = `card card-face weapon-select-card card-${card.art} ${selectedWeapon ? "selected-card" : ""}`;
+    button.className = `card card-face weapon-select-card card-${card.art} ${selectedWeapon ? "selected-card" : ""} ${usedUp ? "used-card" : ""}`;
+    button.disabled = usedUp && !selectedWeapon;
     button.setAttribute("aria-label", `${selectedWeapon ? "Quitar" : "Seleccionar"} ${card.name}`);
     button.innerHTML = cardFace(card, "weapon");
     button.addEventListener("click", () => selectWeapon(card));
@@ -1822,9 +1879,11 @@ function renderLiveTrackers(current) {
     ${characterPortrait(mine.character)}
     <div>
       <strong>${mine.character.name}</strong>
-      <span>Tu personaje - Nivel ${levelFor(mine)} - ${mine.character.trait}</span>
+      <span>Tu personaje - Nivel ${levelFor(mine)}</span>
+      <button class="character-read-btn hero-read-btn" type="button">Leer caracteristicas</button>
     </div>
   `;
+  $("#current-hero .hero-read-btn")?.addEventListener("click", () => showCharacterDetails(mine));
   $("#live-health").textContent = `${mine.health}/${mine.maxHealth}`;
   $("#live-decorations").textContent = mine.decorations;
   const isMyTurnNow = isMyTurn();
@@ -2245,7 +2304,9 @@ function playHandCard(instanceId) {
   }
   if (card.type === "Accion") {
     if (state.turn.actions <= 0) return notify("No puedes jugar acciÃ³n", "No quedan acciones este turno.", "error");
+    if (card.id === "action9" && !playItemManagement(player, card)) return;
     state.turn.actions -= 1;
+    state.turn.actionsPlayed += 1;
     state.turn.damage += card.damageBonus || 0;
     state.turn.gold += card.goldBonus || 0;
     state.turn.ammo += card.ammoBonus || 0;
@@ -2277,8 +2338,13 @@ function selectWeapon(card) {
     state.turn.ammo += card.ammoCost || 0;
     state.turn.weaponAmmoSpent = Math.max(0, state.turn.weaponAmmoSpent - (card.ammoCost || 0));
     state.turn.damage = Math.max(0, state.turn.damage - weaponDamage(card));
+    state.turn.explores = Math.max(0, state.turn.explores - (card.extraExplore || 0));
     notify("Arma retirada", `${card.name} ya no se usarÃ¡ en este ataque.`);
     renderGame();
+    return;
+  }
+  if (weaponUseCount(card) >= weaponUseLimit(player, card)) {
+    notify("Arma ya usada", `${card.name} ya fue usada en una exploracion de este turno.`, "error");
     return;
   }
   if (state.turn.ammo < (card.ammoCost || 0)) {
@@ -2288,6 +2354,7 @@ function selectWeapon(card) {
   state.turn.ammo -= card.ammoCost || 0;
   state.turn.weaponAmmoSpent += card.ammoCost || 0;
   state.turn.damage += weaponDamage(card);
+  state.turn.explores += card.extraExplore || 0;
   player.selectedWeapons.push(card);
   notify("Arma seleccionada", `${card.name}: +${weaponDamage(card)} daÃ±o. Coste: ${card.ammoCost || 0} municiÃ³n.`, "success");
   if (card.id === "grenade" && state.players.length > 1) {
@@ -2302,14 +2369,62 @@ function selectWeapon(card) {
   renderGame();
 }
 
+function weaponUseCount(card) {
+  return state.turn.weaponUses?.[card.instanceId || card.id] || 0;
+}
+
+function weaponUseLimit(player, card) {
+  const activeText = cleanText(activeCharacterLevel(player)?.text || "").toLowerCase();
+  if (card.weaponClass === "pistola" && activeText.includes("pistola") && activeText.includes("dos veces")) return 2;
+  if (activeText.includes("armas") && activeText.includes("dos veces")) return 2;
+  return 1;
+}
+
+function markSelectedWeaponsUsed(player) {
+  state.turn.weaponUses ||= {};
+  (player.selectedWeapons || []).forEach((weapon) => {
+    const key = weapon.instanceId || weapon.id;
+    state.turn.weaponUses[key] = (state.turn.weaponUses[key] || 0) + 1;
+  });
+}
+
+function returnCardToResource(card) {
+  const pile = state.resourceArea.find((item) => item.card.id === card.id);
+  if (pile) pile.count += 1;
+}
+
+function resolveUsedWeaponsAfterExplore(player) {
+  const used = [...(player.selectedWeapons || [])];
+  const usedDamage = used.reduce((total, weapon) => total + weaponDamage(weapon), 0);
+  markSelectedWeaponsUsed(player);
+  const activeText = cleanText(activeCharacterLevel(player)?.text || "").toLowerCase();
+  const keepExplosive = activeText.includes("explosiva") && activeText.includes("descarte");
+  used.forEach((weapon) => {
+    const isExplosive = weapon.explosive || weapon.id === "grenade" || weapon.id === "rocket";
+    if (!isExplosive) return;
+    player.hand = player.hand.filter((card) => card.instanceId !== weapon.instanceId);
+    if (keepExplosive) player.discard.push(weapon);
+    else returnCardToResource(weapon);
+  });
+  player.selectedWeapons = [];
+  state.turn.weaponAmmoSpent = 0;
+  state.turn.weaponDamageBonus = 0;
+  state.turn.damage = Math.max(0, state.turn.damage - usedDamage);
+}
+
 function weaponDamage(card) {
-  if (card.damagePerAmmo) return Math.floor((state.turn.autoAmmo || 0) / card.damagePerAmmo.step) * card.damagePerAmmo.damage;
-  if (card.damageXAmmo) return state.turn.autoAmmo || 0;
-  return card.damage || 0;
+  let damage = card.damage || 0;
+  if (card.damagePerAmmo) damage = Math.floor((state.turn.autoAmmo || 0) / card.damagePerAmmo.step) * card.damagePerAmmo.damage;
+  if (card.damageXAmmo) damage = state.turn.autoAmmo || 0;
+  if (card.id === "burstHandgun" && currentPlayer()?.selectedWeapons?.length > 0) damage += 20;
+  if (card.id === "fullBoreMachineGun" && state.turn.ammo + state.turn.weaponAmmoSpent > 100) damage += 30;
+  if (card.id === "semiRifle") damage += (state.turn.actionsPlayed || 0) * 10;
+  return damage + (state.turn.weaponDamageBonus || 0);
 }
 
 function drawCards(player, amount) {
   const drawn = [];
+  state.turn.drawAnimation = amount;
   for (let i = 0; i < amount; i += 1) {
     if (player.deck.length === 0) {
       player.deck = shuffle(player.discard);
@@ -2322,6 +2437,43 @@ function drawCards(player, amount) {
     }
   }
   applyAmmoResourcesFromCards(player, drawn);
+  setTimeout(() => {
+    state.turn.drawAnimation = 0;
+    renderGame();
+  }, 650);
+}
+
+function addCardToResource(card) {
+  const pile = state.resourceArea.find((item) => item.card.id === card.id);
+  if (pile) pile.count += 1;
+}
+
+function takeResourceCardById(id) {
+  const pile = state.resourceArea.find((item) => item.card.id === id && item.count > 0);
+  if (!pile) return null;
+  pile.count -= 1;
+  return cloneCard(pile.card);
+}
+
+function playItemManagement(player) {
+  const ammoCards = player.hand.filter((card) => card.type === "Municion");
+  const upgradeable = ammoCards.filter((card) => card.id === "ammo10" || card.id === "ammo20");
+  if (!upgradeable.length) {
+    window.alert("Item Management no se puede usar: solo tienes Ammo x30 o no tienes municion disponible para devolver.");
+    notify("Item Management bloqueada", "Necesitas devolver Ammo x10 o Ammo x20 para obtener una municion superior.", "error");
+    return false;
+  }
+  const choice = upgradeable.length === 1
+    ? upgradeable[0]
+    : upgradeable.find((card) => window.confirm(`¿Devolver ${card.name} al area de recursos?`)) || null;
+  if (!choice) return false;
+  const nextId = choice.id === "ammo10" ? "ammo20" : "ammo30";
+  player.hand = player.hand.filter((card) => card.instanceId !== choice.instanceId);
+  addCardToResource(choice);
+  const gained = takeResourceCardById(nextId) || cloneCard(catalog[nextId]);
+  player.discard.push(gained);
+  notify("Item Management", `Devuelves ${choice.name} y ganas ${gained.name} al descarte.`, "success");
+  return true;
 }
 
 function playAction() {
@@ -2416,6 +2568,7 @@ function explore() {
     playAudio("resident-evil-dead-caddicarus.mp3", 0.9);
     if (player.health <= 0) handlePlayerDeath(player, revealed.name);
   }
+  resolveUsedWeaponsAfterExplore(player);
   renderGame();
 }
 
@@ -2457,6 +2610,7 @@ function attackVersus() {
     notify("Personaje derrotado", `${attacker.name} gana 1 condecoraciÃ³n.`, "success");
     if (attacker.decorations >= 3) finishGameByScore(`${attacker.name} alcanzo 3 condecoraciones.`);
   }
+  resolveUsedWeaponsAfterExplore(attacker);
   sound("hit");
   renderGame();
 }
@@ -2574,6 +2728,16 @@ function applyCharacterAbilityText(player, text) {
     state.turn[key] += value;
     applied += 1;
   };
+  const selectedWeaponBonus = numberFor(/\+(\d+)\s*dano/);
+  if (selectedWeaponBonus && source.includes("arma") && (source.includes("seleccionada") || source.includes("selecionada"))) {
+    if (!player.selectedWeapons?.length) {
+      notify("Selecciona arma", "Esta habilidad necesita que primero selecciones un arma.", "error");
+      return 0;
+    }
+    state.turn.weaponDamageBonus += selectedWeaponBonus;
+    state.turn.damage += selectedWeaponBonus;
+    return 1;
+  }
   const heal = numberFor(/cura(?:r|ndo)?\s*(\d+)/);
   if (heal) {
     player.health = Math.min(player.maxHealth, player.health + heal);
@@ -2635,6 +2799,7 @@ function endTurn(auto = false) {
   }
   advanceToNextTurn();
   state.turn = freshTurn();
+  state.turn.drawAnimation = currentPlayer()?.hand?.length || 0;
   state.turnEndsAt = Date.now() + 4 * 60 * 1000;
   applyHandResources(currentPlayer());
 
@@ -2643,6 +2808,10 @@ function endTurn(auto = false) {
   if (!auto) notify("Turno finalizado", `Ahora juega ${currentPlayer().name}.`);
   startTurnTimer();
   renderGame();
+  window.setTimeout(() => {
+    state.turn.drawAnimation = 0;
+    renderGame();
+  }, 650);
   if (currentPlayer()?.isBot) window.setTimeout(botTurn, 700);
 }
 
