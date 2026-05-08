@@ -4120,7 +4120,7 @@ input {
 
 @media (orientation: landscape) and (max-width: 1100px) and (max-height: 460px) {
   .app-shell {
-    grid-template-columns: minmax(126px, 16vw) minmax(0, 1fr) minmax(150px, 20vw);
+    grid-template-columns: clamp(96px, 14vw, 124px) minmax(0, 1fr) clamp(118px, 17vw, 148px);
     gap: 3px;
   }
 
@@ -4155,9 +4155,10 @@ input {
     font-size: 0.66rem;
   }
 
-  .online-panel {
-    max-height: 82px;
-    overflow: hidden;
+  .online-panel,
+  .history-panel,
+  .right-rail > .panel:last-of-type {
+    display: none;
   }
 
   .room-panel {
@@ -4166,8 +4167,23 @@ input {
 
   .room-panel .section-title,
   .room-panel label,
-  .friend-list {
+  .friend-list,
+  .profile-panel .small,
+  .availability-toggle,
+  .logout-button {
     display: none;
+  }
+
+  .sidebar {
+    grid-template-rows: 32px 34px minmax(0, 1fr);
+  }
+
+  .profile-panel {
+    overflow: hidden;
+  }
+
+  .profile-row {
+    gap: 4px;
   }
 
   .room-panel button,
@@ -4205,8 +4221,16 @@ input {
   }
 
   .board {
-    grid-template-rows: 48px minmax(0, 1fr);
+    grid-template-rows: 44px minmax(0, 1fr);
     gap: 3px;
+    padding: 3px;
+  }
+
+  .table-grid {
+    gap: 3px;
+  }
+
+  .player-card {
     padding: 3px;
   }
 
@@ -4227,7 +4251,7 @@ input {
   }
 
   .play-area {
-    grid-template-columns: 78px minmax(0, 1fr);
+    grid-template-columns: 64px minmax(0, 1fr);
     gap: 3px;
   }
 
@@ -4249,13 +4273,15 @@ input {
   }
 
   .controls-panel {
-    grid-template-rows: 24px 30px 24px minmax(44px, 1fr) 40px 34px auto;
+    grid-template-rows: 30px 24px minmax(48px, 1fr) 40px 34px 44px;
     gap: 3px;
   }
 
   .action-row {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    min-height: 24px;
+    grid-row: 6;
+    min-height: 44px;
+    align-self: end;
   }
 
   .turn-command {
@@ -4265,6 +4291,7 @@ input {
   }
 
   .current-hero {
+    grid-row: 1;
     min-height: 30px;
     grid-template-columns: 28px minmax(0, 1fr);
     padding: 3px;
@@ -4286,6 +4313,7 @@ input {
   }
 
   .live-trackers {
+    grid-row: 2;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 2px;
   }
@@ -4307,6 +4335,7 @@ input {
   }
 
   .hand {
+    grid-row: 3;
     grid-template-columns: repeat(5, minmax(36px, 1fr));
     gap: 3px;
   }
@@ -4321,6 +4350,7 @@ input {
   }
 
   .action-picker {
+    grid-row: 4;
     height: 40px;
     max-height: 40px;
     padding: 3px;
@@ -4335,22 +4365,51 @@ input {
   }
 
   .weapon-picker {
+    grid-row: 5;
     height: 34px;
     max-height: 34px;
   }
 
   .right-rail {
-    grid-template-rows: minmax(72px, 24dvh) auto minmax(0, 1fr);
-  }
-
-  .history-panel {
-    display: none;
+    grid-template-rows: minmax(78px, 24dvh) minmax(0, 1fr);
   }
 
   .chat-panel,
   .resources-panel,
-  .achievements-panel {
+  .achievements-panel,
+  .right-rail > .panel {
     min-height: 0;
+  }
+
+  .chat-panel .section-title {
+    margin-bottom: 3px;
+  }
+
+  #chat-form {
+    grid-template-columns: 20px minmax(48px, 1fr) minmax(52px, auto);
+    gap: 3px;
+  }
+
+  #chat-input {
+    min-width: 20px;
+    padding: 0 4px;
+    font-size: 0;
+  }
+
+  #chat-input::placeholder {
+    font-size: 0;
+  }
+
+  #voice-message,
+  #chat-form button[type="submit"] {
+    min-width: 0;
+    padding: 0 5px;
+    font-size: 0.56rem;
+  }
+
+  .right-rail .section-title span,
+  #resource-status {
+    display: none;
   }
 
   #chat-log,
