@@ -4226,17 +4226,23 @@ input {
   }
 
   .board {
-    grid-template-rows: 44px minmax(0, 1fr);
+    grid-template-rows: 36px minmax(0, 1fr);
     gap: 3px;
     padding: 3px;
   }
 
   .table-grid {
     gap: 3px;
+    align-items: stretch;
   }
 
   .player-card {
-    padding: 3px;
+    min-height: 0;
+    height: 36px;
+    padding: 2px 3px;
+    grid-template-columns: 22px minmax(0, 1fr);
+    gap: 3px;
+    align-items: center;
   }
 
   .player-name-row em,
@@ -4247,30 +4253,39 @@ input {
 
   .portrait,
   .table-grid .player-card .portrait {
-    height: 18px;
-    min-height: 18px;
+    width: 22px;
+    height: 28px;
+    min-height: 28px;
+    margin: 0;
   }
 
   .player-name-row strong {
-    font-size: 0.54rem;
+    font-size: 0.5rem;
+    line-height: 1;
+  }
+
+  .health-bar {
+    height: 4px;
+    margin: 1px 0 0;
   }
 
   .play-area {
-    grid-template-columns: 64px minmax(0, 1fr);
+    grid-template-columns: clamp(82px, 17vw, 104px) minmax(0, 1fr);
     gap: 3px;
   }
 
   .deck-stack {
-    min-height: 76px;
+    min-height: 104px;
   }
 
   .deck-card {
-    width: 46px;
+    width: 70px;
   }
 
   .mansion-card {
-    width: 50px;
-    min-height: 66px;
+    width: 76px;
+    min-height: 106px;
+    padding: 4px;
   }
 
   .discard-slot {
@@ -4278,14 +4293,14 @@ input {
   }
 
   .controls-panel {
-    grid-template-rows: 30px 22px minmax(38px, 1fr) 34px 34px 36px 34px;
+    grid-template-rows: 26px 20px minmax(44px, 1fr) 32px 28px 30px 30px minmax(0, 26px);
     gap: 2px;
   }
 
   .action-row {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     grid-row: 7;
-    min-height: 34px;
+    min-height: 30px;
     align-self: end;
     gap: 2px;
   }
@@ -4301,7 +4316,7 @@ input {
 
   .current-hero {
     grid-row: 1;
-    min-height: 30px;
+    min-height: 26px;
     grid-template-columns: 28px minmax(0, 1fr);
     padding: 3px;
   }
@@ -4311,7 +4326,11 @@ input {
   }
 
   .current-hero strong {
-    font-size: 0.58rem;
+    font-size: 0.54rem;
+  }
+
+  .controls-panel > .section-title {
+    display: none;
   }
 
   .hero-read-btn,
@@ -4327,7 +4346,7 @@ input {
   }
 
   .live-trackers div {
-    min-height: 20px;
+    min-height: 18px;
     padding: 2px 3px 2px 15px;
   }
 
@@ -4339,14 +4358,14 @@ input {
   }
 
   .live-trackers strong {
-    font-size: 0.52rem;
+    font-size: 0.48rem;
   }
 
   .hand {
     grid-row: 3;
     grid-template-columns: repeat(5, minmax(36px, 1fr));
     gap: 3px;
-    max-height: 70px;
+    max-height: 74px;
     overflow: hidden auto;
   }
 
@@ -4361,29 +4380,29 @@ input {
 
   .action-picker {
     grid-row: 5;
-    height: 34px;
-    max-height: 34px;
-    padding: 3px;
+    height: 28px;
+    max-height: 28px;
+    padding: 2px 3px;
   }
 
   .action-card-list .action-select-card,
   .weapon-list .weapon-select-card {
-    height: 24px;
-    min-height: 24px;
-    max-height: 24px;
-    grid-template-columns: 24px minmax(0, 1fr);
+    height: 20px;
+    min-height: 20px;
+    max-height: 20px;
+    grid-template-columns: 20px minmax(0, 1fr);
   }
 
   .weapon-picker {
     grid-row: 6;
-    height: 36px;
-    max-height: 36px;
-    padding: 3px;
+    height: 30px;
+    max-height: 30px;
+    padding: 2px 3px;
   }
 
   .weapon-list,
   .action-card-list {
-    max-height: 26px;
+    max-height: 21px;
     overflow: hidden auto;
   }
 
@@ -4395,6 +4414,89 @@ input {
     min-height: 34px;
     height: 34px;
     overflow: hidden;
+  }
+
+  .turn-footer {
+    grid-row: 8;
+    min-height: 22px;
+    justify-content: end;
+    align-items: center;
+  }
+
+  #turn-timer {
+    min-width: 42px;
+    height: 22px;
+    padding: 2px 5px;
+    font-size: 0.58rem;
+    border-radius: 6px;
+  }
+
+  .dice-roll-panel {
+    grid-row: 8;
+    grid-column: 1;
+    justify-self: start;
+    align-self: stretch;
+    width: min(72%, 230px);
+    min-height: 22px;
+    margin: 0;
+    padding: 2px 4px;
+    display: grid;
+    grid-template-columns: minmax(44px, auto) minmax(0, 1fr);
+    gap: 4px;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .turn-footer {
+    grid-column: 1;
+  }
+
+  .dice-roll-panel.hidden {
+    display: none;
+  }
+
+  .dice-roll-panel .section-title {
+    min-height: 0;
+    margin: 0;
+    display: grid;
+    gap: 0;
+  }
+
+  .dice-roll-panel .section-title h2 {
+    font-size: 0.48rem;
+    line-height: 1;
+    margin: 0;
+  }
+
+  #dice-roll-status {
+    font-size: 0.46rem;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .dice-roll-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2px;
+  }
+
+  .dice-result {
+    gap: 1px;
+    padding: 1px;
+    border-radius: 5px;
+  }
+
+  .dice-result span {
+    font-size: 0.42rem;
+    line-height: 1;
+  }
+
+  .dice-result strong {
+    width: 17px;
+    height: 17px;
+    border-radius: 5px;
+    font-size: 0.62rem;
   }
 
   .player-zone {
