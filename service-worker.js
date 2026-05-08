@@ -1,4 +1,4 @@
-const CACHE_NAME = "mansion-dbg-v85";
+const CACHE_NAME = "mansion-dbg-v87";
 const ASSETS = [
   "./",
   "./index.html",

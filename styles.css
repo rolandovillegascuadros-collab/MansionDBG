@@ -1027,6 +1027,345 @@ input {
   }
 }
 
+/* Final anti-overlap layout shared by online/offline, desktop and mobile. */
+.controls-panel {
+  isolation: isolate;
+}
+
+.controls-panel > *,
+.current-hero,
+.live-trackers,
+.hand,
+.player-card-zones,
+.action-picker,
+.weapon-picker,
+.action-row,
+.dice-roll-panel,
+.turn-footer {
+  min-width: 0;
+  position: relative;
+}
+
+.current-hero {
+  z-index: 1;
+  overflow: hidden;
+}
+
+.current-hero .portrait {
+  align-self: stretch;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.live-trackers {
+  z-index: 2;
+  align-self: stretch;
+}
+
+.live-trackers div,
+.hand .card-face {
+  overflow: hidden;
+}
+
+.hand {
+  z-index: 1;
+  align-self: stretch;
+}
+
+.mansion-card.has-card-image .card-copy {
+  display: none;
+}
+
+@media (min-width: 861px) {
+  .controls-panel {
+    grid-template-rows:
+      auto
+      minmax(42px, auto)
+      minmax(30px, auto)
+      minmax(74px, 1fr)
+      minmax(42px, auto)
+      minmax(54px, auto)
+      minmax(44px, auto)
+      minmax(34px, auto)
+      minmax(28px, auto)
+      minmax(0, auto)
+      minmax(0, auto);
+  }
+
+  .current-hero,
+  .live-trackers {
+    margin-bottom: 0;
+  }
+
+  .mansion-card,
+  .deck-card {
+    width: min(178px, 94%);
+  }
+
+  .mansion-card.card-face {
+    max-height: none;
+    height: auto;
+  }
+}
+
+@media (min-width: 861px) and (max-width: 1600px), (min-width: 861px) and (max-height: 900px) {
+  .controls-panel {
+    grid-template-rows:
+      auto
+      minmax(34px, auto)
+      minmax(26px, auto)
+      minmax(58px, 1fr)
+      minmax(38px, auto)
+      minmax(44px, auto)
+      minmax(36px, auto)
+      minmax(28px, auto)
+      minmax(24px, auto)
+      minmax(0, auto)
+      minmax(0, auto);
+  }
+
+  .mansion-card,
+  .deck-card {
+    width: min(150px, 94%);
+  }
+}
+
+@media (orientation: landscape) and (max-width: 1100px) and (max-height: 540px) {
+  .play-area {
+    grid-template-columns: clamp(108px, 21vw, 136px) minmax(0, 1fr);
+  }
+
+  .mansion-panel .section-title span {
+    font-size: 0.58rem;
+    line-height: 1;
+  }
+
+  .deck-stack {
+    min-height: 126px;
+  }
+
+  .mansion-card,
+  .deck-card {
+    width: min(98px, 92%);
+  }
+
+  .mansion-card {
+    min-height: 136px;
+  }
+
+  .controls-panel {
+    grid-template-rows: 26px 20px minmax(50px, 1fr) 32px 28px 30px 30px minmax(0, 26px);
+  }
+
+  .current-hero {
+    max-height: 26px;
+  }
+
+  .current-hero .portrait {
+    width: 22px;
+    height: 22px;
+    min-height: 22px;
+  }
+
+  .live-trackers {
+    max-height: 20px;
+    overflow: hidden;
+  }
+
+  .hand {
+    max-height: 78px;
+    overflow: hidden auto;
+  }
+}
+
+@media (orientation: landscape) and (max-width: 760px) and (max-height: 430px) {
+  .play-area {
+    grid-template-columns: clamp(96px, 20vw, 118px) minmax(0, 1fr);
+  }
+
+  .mansion-card,
+  .deck-card {
+    width: min(86px, 92%);
+  }
+
+  .mansion-card {
+    min-height: 120px;
+  }
+}
+
+/* Final anti-overlap layout shared by online/offline, desktop and mobile. */
+.controls-panel {
+  isolation: isolate;
+}
+
+.controls-panel > *,
+.current-hero,
+.live-trackers,
+.hand,
+.player-card-zones,
+.action-picker,
+.weapon-picker,
+.action-row,
+.dice-roll-panel,
+.turn-footer {
+  min-width: 0;
+  position: relative;
+}
+
+.current-hero {
+  z-index: 1;
+  overflow: hidden;
+}
+
+.current-hero .portrait {
+  align-self: stretch;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.live-trackers {
+  z-index: 2;
+  align-self: stretch;
+}
+
+.live-trackers div {
+  overflow: hidden;
+}
+
+.hand {
+  z-index: 1;
+  align-self: stretch;
+}
+
+.hand .card-face {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.mansion-card.has-card-image .card-copy {
+  display: none;
+}
+
+@media (min-width: 861px) {
+  .controls-panel {
+    grid-template-rows:
+      auto
+      minmax(42px, auto)
+      minmax(30px, auto)
+      minmax(74px, 1fr)
+      minmax(42px, auto)
+      minmax(54px, auto)
+      minmax(44px, auto)
+      minmax(34px, auto)
+      minmax(28px, auto)
+      minmax(0, auto)
+      minmax(0, auto);
+  }
+
+  .current-hero {
+    margin-bottom: 0;
+  }
+
+  .live-trackers {
+    margin-bottom: 0;
+  }
+
+  .mansion-card,
+  .deck-card {
+    width: min(178px, 94%);
+  }
+
+  .mansion-card.card-face {
+    max-height: none;
+    height: auto;
+  }
+}
+
+@media (min-width: 861px) and (max-width: 1600px), (min-width: 861px) and (max-height: 900px) {
+  .controls-panel {
+    grid-template-rows:
+      auto
+      minmax(34px, auto)
+      minmax(26px, auto)
+      minmax(58px, 1fr)
+      minmax(38px, auto)
+      minmax(44px, auto)
+      minmax(36px, auto)
+      minmax(28px, auto)
+      minmax(24px, auto)
+      minmax(0, auto)
+      minmax(0, auto);
+  }
+
+  .mansion-card,
+  .deck-card {
+    width: min(150px, 94%);
+  }
+}
+
+@media (orientation: landscape) and (max-width: 1100px) and (max-height: 540px) {
+  .play-area {
+    grid-template-columns: clamp(108px, 21vw, 136px) minmax(0, 1fr);
+  }
+
+  .mansion-panel .section-title span {
+    font-size: 0.58rem;
+    line-height: 1;
+  }
+
+  .deck-stack {
+    min-height: 126px;
+  }
+
+  .mansion-card,
+  .deck-card {
+    width: min(98px, 92%);
+  }
+
+  .mansion-card {
+    min-height: 136px;
+  }
+
+  .controls-panel {
+    grid-template-rows: 26px 20px minmax(50px, 1fr) 32px 28px 30px 30px minmax(0, 26px);
+  }
+
+  .current-hero {
+    max-height: 26px;
+  }
+
+  .current-hero .portrait {
+    height: 22px;
+    min-height: 22px;
+    width: 22px;
+  }
+
+  .live-trackers {
+    max-height: 20px;
+    overflow: hidden;
+  }
+
+  .hand {
+    max-height: 78px;
+    overflow: hidden auto;
+  }
+}
+
+@media (orientation: landscape) and (max-width: 760px) and (max-height: 430px) {
+  .play-area {
+    grid-template-columns: clamp(96px, 20vw, 118px) minmax(0, 1fr);
+  }
+
+  .mansion-card,
+  .deck-card {
+    width: min(86px, 92%);
+  }
+
+  .mansion-card {
+    min-height: 120px;
+  }
+}
+
 @media (min-width: 861px) {
   .play-area {
     grid-template-columns: clamp(180px, 19vw, 280px) minmax(0, 1fr);
@@ -5527,5 +5866,170 @@ input {
   .turn-command {
     min-height: 21px;
     height: 21px;
+  }
+}
+/* Mansion DBG final global anti-overlap overrides. */
+.controls-panel {
+  isolation: isolate;
+}
+
+.controls-panel > *,
+.current-hero,
+.live-trackers,
+.hand,
+.player-card-zones,
+.action-picker,
+.weapon-picker,
+.action-row,
+.dice-roll-panel,
+.turn-footer {
+  min-width: 0;
+  position: relative;
+}
+
+.current-hero {
+  z-index: 1;
+  overflow: hidden;
+}
+
+.current-hero .portrait {
+  align-self: stretch;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.live-trackers {
+  z-index: 2;
+  align-self: stretch;
+}
+
+.live-trackers div,
+.hand .card-face {
+  overflow: hidden;
+}
+
+.hand {
+  z-index: 1;
+  align-self: stretch;
+}
+
+.mansion-card.has-card-image .card-copy {
+  display: none;
+}
+
+@media (min-width: 861px) {
+  .controls-panel {
+    grid-template-rows:
+      auto
+      minmax(42px, auto)
+      minmax(30px, auto)
+      minmax(74px, 1fr)
+      minmax(42px, auto)
+      minmax(54px, auto)
+      minmax(44px, auto)
+      minmax(34px, auto)
+      minmax(28px, auto)
+      minmax(0, auto)
+      minmax(0, auto);
+  }
+
+  .current-hero,
+  .live-trackers {
+    margin-bottom: 0;
+  }
+
+  .mansion-card,
+  .deck-card {
+    width: min(178px, 94%);
+  }
+
+  .mansion-card.card-face {
+    max-height: none;
+    height: auto;
+  }
+}
+
+@media (min-width: 861px) and (max-width: 1600px), (min-width: 861px) and (max-height: 900px) {
+  .controls-panel {
+    grid-template-rows:
+      auto
+      minmax(34px, auto)
+      minmax(26px, auto)
+      minmax(58px, 1fr)
+      minmax(38px, auto)
+      minmax(44px, auto)
+      minmax(36px, auto)
+      minmax(28px, auto)
+      minmax(24px, auto)
+      minmax(0, auto)
+      minmax(0, auto);
+  }
+
+  .mansion-card,
+  .deck-card {
+    width: min(150px, 94%);
+  }
+}
+
+@media (orientation: landscape) and (max-width: 1100px) and (max-height: 540px) {
+  .play-area {
+    grid-template-columns: clamp(108px, 21vw, 136px) minmax(0, 1fr);
+  }
+
+  .mansion-panel .section-title span {
+    font-size: 0.58rem;
+    line-height: 1;
+  }
+
+  .deck-stack {
+    min-height: 126px;
+  }
+
+  .mansion-card,
+  .deck-card {
+    width: min(98px, 92%);
+  }
+
+  .mansion-card {
+    min-height: 136px;
+  }
+
+  .controls-panel {
+    grid-template-rows: 26px 20px minmax(50px, 1fr) 32px 28px 30px 30px minmax(0, 26px);
+  }
+
+  .current-hero {
+    max-height: 26px;
+  }
+
+  .current-hero .portrait {
+    width: 22px;
+    height: 22px;
+    min-height: 22px;
+  }
+
+  .live-trackers {
+    max-height: 20px;
+    overflow: hidden;
+  }
+
+  .hand {
+    max-height: 78px;
+    overflow: hidden auto;
+  }
+}
+
+@media (orientation: landscape) and (max-width: 760px) and (max-height: 430px) {
+  .play-area {
+    grid-template-columns: clamp(96px, 20vw, 118px) minmax(0, 1fr);
+  }
+
+  .mansion-card,
+  .deck-card {
+    width: min(86px, 92%);
+  }
+
+  .mansion-card {
+    min-height: 120px;
   }
 }
