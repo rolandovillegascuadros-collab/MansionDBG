@@ -61,6 +61,10 @@ service cloud.firestore {
       match /voiceConnections/{connectionId} {
         allow read, create, update: if isRoomPlayer(roomId);
       }
+
+      match /chatMessages/{messageId} {
+        allow read, create, update: if isRoomPlayer(roomId);
+      }
     }
 
     match /roomInvitations/{inviteId} {

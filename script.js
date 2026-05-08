@@ -156,6 +156,7 @@ const state = {
   unsubFriendRequests: null,
   unsubRoomInvitations: null,
   unsubRoom: null,
+  unsubChat: null,
   unsubVoice: null,
   voiceStream: null,
   voicePeers: {},
@@ -184,6 +185,7 @@ const state = {
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 let cardInstanceSequence = 0;
+const cleanedChatRooms = new Set();
 
 const tutorialSteps = [
   {
@@ -373,7 +375,7 @@ function mergeSiteUsers(users) {
 }
 
 function stopOnlineSubscriptions() {
-  ["unsubFriendRequests", "unsubRoomInvitations", "unsubRoom", "unsubVoice"].forEach((key) => {
+  ["unsubFriendRequests", "unsubRoomInvitations", "unsubRoom", "unsubChat", "unsubVoice"].forEach((key) => {
     if (typeof state[key] === "function") state[key]();
     state[key] = null;
   });
@@ -404,7 +406,9 @@ function startOnlineSubscriptions() {
 function watchCurrentRoom() {
   const backend = getOnlineBackend();
   if (typeof state.unsubRoom === "function") state.unsubRoom();
+  if (typeof state.unsubChat === "function") state.unsubChat();
   state.unsubRoom = null;
+  state.unsubChat = null;
   if (!backend?.watchRoom || !state.roomId) return;
   state.unsubRoom = backend.watchRoom(state.roomId, (room) => {
     if (!room) return;
@@ -412,7 +416,13 @@ function watchCurrentRoom() {
     try {
       if (room.gameState) applyRemoteGameState(room.gameState);
       else if (room.players) syncPlayersFromRoom(room.players);
-      renderChatMessages(room.chatMessages || []);
+      if (room.chatMessages?.length) {
+        renderChatMessages(room.chatMessages || []);
+        if (backend.cleanupRoomChatCache && !cleanedChatRooms.has(state.roomId)) {
+          cleanedChatRooms.add(state.roomId);
+          backend.cleanupRoomChatCache(state.roomId).catch(() => {});
+        }
+      }
       if (state.voiceStream) startRoomVoice().catch(() => {});
       renderRoom();
       renderGame();
@@ -420,6 +430,11 @@ function watchCurrentRoom() {
       state.applyingRemoteRoom = false;
     }
   });
+  if (backend.watchRoomChat) {
+    state.unsubChat = backend.watchRoomChat(state.roomId, (messages) => {
+      renderChatMessages(messages || []);
+    });
+  }
 }
 
 function isOnlineRoomActive() {
@@ -915,22 +930,27 @@ function addChat(author, text, extra = {}) {
 
 async function publishChatMessages() {
   const backend = getOnlineBackend();
-  if (isOnlineRoomActive() && backend?.updateRoom) {
-    await backend.updateRoom(state.roomId, { chatMessages: state.chatMessages.slice(0, 80) });
+  if (isOnlineRoomActive() && backend?.addRoomChat) {
+    await Promise.all(state.chatMessages.slice(0, 80).map((message) => backend.addRoomChat(state.roomId, message)));
   }
 }
 
 function reactToMessage(messageId, reaction) {
   const key = state.currentUser?.uid || myPlayer()?.name || "local";
+  let nextReactions = null;
   state.chatMessages = state.chatMessages.map((message) => {
     if (message.id !== messageId) return message;
     const reactions = { ...(message.reactions || {}) };
     if (reactions[key] === reaction) delete reactions[key];
     else reactions[key] = reaction;
+    nextReactions = reactions;
     return { ...message, reactions };
   });
   renderChatMessages(state.chatMessages);
-  publishChatMessages().catch((error) => notify("Reaccion no enviada", error.message, "error"));
+  const backend = getOnlineBackend();
+  if (isOnlineRoomActive() && backend?.updateRoomChatReaction) {
+    backend.updateRoomChatReaction(state.roomId, messageId, nextReactions || {}).catch((error) => notify("Reaccion no enviada", error.message, "error"));
+  }
 }
 
 function reactionCounts(reactions = {}) {
@@ -974,7 +994,11 @@ async function toggleVoiceMessage() {
   }
   const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
   state.voiceChunks = [];
-  const recorderOptions = MediaRecorder.isTypeSupported("audio/webm") ? { mimeType: "audio/webm" } : undefined;
+  const recorderOptions = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
+    ? { mimeType: "audio/webm;codecs=opus", audioBitsPerSecond: 24000 }
+    : MediaRecorder.isTypeSupported("audio/webm")
+      ? { mimeType: "audio/webm", audioBitsPerSecond: 24000 }
+      : { audioBitsPerSecond: 24000 };
   const recorder = new MediaRecorder(stream, recorderOptions);
   state.voiceRecorder = recorder;
   recorder.ondataavailable = (event) => {
@@ -987,8 +1011,8 @@ async function toggleVoiceMessage() {
     button.classList.remove("recording");
     const blob = new Blob(state.voiceChunks, { type: recorder.mimeType || "audio/webm" });
     if (!blob.size) return;
-    if (blob.size > 700000) {
-      notify("Audio muy largo", "El mensaje supera el limite para sincronizar en Firebase.", "error");
+    if (blob.size > 850000) {
+      notify("Audio muy largo", "El mensaje supera el limite seguro para Firebase. Graba un audio mas corto.", "error");
       return;
     }
     const audioData = await blobToDataUrl(blob);
@@ -1002,8 +1026,8 @@ async function toggleVoiceMessage() {
   recorder.start();
   button.textContent = "Grabando";
   button.classList.add("recording");
-  state.voiceRecordTimer = window.setTimeout(stopVoiceMessageRecording, 8000);
-  notify("Grabando audio", "Toca Audio otra vez para enviar. Maximo 8 segundos.", "success");
+  state.voiceRecordTimer = window.setTimeout(stopVoiceMessageRecording, 15000);
+  notify("Grabando audio", "Toca Audio otra vez para enviar. Maximo 15 segundos.", "success");
 }
 
 function renderChatMessages(messages = []) {
@@ -2024,7 +2048,13 @@ async function acceptRoomInvitation(invitation) {
       $$("[data-session]").forEach((item) => item.classList.toggle("active", item.dataset.session === state.sessionType));
       syncPlayersFromRoom(room.players || []);
       if (room.gameState) applyRemoteGameState(room.gameState);
-      renderChatMessages(room.chatMessages || []);
+      if (room.chatMessages?.length) {
+        renderChatMessages(room.chatMessages || []);
+        if (backend.cleanupRoomChatCache && !cleanedChatRooms.has(room.id)) {
+          cleanedChatRooms.add(room.id);
+          backend.cleanupRoomChatCache(room.id).catch(() => {});
+        }
+      }
       $("#entry-screen").classList.add("hidden");
       document.body.classList.toggle("offline-mode", false);
       watchCurrentRoom();

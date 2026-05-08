@@ -6,7 +6,7 @@
   "display": "standalone",
   "background_color": "#0f1218",
   "theme_color": "#111827",
-  "orientation": "portrait-primary",
+  "orientation": "any",
   "icons": [
     {
       "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='32' fill='%23111827'/%3E%3Cpath d='M44 150V60h24v90h24V34h32v116h24V76h20v74' fill='none' stroke='%23d8a84d' stroke-width='12' stroke-linejoin='round'/%3E%3C/svg%3E",

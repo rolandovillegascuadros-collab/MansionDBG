@@ -49,6 +49,7 @@ async function createBackend() {
     arrayRemove,
     arrayUnion,
     collection,
+    deleteField,
     doc,
     getDoc,
     getDocs,
@@ -284,11 +285,34 @@ async function createBackend() {
 
   async function addRoomChat(roomId, message) {
     if (!roomId || (!message?.text && !message?.audioData)) return;
+    const cleanMessage = {
+      id: message.id || `${Date.now()}`,
+      author: cleanText(message.author) || "Jugador",
+      uid: message.uid || auth.currentUser?.uid || "",
+      text: cleanText(message.text),
+      type: message.type || "text",
+      audioData: message.audioData || "",
+      audioMime: message.audioMime || "",
+      reactions: message.reactions || {},
+      time: Number(message.time || Date.now()),
+      createdAt: Date.now(),
+    };
+    await setDoc(doc(db, "rooms", roomId, "chatMessages", cleanMessage.id), cleanMessage, { merge: true });
+    await updateDoc(doc(db, "rooms", roomId), { updatedAt: serverTimestamp() }).catch(() => {});
+  }
+
+  async function updateRoomChatReaction(roomId, messageId, reactions = {}) {
+    if (!roomId || !messageId) return;
+    await updateDoc(doc(db, "rooms", roomId, "chatMessages", messageId), {
+      reactions,
+      updatedAt: Date.now(),
+    });
+  }
+
+  async function cleanupRoomChatCache(roomId) {
+    if (!roomId) return;
     await updateDoc(doc(db, "rooms", roomId), {
-      chatMessages: arrayUnion({
-        ...message,
-        createdAt: Date.now(),
-      }),
+      chatMessages: deleteField(),
       updatedAt: serverTimestamp(),
     });
   }
@@ -405,6 +429,14 @@ async function createBackend() {
     });
   }
 
+  function watchRoomChat(roomId, callback) {
+    if (!roomId) return () => {};
+    const chatQuery = query(collection(db, "rooms", roomId, "chatMessages"), orderBy("time", "desc"), limit(80));
+    return onSnapshot(chatQuery, (snapshot) => {
+      callback(snapshot.docs.map((item) => ({ id: item.id, ...item.data() })));
+    });
+  }
+
   async function createVoiceOffer(roomId, connectionId, payload) {
     if (!roomId || !connectionId) return;
     await setDoc(doc(db, "rooms", roomId, "voiceConnections", connectionId), {
@@ -463,6 +495,8 @@ async function createBackend() {
     inviteToRoom,
     updateRoom,
     addRoomChat,
+    updateRoomChatReaction,
+    cleanupRoomChatCache,
     getRoom,
     joinRoomFromInvitation,
     acceptRoomInvite,
@@ -470,6 +504,7 @@ async function createBackend() {
     watchFriendRequests,
     watchRoomInvitations,
     watchRoom,
+    watchRoomChat,
     createVoiceOffer,
     answerVoiceOffer,
     addVoiceCandidate,
