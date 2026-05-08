@@ -1818,10 +1818,14 @@ input {
 
 .resource-grid {
   max-height: 330px;
+  min-height: 0;
   display: grid;
   grid-template-columns: 1fr;
   gap: 8px;
   overflow: auto;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
 }
 
 .resource-grid.collapsed {
@@ -2170,6 +2174,7 @@ input {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.045);
+  touch-action: manipulation;
 }
 
 .dice-result span {
@@ -4381,6 +4386,12 @@ input {
     min-height: 0;
   }
 
+  .resources-panel {
+    display: grid;
+    grid-template-rows: auto auto minmax(0, 1fr);
+    overflow: hidden;
+  }
+
   .chat-panel .section-title {
     margin-bottom: 3px;
   }
@@ -4410,6 +4421,60 @@ input {
   .right-rail .section-title span,
   #resource-status {
     display: none;
+  }
+
+  .resource-types {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3px;
+    margin-bottom: 3px;
+  }
+
+  .resource-types button {
+    min-height: 22px;
+    padding: 0 4px;
+    font-size: 0.56rem;
+  }
+
+  .resource-grid {
+    height: 100%;
+    max-height: none;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-right: 2px;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .resource-group {
+    gap: 4px;
+  }
+
+  .resource-group h3 {
+    margin-top: 3px;
+    font-size: 0.58rem;
+  }
+
+  .resource-group-grid {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .resource-card {
+    padding: 4px;
+  }
+
+  .resource-card .card-face {
+    min-height: 54px;
+    aspect-ratio: 2.8 / 2.1;
+    grid-template-rows: 52% 48%;
+  }
+
+  .resource-card footer {
+    margin-top: 3px;
+    font-size: 0.58rem;
   }
 
   #chat-log,

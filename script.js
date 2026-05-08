@@ -2534,6 +2534,11 @@ function buyResource(index) {
   if (["gatling", "rocket"].includes(pile.card.id)) return notify("Carta no comprable", "WE-007 y WE-008 solo se obtienen desde la mansiÃ³n.", "error");
   if (state.turn.buys <= 0) return notify("No puedes comprar", "No quedan compras este turno.", "error");
   if (state.turn.gold < pile.card.cost) return notify("Oro insuficiente", `Necesitas ${pile.card.cost} oro para ${pile.card.name}. Disponible: ${state.turn.gold}.`, "error");
+  const confirmText = `¿Comprar ${pile.card.name} por ${pile.card.cost} oro?\n\nOro disponible: ${state.turn.gold}\nCompras disponibles: ${state.turn.buys}\nQuedan en recurso: ${pile.count}\n\nLa carta ira a tu descarte.`;
+  if (!window.confirm(confirmText)) {
+    notify("Compra cancelada", "No se movio ninguna carta.", "error");
+    return;
+  }
   state.turn.buys -= 1;
   state.turn.gold -= pile.card.cost;
   pile.count -= 1;
