@@ -1673,7 +1673,7 @@ function renderTurnControls() {
     button.disabled = state.started && !canAct;
   });
   $("#request-end-game").disabled = !state.started || hasVotedToEnd();
-  $("#request-end-game").textContent = hasVotedToEnd() ? "Votado" : "Terminar";
+  $("#request-end-game").textContent = hasVotedToEnd() ? "Voto enviado" : "Terminar partida";
   $("#mansion-card").disabled = getModeKey() === "versus" || (state.started && !canAct);
   $$("#hand button, #action-card-list button, #weapon-list button").forEach((button) => {
     button.disabled = state.started && !canAct;

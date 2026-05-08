@@ -2054,7 +2054,7 @@ input {
 
 .action-row {
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 4px;
   margin: 5px 0;
   padding: 5px;
@@ -2107,6 +2107,14 @@ input {
   color: #10141b;
   border: 0;
   background: var(--accent);
+}
+
+.room-end-command {
+  width: 100%;
+  min-height: 34px;
+  margin-top: 6px;
+  border-radius: 8px;
+  font-weight: 900;
 }
 
 .turn-footer {
@@ -3216,7 +3224,7 @@ input {
   }
 
   .action-row {
-    grid-template-columns: repeat(7, minmax(0, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: 4px;
     margin: 4px 0;
     padding: 4px;
@@ -3239,10 +3247,12 @@ input {
       auto
       auto
       auto
-      clamp(78px, 10dvh, 104px)
-      minmax(92px, 100px)
-      minmax(70px, 82px)
-      minmax(92px, 100px)
+      clamp(70px, 9dvh, 96px)
+      clamp(58px, 7dvh, 76px)
+      clamp(74px, 9dvh, 92px)
+      clamp(62px, 8dvh, 78px)
+      clamp(58px, 7dvh, 76px)
+      auto
       auto
       auto;
     gap: 4px;
@@ -3272,18 +3282,18 @@ input {
 
   .action-picker {
     padding: 5px;
-    min-height: 92px;
-    max-height: 100px;
+    min-height: 74px;
+    max-height: 92px;
     overflow: hidden;
   }
 
   .action-card-list {
-    max-height: 70px;
+    max-height: 58px;
     overflow: hidden;
   }
 
   .played-row {
-    max-height: 100px;
+    max-height: 76px;
     overflow: hidden;
   }
 
@@ -3313,7 +3323,7 @@ input {
   }
 
   .weapon-picker {
-    max-height: 82px;
+    max-height: 78px;
     overflow: hidden;
   }
 
@@ -3369,6 +3379,279 @@ input {
   .turn-command {
     min-height: 26px;
     height: 26px;
+  }
+}
+
+@media (min-width: 861px) and (max-height: 820px) {
+  body {
+    overflow: auto;
+  }
+
+  .app-shell {
+    min-height: 0;
+    height: calc(100dvh - 8px);
+    margin: 4px auto;
+  }
+
+  .game-surface,
+  .board,
+  .play-area,
+  .controls-panel {
+    min-height: 0;
+  }
+
+  .topbar {
+    min-height: 46px;
+    gap: 5px;
+  }
+
+  .topbar p {
+    font-size: 0.72rem;
+  }
+
+  .top-actions button,
+  .sound-panel {
+    min-height: 30px;
+  }
+
+  .turn-pill {
+    min-width: 74px;
+    padding: 6px 8px;
+  }
+
+  .board {
+    grid-template-rows: minmax(92px, 116px) minmax(0, 1fr);
+    gap: 5px;
+    padding: 5px;
+  }
+
+  .table-grid .player-card {
+    min-height: 88px;
+    grid-template-columns: clamp(54px, 18%, 70px) minmax(0, 1fr);
+    column-gap: 6px;
+    padding: 5px;
+  }
+
+  .table-grid .player-card .portrait {
+    min-height: 74px;
+  }
+
+  .player-name-row strong {
+    font-size: 0.68rem;
+  }
+
+  .table-grid .player-card > span,
+  .player-meta {
+    font-size: 0.56rem;
+  }
+
+  .character-read-btn {
+    height: 19px;
+    min-height: 19px;
+    padding-inline: 6px;
+    font-size: 0.52rem;
+  }
+
+  .controls-panel {
+    grid-template-rows:
+      auto
+      auto
+      auto
+      minmax(58px, 74px)
+      minmax(46px, 58px)
+      minmax(58px, 70px)
+      minmax(52px, 64px)
+      minmax(44px, 56px)
+      auto
+      auto
+      auto;
+    gap: 3px;
+  }
+
+  .current-hero {
+    min-height: 42px;
+    grid-template-columns: 42px minmax(0, 1fr);
+    padding: 5px;
+    margin-bottom: 0;
+  }
+
+  .current-hero .portrait {
+    width: 38px;
+  }
+
+  .current-hero strong {
+    font-size: 0.72rem;
+  }
+
+  .current-hero span {
+    display: none;
+  }
+
+  .live-trackers {
+    gap: 3px;
+    margin-bottom: 2px;
+  }
+
+  .live-trackers div {
+    min-height: 26px;
+    padding: 3px 4px 3px 19px;
+  }
+
+  .live-trackers div::before {
+    left: 5px;
+    width: 10px;
+    height: 10px;
+    font-size: 0.45rem;
+  }
+
+  .live-trackers span {
+    font-size: 0.42rem;
+  }
+
+  .live-trackers strong {
+    font-size: 0.6rem;
+  }
+
+  .hand {
+    min-height: 58px;
+    max-height: 74px;
+    gap: 4px;
+  }
+
+  .hand .card-face {
+    max-height: 74px;
+    min-height: 54px;
+  }
+
+  .player-card-zones {
+    min-height: 46px;
+    gap: 5px;
+  }
+
+  .player-zone {
+    padding: 4px;
+  }
+
+  .compact-title {
+    margin-bottom: 2px;
+  }
+
+  .compact-title h2,
+  .compact-title span {
+    font-size: 0.58rem;
+  }
+
+  .player-stack-zone,
+  .player-discard-zone {
+    min-height: 30px;
+  }
+
+  .mini-stack {
+    height: 30px;
+  }
+
+  .action-picker {
+    min-height: 58px;
+    max-height: 70px;
+    padding: 4px;
+  }
+
+  .action-card-list,
+  .weapon-list {
+    max-height: 42px;
+  }
+
+  .action-card-list .action-select-card,
+  .weapon-list .weapon-select-card,
+  .played-cards .played-turn-card {
+    height: 42px;
+    min-height: 42px;
+    max-height: 42px;
+    grid-template-columns: 38px minmax(0, 1fr);
+  }
+
+  .weapon-picker,
+  .played-row {
+    max-height: 64px;
+  }
+
+  .played-cards {
+    min-height: 42px;
+    max-height: 42px;
+  }
+
+  .card-copy small,
+  .card-copy span {
+    font-size: 0.42rem;
+  }
+
+  .card-copy strong {
+    font-size: 0.54rem;
+  }
+
+  .action-row {
+    min-height: 32px;
+    margin: 2px 0;
+    padding: 3px;
+  }
+
+  .turn-command {
+    height: 22px;
+    min-height: 22px;
+    font-size: 0.54rem;
+  }
+
+  .turn-footer {
+    gap: 5px;
+  }
+
+  .turn-footer .status {
+    font-size: 0.66rem;
+  }
+
+  #turn-timer {
+    min-width: 56px;
+    padding: 5px 6px;
+    font-size: 0.72rem;
+  }
+}
+
+@media (min-width: 861px) and (max-width: 1450px) {
+  .app-shell {
+    grid-template-columns: clamp(176px, 15vw, 210px) minmax(0, 1fr) clamp(226px, 20vw, 282px);
+    gap: 5px;
+  }
+
+  .panel,
+  .game-surface {
+    padding: 6px;
+  }
+
+  .brand {
+    min-height: 54px;
+    padding: 6px;
+  }
+
+  .brand h1 {
+    font-size: 1.02rem;
+  }
+
+  .right-rail {
+    grid-template-rows: minmax(150px, 25dvh) auto minmax(0, 1fr) auto;
+  }
+
+  .resource-card {
+    min-width: 0;
+  }
+}
+
+@media (min-width: 861px) and (max-width: 1250px) {
+  body {
+    overflow: auto;
+  }
+
+  .app-shell {
+    min-width: 1180px;
   }
 }
 
