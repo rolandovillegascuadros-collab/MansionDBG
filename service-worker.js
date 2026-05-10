@@ -1,4 +1,5 @@
-const CACHE_NAME = "mansion-dbg-v87";
+// cache v7-responsive-horizontal
+const CACHE_NAME = 'mansiondbg-layout-corregido-v11';
 const ASSETS = [
   "./",
   "./index.html",

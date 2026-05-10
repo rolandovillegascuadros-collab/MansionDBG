@@ -1,0 +1,1057 @@
+/* MansionDBG - Layout horizontal corregido v11
+   Objetivo: que el juego se vea completo, con cartas legibles y 4 personajes visibles. */
+:root{
+  --bg:#06090e;--panel:#10151d;--panel2:#151b25;--line:rgba(224,172,64,.35);--line2:rgba(255,255,255,.10);
+  --gold:#e5b548;--green:#45d38b;--red:#e44d4d;--text:#f4f6fa;--muted:#aeb6c5;
+  --handW:174px;--handH:244px;--smallW:96px;--smallH:134px;--marketW:72px;--marketH:104px;
+}
+*{box-sizing:border-box}html,body{height:100%;overflow:hidden}body{margin:0;background:radial-gradient(circle at 55% 35%,#111925 0,#06090e 55%,#030508 100%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif;font-size:14px}.hidden{display:none!important}
+.app-shell{height:100vh!important;width:100vw!important;display:grid!important;grid-template-columns:290px minmax(1000px,1fr) 295px!important;gap:10px!important;padding:10px!important;overflow:hidden!important}.sidebar,.game-surface,.right-rail{min-height:0!important;min-width:0!important}.sidebar{display:grid!important;grid-template-rows:78px 155px minmax(150px,1fr) 460px!important;gap:10px!important;overflow:hidden!important}.panel,.brand,.topbar,.table-zone,.player-card,.right-rail .panel{background:linear-gradient(180deg,rgba(21,27,37,.96),rgba(8,12,18,.96))!important;border:1px solid var(--line2)!important;border-radius:12px!important;box-shadow:0 12px 32px rgba(0,0,0,.25)!important}.brand{display:flex!important;align-items:center!important;gap:12px!important;padding:12px!important;overflow:hidden!important;border-color:rgba(218,44,44,.45)!important}.brand h1{font-size:1rem!important;line-height:1.08!important;color:#ff3434!important;text-shadow:0 0 12px rgba(255,0,0,.35)!important;margin:0!important}.brand .eyebrow{font-size:.72rem!important;margin:0!important;color:#dce3ef!important}.brand-mark{width:44px!important;height:44px!important;border-radius:10px!important;display:grid!important;place-items:center!important;background:#d33!important;color:#fff!important;font-weight:1000!important}.sidebar .panel,.profile-panel,.online-panel{padding:12px!important;overflow:hidden!important}.profile-panel{display:grid!important;grid-template-rows:auto auto 54px 26px 40px!important;gap:8px!important}.stats-row{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:7px!important}.stats-row span{min-height:48px!important;border:1px solid var(--line2)!important;border-radius:8px!important;display:grid!important;place-items:center!important;text-align:center!important;font-size:.76rem!important}.stats-row strong{display:block!important;font-size:1.1rem!important;color:#fff!important}.online-panel{display:grid!important;grid-template-rows:30px 42px minmax(0,1fr)!important;gap:8px!important}.online-list,#site-users{min-height:0!important;overflow:auto!important;padding-right:4px!important}.room-panel{display:flex!important;flex-direction:column!important;gap:9px!important;min-height:0!important}.room-panel select,.room-panel input{width:100%!important;height:38px!important;border-radius:8px!important;background:#1c2330!important;border:1px solid var(--line2)!important;color:#fff!important;padding:0 10px!important}.primary-button,.warning-button,.ghost-button,.turn-command,.resource-types button,.tutorial-button,.sound-button{border:1px solid var(--line2)!important;border-radius:9px!important;font-weight:900!important}.primary-button{background:linear-gradient(180deg,#52d493,#25b86d)!important;color:#06100b!important}.warning-button,.sound-button{background:linear-gradient(180deg,#f0c65b,#d9a933)!important;color:#110c02!important}.ghost-button,.turn-command{background:#171d28!important;color:#fff!important}.status{color:#c6ced9!important;font-size:.78rem!important;line-height:1.35!important}
+.game-surface{display:grid!important;grid-template-rows:82px minmax(0,1fr)!important;gap:10px!important;overflow:hidden!important}.topbar{height:82px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;padding:14px 18px!important;border-color:var(--line)!important}.topbar .eyebrow{margin:0 0 4px!important;color:var(--muted)!important;text-transform:uppercase!important;font-size:.75rem!important;font-weight:800!important}.topbar h2{margin:0!important;color:#ffc53d!important;font-size:1.25rem!important}.top-actions{display:flex!important;align-items:center!important;gap:10px!important}.top-actions button{height:38px!important;padding:0 17px!important}.volume-controls{display:flex!important;gap:10px!important}.volume-controls label{width:150px!important;height:56px!important;background:rgba(255,255,255,.04)!important;border:1px solid var(--line2)!important;border-radius:9px!important;padding:8px!important;color:#d7deea!important;font-size:.75rem!important}.volume-controls input{width:100%!important}.turn-pill{width:64px!important;height:58px!important;border-radius:50%!important;display:grid!important;place-items:center!important;background:linear-gradient(180deg,#f0c65b,#d19c27)!important;color:#120d03!important;font-weight:1000!important;text-align:center!important}
+.board{min-height:0!important;display:grid!important;grid-template-rows:146px 40px minmax(0,1fr)!important;gap:8px!important;overflow:hidden!important}.table-grid{grid-row:1!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important;min-height:0!important;overflow:hidden!important}.player-card{position:relative!important;height:146px!important;min-width:0!important;display:grid!important;grid-template-columns:92px minmax(0,1fr)!important;grid-template-rows:24px 22px 28px 13px 22px!important;gap:4px 10px!important;padding:9px!important;border-color:rgba(218,170,69,.25)!important}.player-card.active{border-color:var(--green)!important;box-shadow:0 0 0 1px rgba(69,211,139,.25),0 0 22px rgba(69,211,139,.12)!important}.player-card .portrait{grid-row:1/6!important;width:92px!important;height:128px!important;border-radius:8px!important;overflow:hidden!important;background:#111!important}.player-card .portrait img{width:100%!important;height:100%!important;object-fit:cover!important}.player-name-row{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:6px!important;min-width:0!important}.player-name-row strong{font-size:.92rem!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}.player-name-row em{font-size:.62rem!important;font-style:normal!important;background:var(--gold)!important;color:#111!important;border-radius:999px!important;padding:3px 7px!important;font-weight:1000!important}.player-card>span{font-size:.76rem!important;color:#d7deea!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}.character-read-btn{height:24px!important;justify-self:start!important;border:1px solid rgba(229,181,72,.55)!important;background:rgba(229,181,72,.12)!important;color:#ffd66b!important;border-radius:7px!important;font-size:.66rem!important;font-weight:900!important;padding:0 8px!important}.health-bar{height:10px!important;background:#24303f!important;border-radius:999px!important;overflow:hidden!important;align-self:center!important}.health-bar span{display:block!important;height:100%!important;background:var(--green)!important}.player-meta{display:flex!important;justify-content:space-between!important;gap:6px!important;color:#cbd3df!important;font-size:.65rem!important}.player-slot-empty{height:146px!important;border:1px dashed rgba(255,255,255,.13)!important;border-radius:12px!important;display:grid!important;place-items:center!important;text-align:center!important;color:#8994a6!important;background:rgba(255,255,255,.025)!important}.player-slot-empty strong{display:block!important;color:#dfe5ef!important}.global-trackers{grid-row:2!important;display:grid!important;grid-template-columns:repeat(8,1fr)!important;gap:6px!important;min-height:0!important}.global-trackers div,.live-trackers div{background:rgba(20,26,36,.85)!important;border:1px solid var(--line2)!important;border-radius:9px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;padding:0 11px!important;min-width:0!important}.global-trackers span,.live-trackers span{font-size:.68rem!important;color:#b9c3d1!important;text-transform:uppercase!important;font-weight:800!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}.global-trackers strong,.live-trackers strong{color:#ffd75e!important;font-size:1rem!important}
+.play-area{grid-row:3!important;display:grid!important;grid-template-columns:250px minmax(0,1fr)!important;gap:10px!important;min-height:0!important;overflow:hidden!important}.mansion-panel{display:grid!important;grid-template-rows:34px minmax(0,1fr) 180px!important;gap:10px!important;padding:12px!important;min-height:0!important;overflow:hidden!important}.section-title{display:flex!important;justify-content:space-between!important;align-items:center!important;gap:8px!important;margin:0!important;min-height:0!important}.section-title h2{margin:0!important;color:#fff!important;font-size:1rem!important;text-transform:none!important}.section-title span{color:#fff!important;font-size:.86rem!important}.mansion-row{display:grid!important;grid-template-rows:minmax(0,1fr) 130px!important;gap:10px!important;min-height:0!important}.deck-stack{height:100%!important;min-height:0!important;position:relative!important;display:grid!important;place-items:center!important}.deck-card{position:absolute!important;width:170px!important;height:238px!important;border-radius:12px!important;background:#161b24!important;border:1px solid rgba(218,170,69,.35)!important;transform:rotate(-6deg) translate(-8px,5px)!important}.deck-card:nth-child(2){transform:rotate(5deg) translate(9px,2px)!important}.mansion-card{position:relative!important;width:170px!important;height:238px!important;border-radius:12px!important;background:#080b10!important;border:1px solid rgba(218,170,69,.55)!important;display:grid!important;place-items:center!important;text-align:center!important;overflow:hidden!important}.mansion-card.card-face:not(.card-back){display:block!important}.mansion-card.card-face:not(.card-back) .card-art{height:70%!important}.mansion-card.card-face:not(.card-back) .card-copy{height:30%!important}.card-back span,.card-mark{width:58px!important;height:58px!important;border-radius:50%!important;background:var(--gold)!important;color:#090b10!important;display:grid!important;place-items:center!important;font-size:1.8rem!important;font-weight:1000!important;margin:auto!important}.card-back strong{display:block!important;margin-top:12px!important}.discard-slot{height:130px!important;border:1px dashed rgba(255,255,255,.18)!important;border-radius:10px!important;display:grid!important;place-items:center!important;text-align:center!important;color:#d8dee8!important;overflow:hidden!important}.discard-slot .card-face{width:76px!important;height:108px!important}.discard-slot .card-copy{display:none!important}
+.controls-panel{padding:12px!important;min-height:0!important;overflow:hidden!important;display:grid!important;grid-template-rows:30px 62px 88px 248px 78px 134px 96px!important;gap:8px!important}.controls-panel>.section-title{grid-row:1!important}.current-hero{grid-row:2!important;display:grid!important;grid-template-columns:54px minmax(0,1fr)!important;align-items:center!important;gap:10px!important;height:62px!important;padding:7px!important;background:rgba(255,255,255,.035)!important;border:1px solid var(--line)!important;border-radius:10px!important;overflow:hidden!important}.current-hero .portrait{width:48px!important;height:48px!important;border-radius:7px!important;overflow:hidden!important}.current-hero strong{font-size:.9rem!important}.current-hero span{display:block!important;color:#d0d8e5!important;font-size:.75rem!important}.hero-read-btn{height:22px!important;margin-top:2px!important}.live-trackers{grid-row:3!important;display:grid!important;grid-template-columns:repeat(4,1fr)!important;grid-auto-rows:40px!important;gap:6px!important;min-height:0!important}.hand{grid-row:4!important;height:248px!important;display:grid!important;grid-template-columns:repeat(5,minmax(0,var(--handW)))!important;justify-content:space-between!important;align-items:center!important;gap:10px!important;padding:8px!important;border:1px solid var(--line)!important;border-radius:12px!important;background:rgba(5,8,13,.76)!important;overflow:hidden!important}.hand .card{width:var(--handW)!important;height:var(--handH)!important;min-width:0!important;max-width:100%!important;padding:0!important;justify-self:center!important}.card,.card-face{border-radius:10px!important;border:1px solid rgba(218,170,69,.55)!important;background:#080a0e!important;color:#fff!important;overflow:hidden!important;box-shadow:0 10px 20px rgba(0,0,0,.38)!important}.card-art{height:68%!important;background:#090c12!important;overflow:hidden!important;display:grid!important;place-items:center!important}.card-art img{width:100%!important;height:100%!important;object-fit:cover!important}.card-copy{height:32%!important;padding:7px 8px!important;background:linear-gradient(180deg,rgba(12,15,21,.92),rgba(4,5,8,.98))!important;display:flex!important;flex-direction:column!important;gap:2px!important;overflow:hidden!important}.card-copy small{font-size:.62rem!important;line-height:1!important;color:#ffd43e!important;text-transform:uppercase!important;font-weight:1000!important}.card-copy strong{font-size:.86rem!important;line-height:1.05!important;color:#fff!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}.card-copy span{font-size:.66rem!important;line-height:1.16!important;color:#e7edf6!important;display:-webkit-box!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important;overflow:hidden!important}.player-card-zones{grid-row:5!important;display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important;min-height:0!important}.player-zone{background:rgba(255,255,255,.025)!important;border:1px solid var(--line2)!important;border-radius:10px!important;padding:8px!important;overflow:hidden!important}.player-stack-zone,.player-discard-zone{height:38px!important;display:flex!important;align-items:center!important;gap:5px!important;overflow:hidden!important}.empty-stack{font-size:.76rem!important;color:#d4dbe6!important}.mini-back-card{width:30px!important;height:40px!important;background:#4b2b18!important;border:1px solid var(--line)!important;border-radius:5px!important;margin-left:calc(var(--i)*-18px)!important}.mini-stack{display:flex!important;align-items:center!important}.mini-stack span{display:grid!important;place-items:center!important;width:24px!important;height:24px!important;border-radius:50%!important;background:var(--gold)!important;color:#111!important;font-weight:1000!important;margin-left:4px!important}.discard-mini-card{width:36px!important;height:50px!important;min-width:36px!important}.discard-mini-card .card-copy{display:none!important}.discard-mini-card .card-art{height:100%!important}.action-picker{display:none!important}.weapon-picker{grid-row:6!important;grid-column:1!important;background:rgba(255,255,255,.025)!important;border:1px solid var(--line2)!important;border-radius:10px!important;padding:8px!important;overflow:hidden!important}.played-row{grid-row:6!important;grid-column:2!important;background:rgba(255,255,255,.025)!important;border:1px solid var(--line2)!important;border-radius:10px!important;padding:8px!important;overflow:hidden!important}.weapon-list,.played-cards{height:92px!important;display:flex!important;align-items:center!important;gap:7px!important;overflow:hidden!important}.weapon-select-card,.played-turn-card{width:var(--smallW)!important;height:var(--smallH)!important;min-width:var(--smallW)!important}.weapon-select-card .card-copy,.played-turn-card .card-copy{padding:4px!important}.weapon-select-card .card-copy small,.played-turn-card .card-copy small{font-size:.46rem!important}.weapon-select-card .card-copy strong,.played-turn-card .card-copy strong{font-size:.58rem!important}.weapon-select-card .card-copy span,.played-turn-card .card-copy span{font-size:.48rem!important}.played-cards .status,.weapon-list .status{font-size:.78rem!important;color:#cfd7e2!important;margin:auto!important;text-align:center!important}.dice-roll-panel{grid-row:7!important;display:grid!important;grid-template-columns:1fr 1fr 1fr!important;gap:8px!important;align-items:center!important;min-height:0!important;background:rgba(255,255,255,.025)!important;border:1px solid var(--line2)!important;border-radius:10px!important;padding:8px!important}.dice-roll-panel.hidden{display:grid!important}.dice-roll-panel .section-title{display:block!important}.dice-roll-panel h2{font-size:.85rem!important}.dice-roll-grid{display:flex!important;gap:8px!important;align-items:center!important}.dice-result{height:58px!important;min-width:68px!important;border-radius:10px!important;border:1px solid var(--line)!important;display:grid!important;place-items:center!important}.dice-result strong{font-size:1.45rem!important}.mansion-command-zone{grid-row:7!important;display:grid!important;grid-template-columns:minmax(0,1fr) 118px!important;gap:8px!important;align-items:center!important}.dice-roll-panel + .mansion-command-zone{grid-row:7!important}.action-row{height:46px!important;display:grid!important;grid-template-columns:repeat(5,1fr) 1.3fr!important;gap:8px!important}.turn-command{height:46px!important;font-size:.82rem!important}.end-command{background:linear-gradient(180deg,#54d895,#24b96f)!important;color:#06100b!important}.turn-footer{display:grid!important;grid-template-columns:1fr!important;align-items:center!important}.turn-footer .status{display:none!important}#turn-timer{height:46px!important;display:grid!important;place-items:center!important;border:1px solid var(--line)!important;border-radius:10px!important;color:#ffcc45!important;font-size:1.35rem!important}
+.right-rail{display:grid!important;grid-template-rows:290px 295px minmax(0,1fr)!important;gap:10px!important;overflow:hidden!important}.right-rail .panel{padding:12px!important;min-height:0!important;overflow:hidden!important}.chat-panel{display:grid!important;grid-template-rows:28px minmax(0,1fr) 42px!important}.chat-panel h2{text-transform:uppercase!important}#chat-log{min-height:0!important;overflow:auto!important}#chat-form{display:grid!important;grid-template-columns:minmax(0,1fr) 66px 70px!important;gap:6px!important}#chat-form input,#chat-form button{height:36px!important;border-radius:8px!important;font-size:.75rem!important}.resources-panel{display:grid!important;grid-template-rows:28px 34px minmax(0,1fr)!important}.resource-types{display:flex!important;gap:6px!important;overflow:hidden!important}.resource-types button{height:28px!important;padding:0 8px!important;font-size:.7rem!important}.resource-types .active{background:var(--gold)!important;color:#111!important}.resource-grid,#resource-area{min-height:0!important;overflow:auto!important}.resource-group h3{margin:0 0 8px!important;color:#ffd14f!important;font-size:.86rem!important;text-transform:uppercase!important}.resource-group-grid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:8px!important}.resource-card{background:transparent!important;border:0!important;box-shadow:none!important;min-width:0!important}.resource-card button{background:transparent!important;border:0!important;padding:0!important;width:100%!important}.resource-card .card-face{height:var(--marketH)!important;width:100%!important}.resource-card .card-copy{display:none!important}.resource-card .card-art{height:100%!important}.resource-card footer{display:grid!important;text-align:center!important;margin-top:5px!important;color:#ffd14f!important;font-weight:900!important;font-size:.7rem!important;line-height:1.12!important}.history-panel{display:grid!important;grid-template-rows:28px minmax(0,1fr)!important}.match-history,.achievement-list{min-height:0!important;overflow:auto!important;margin:0!important;padding:0!important}.match-history li,.achievement-list li{list-style:none!important;border:1px solid var(--line2)!important;border-radius:10px!important;padding:9px!important;margin-bottom:8px!important;background:rgba(255,255,255,.035)!important;font-size:.78rem!important}.selected-card{outline:2px solid var(--green)!important;box-shadow:0 0 0 2px rgba(69,211,139,.2),0 0 22px rgba(69,211,139,.25)!important}
+@media (max-width:1600px),(max-height:900px){:root{--handW:144px;--handH:202px;--smallW:76px;--smallH:106px;--marketH:88px}.app-shell{grid-template-columns:235px minmax(850px,1fr) 245px!important;gap:7px!important;padding:7px!important}.sidebar{grid-template-rows:66px 125px minmax(120px,1fr) 390px!important;gap:7px!important}.brand h1{font-size:.82rem!important}.brand-mark{width:36px!important;height:36px!important}.sidebar .panel,.profile-panel,.online-panel{padding:8px!important}.stats-row span{min-height:38px!important;font-size:.62rem!important}.game-surface{grid-template-rows:70px minmax(0,1fr)!important;gap:7px!important}.topbar{height:70px!important;padding:10px 13px!important}.topbar h2{font-size:1rem!important}.top-actions{gap:6px!important}.top-actions button{height:32px!important;padding:0 10px!important;font-size:.72rem!important}.volume-controls label{width:120px!important;height:48px!important}.turn-pill{width:55px!important;height:48px!important;font-size:.78rem!important}.board{grid-template-rows:112px 34px minmax(0,1fr)!important;gap:6px!important}.table-grid{gap:6px!important}.player-card{height:112px!important;grid-template-columns:70px minmax(0,1fr)!important;grid-template-rows:20px 17px 22px 9px 18px!important;padding:6px!important;gap:2px 7px!important}.player-card .portrait{width:70px!important;height:98px!important}.player-name-row strong{font-size:.72rem!important}.player-name-row em{font-size:.5rem!important;padding:2px 5px!important}.player-card>span{font-size:.56rem!important}.character-read-btn{height:19px!important;font-size:.48rem!important}.player-meta{font-size:.5rem!important}.global-trackers{height:34px!important;gap:5px!important}.global-trackers div,.live-trackers div{padding:0 7px!important}.global-trackers span,.live-trackers span{font-size:.48rem!important}.global-trackers strong,.live-trackers strong{font-size:.75rem!important}.play-area{grid-template-columns:205px minmax(0,1fr)!important;gap:7px!important}.mansion-panel{grid-template-rows:26px minmax(0,1fr) 120px!important;padding:8px!important;gap:7px!important}.mansion-row{grid-template-rows:minmax(0,1fr) 88px!important;gap:7px!important}.deck-card,.mansion-card{width:130px!important;height:182px!important}.discard-slot{height:88px!important}.controls-panel{grid-template-rows:24px 50px 62px 206px 58px 100px 48px!important;padding:8px!important;gap:6px!important}.section-title h2{font-size:.82rem!important}.section-title span{font-size:.7rem!important}.current-hero{height:50px!important;grid-template-columns:40px minmax(0,1fr)!important;padding:5px!important}.current-hero .portrait{width:38px!important;height:38px!important}.current-hero strong{font-size:.7rem!important}.current-hero span{font-size:.58rem!important}.hero-read-btn{height:18px!important;font-size:.5rem!important}.live-trackers{grid-auto-rows:28px!important;height:62px!important;gap:5px!important}.hand{height:206px!important;padding:6px!important;gap:6px!important}.card-copy{padding:4px 5px!important}.card-copy small{font-size:.48rem!important}.card-copy strong{font-size:.62rem!important}.card-copy span{font-size:.5rem!important}.player-card-zones{gap:6px!important}.player-zone{padding:6px!important}.player-stack-zone,.player-discard-zone{height:26px!important}.mini-back-card{width:22px!important;height:30px!important}.mini-stack span{width:20px!important;height:20px!important;font-size:.65rem!important}.discard-mini-card{width:26px!important;height:36px!important;min-width:26px!important}.weapon-picker,.played-row{padding:6px!important}.weapon-list,.played-cards{height:68px!important;gap:5px!important}.weapon-select-card,.played-turn-card{width:76px!important;height:106px!important;min-width:76px!important}.dice-roll-panel{padding:6px!important;height:48px!important}.dice-roll-panel h2{font-size:.65rem!important}.dice-result{height:36px!important;min-width:48px!important}.dice-result strong{font-size:1rem!important}.mansion-command-zone{grid-template-columns:1fr 92px!important}.action-row{height:38px!important;gap:5px!important}.turn-command,#turn-timer{height:38px!important;font-size:.6rem!important}#turn-timer{font-size:.92rem!important}.right-rail{grid-template-rows:220px 230px minmax(0,1fr)!important;gap:7px!important}.right-rail .panel{padding:8px!important}.resource-group-grid{gap:5px!important}.resource-card footer{font-size:.54rem!important}.chat-panel{grid-template-rows:24px minmax(0,1fr) 34px!important}#chat-form{grid-template-columns:1fr 52px 58px!important}#chat-form input,#chat-form button{height:30px!important;font-size:.58rem!important}}
+@media (max-width:1280px){.app-shell{grid-template-columns:205px minmax(760px,1fr) 220px!important}.volume-controls{display:none!important}:root{--handW:128px;--handH:180px;--smallW:64px;--smallH:92px}.play-area{grid-template-columns:170px minmax(0,1fr)!important}.deck-card,.mansion-card{width:108px!important;height:150px!important}.controls-panel{grid-template-rows:22px 42px 56px 184px 48px 84px 42px!important}.hand{height:184px!important}.right-rail{grid-template-rows:190px 210px minmax(0,1fr)!important}.player-card:nth-child(n+4){display:none!important}.table-grid{grid-template-columns:repeat(3,1fr)!important}}
+
+/* =========================================================
+   MansionDBG FIX VISUAL V12 - correccion real de layout
+   - Corrige zonas rojas: panel central sin desborde, cartas visibles
+   - Aprovecha zonas verdes: jugadores arriba y espacio libre bajo mano
+   - Corrige mansión: nada sobresale del contenedor
+   ========================================================= */
+:root{
+  --v12-left: 250px;
+  --v12-right: 255px;
+  --v12-gap: 8px;
+  --v12-card-w: clamp(118px, 10.7vw, 160px);
+  --v12-card-h: calc(var(--v12-card-w) * 1.40);
+  --v12-weapon-w: clamp(70px, 6.3vw, 92px);
+  --v12-weapon-h: calc(var(--v12-weapon-w) * 1.40);
+  --v12-gold: #e6b84a;
+  --v12-green: #43d48c;
+  --v12-line: rgba(229,184,74,.32);
+}
+
+html, body{
+  width:100% !important;
+  height:100% !important;
+  overflow:hidden !important;
+}
+
+.app-shell{
+  display:grid !important;
+  grid-template-columns: var(--v12-left) minmax(760px, 1fr) var(--v12-right) !important;
+  gap: var(--v12-gap) !important;
+  padding: var(--v12-gap) !important;
+  width:100vw !important;
+  height:100vh !important;
+  max-width:none !important;
+  overflow:hidden !important;
+}
+
+.sidebar,
+.game-surface,
+.right-rail,
+.board,
+.play-area,
+.controls-panel,
+.mansion-panel{
+  min-width:0 !important;
+  min-height:0 !important;
+  overflow:hidden !important;
+}
+
+/* Sidebar compacta y estable */
+.sidebar{
+  display:grid !important;
+  grid-template-rows: 64px 142px minmax(130px, 1fr) 390px !important;
+  gap:8px !important;
+}
+.sidebar .panel,
+.sidebar .brand{
+  padding:10px !important;
+}
+.brand h1{font-size:.82rem !important;line-height:1.05 !important;}
+.brand-mark{width:38px !important;height:38px !important;}
+.online-panel{display:grid !important;grid-template-rows: 28px 36px minmax(0,1fr) !important;}
+#site-users,.friend-list,.invitation-list{overflow:auto !important;min-height:0 !important;}
+
+/* Estructura central */
+.game-surface{
+  display:grid !important;
+  grid-template-rows: 66px minmax(0,1fr) !important;
+  gap:8px !important;
+}
+.topbar{
+  height:66px !important;
+  min-height:66px !important;
+  padding:10px 14px !important;
+}
+.topbar h2{font-size:1.05rem !important;}
+.top-actions{gap:7px !important;}
+.top-actions button{height:34px !important;padding:0 13px !important;font-size:.75rem !important;}
+.volume-controls label{width:124px !important;height:48px !important;padding:7px !important;}
+.turn-pill{width:54px !important;height:50px !important;font-size:.78rem !important;}
+
+.board{
+  display:grid !important;
+  grid-template-rows: 112px 34px minmax(0,1fr) !important;
+  gap:7px !important;
+  padding:0 !important;
+}
+
+/* Jugadores: siempre 4 columnas visibles arriba */
+.table-grid{
+  display:grid !important;
+  grid-template-columns: repeat(4, minmax(0,1fr)) !important;
+  gap:7px !important;
+  height:112px !important;
+  overflow:hidden !important;
+}
+.table-grid > *{min-width:0 !important;}
+.player-card,
+.player-slot-empty,
+.player-card:nth-child(n+4){
+  display:grid !important;
+  height:112px !important;
+  max-height:112px !important;
+  overflow:hidden !important;
+}
+.player-card{
+  grid-template-columns: 68px minmax(0,1fr) !important;
+  grid-template-rows: 20px 18px 20px 10px 18px !important;
+  gap:2px 7px !important;
+  padding:6px !important;
+}
+.player-card .portrait{width:68px !important;height:98px !important;grid-row:1 / 6 !important;}
+.player-card .portrait img{width:100% !important;height:100% !important;object-fit:cover !important;}
+.player-name-row strong{font-size:.75rem !important;}
+.player-name-row em{font-size:.52rem !important;padding:2px 5px !important;}
+.player-card > span{font-size:.58rem !important;}
+.character-read-btn{height:19px !important;font-size:.52rem !important;padding:0 6px !important;}
+.health-bar{height:8px !important;}
+.player-meta{font-size:.51rem !important;}
+.player-slot-empty{place-items:center !important;text-align:center !important;border:1px dashed rgba(255,255,255,.16) !important;border-radius:10px !important;}
+
+.global-trackers{
+  display:grid !important;
+  grid-template-columns: repeat(8, minmax(0,1fr)) !important;
+  gap:5px !important;
+  height:34px !important;
+}
+.global-trackers div,
+.live-trackers div{
+  min-width:0 !important;
+  overflow:hidden !important;
+  padding:0 8px !important;
+}
+.global-trackers span,
+.live-trackers span{font-size:.52rem !important;}
+.global-trackers strong,
+.live-trackers strong{font-size:.82rem !important;}
+
+/* Zona principal: mansión izquierda + juego derecha */
+.play-area{
+  display:grid !important;
+  grid-template-columns: 215px minmax(0,1fr) !important;
+  gap:8px !important;
+  height:100% !important;
+  overflow:hidden !important;
+}
+
+/* Mansión: corregida para que no sobresalga */
+.mansion-panel{
+  display:grid !important;
+  grid-template-rows: 28px minmax(0,1fr) 128px !important;
+  gap:8px !important;
+  padding:10px !important;
+  position:relative !important;
+}
+.mansion-row{
+  display:grid !important;
+  grid-template-rows: minmax(0,1fr) 104px !important;
+  gap:8px !important;
+  min-height:0 !important;
+  overflow:hidden !important;
+}
+.deck-stack{
+  width:100% !important;
+  height:100% !important;
+  min-height:0 !important;
+  display:grid !important;
+  place-items:center !important;
+  overflow:hidden !important;
+  position:relative !important;
+}
+.deck-card,
+.mansion-card{
+  width:min(142px, 78%) !important;
+  height:auto !important;
+  aspect-ratio: 5 / 7 !important;
+  max-height: 96% !important;
+  border-radius:10px !important;
+}
+.deck-card{position:absolute !important;}
+.deck-card:nth-child(1){transform:rotate(-5deg) translate(-7px,3px) !important;}
+.deck-card:nth-child(2){transform:rotate(4deg) translate(7px,2px) !important;}
+.mansion-card{
+  position:relative !important;
+  transform:none !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  overflow:hidden !important;
+}
+.mansion-card.has-card-image img,
+.mansion-card .card-art img{object-fit:cover !important;}
+.discard-slot{
+  height:104px !important;
+  min-height:104px !important;
+  overflow:hidden !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+/* Panel de mano y opciones: sin zonas perdidas */
+.controls-panel{
+  display:grid !important;
+  grid-template-rows: 28px 54px 60px minmax(150px, 1fr) 58px 108px 52px 48px !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap:7px !important;
+  padding:10px !important;
+  height:100% !important;
+  max-height:100% !important;
+}
+.controls-panel > .section-title{grid-column:1 / -1 !important;grid-row:1 !important;}
+.current-hero{grid-column:1 / 2 !important;grid-row:2 !important;height:54px !important;}
+.live-trackers{grid-column:2 / 3 !important;grid-row:2 / 4 !important;height:auto !important;display:grid !important;grid-template-columns:repeat(2,minmax(0,1fr)) !important;grid-auto-rows:26px !important;gap:5px !important;}
+.hand{grid-column:1 / -1 !important;grid-row:4 !important;height:100% !important;min-height:150px !important;display:flex !important;align-items:center !important;gap:10px !important;padding:8px !important;overflow-x:auto !important;overflow-y:hidden !important;border:1px solid var(--v12-line) !important;border-radius:10px !important;background:rgba(5,8,13,.72) !important;}
+.player-card-zones{grid-column:1 / 2 !important;grid-row:5 !important;display:grid !important;grid-template-columns:1fr 1fr !important;gap:7px !important;min-height:0 !important;}
+.action-picker{display:none !important;}
+.weapon-picker{grid-column:1 / 2 !important;grid-row:6 !important;min-height:0 !important;overflow:hidden !important;}
+.played-row{grid-column:2 / 3 !important;grid-row:5 / 7 !important;min-height:0 !important;overflow:hidden !important;}
+.dice-roll-panel{grid-column:1 / -1 !important;grid-row:7 !important;display:grid !important;grid-template-columns:1fr 1fr 1fr !important;gap:8px !important;min-height:0 !important;height:52px !important;padding:6px !important;}
+.dice-roll-panel.hidden{display:grid !important;visibility:visible !important;}
+.mansion-command-zone{grid-column:1 / -1 !important;grid-row:8 !important;display:grid !important;grid-template-columns:minmax(0,1fr) 112px !important;gap:8px !important;min-height:0 !important;}
+.target-row{display:none !important;}
+
+.current-hero{display:grid !important;grid-template-columns:44px minmax(0,1fr) !important;gap:8px !important;align-items:center !important;padding:6px !important;overflow:hidden !important;}
+.current-hero .portrait{width:42px !important;height:42px !important;}
+.current-hero strong{font-size:.78rem !important;white-space:nowrap !important;overflow:hidden !important;text-overflow:ellipsis !important;}
+.current-hero span{font-size:.62rem !important;}
+.hero-read-btn{height:19px !important;font-size:.52rem !important;}
+
+/* Cartas de mano: legibles, no gigantes, no cortadas */
+.hand .card,
+.hand .card-face{
+  width:var(--v12-card-w) !important;
+  height:var(--v12-card-h) !important;
+  min-width:var(--v12-card-w) !important;
+  max-width:var(--v12-card-w) !important;
+  max-height:100% !important;
+  aspect-ratio:5 / 7 !important;
+  overflow:hidden !important;
+  border-radius:9px !important;
+  flex:0 0 var(--v12-card-w) !important;
+}
+.card-face img,
+.card-art img{width:100% !important;height:100% !important;object-fit:cover !important;}
+.card-face .card-art{height:64% !important;overflow:hidden !important;}
+.card-copy{height:36% !important;padding:5px 7px !important;overflow:hidden !important;}
+.card-copy small{font-size:.55rem !important;line-height:1 !important;}
+.card-copy strong{font-size:.72rem !important;line-height:1.08 !important;}
+.card-copy span{font-size:.58rem !important;line-height:1.12 !important;}
+
+.player-zone,
+.weapon-picker,
+.played-row{
+  border:1px solid rgba(255,255,255,.10) !important;
+  border-radius:10px !important;
+  background:rgba(7,11,17,.68) !important;
+  padding:7px !important;
+}
+.player-stack-zone,
+.player-discard-zone{height:28px !important;overflow:hidden !important;}
+.weapon-list{height:72px !important;display:flex !important;gap:6px !important;align-items:flex-start !important;overflow-x:auto !important;overflow-y:hidden !important;}
+.weapon-select-card,
+.played-turn-card{
+  width:var(--v12-weapon-w) !important;
+  height:var(--v12-weapon-h) !important;
+  min-width:var(--v12-weapon-w) !important;
+  max-width:var(--v12-weapon-w) !important;
+  aspect-ratio:5/7 !important;
+  overflow:hidden !important;
+}
+.played-cards{height:calc(100% - 28px) !important;min-height:92px !important;display:flex !important;align-items:center !important;justify-content:center !important;overflow:auto !important;border:1px dashed rgba(255,255,255,.16) !important;border-radius:9px !important;}
+.weapon-select-card .card-copy,
+.played-turn-card .card-copy{padding:3px 4px !important;}
+.weapon-select-card .card-copy strong,
+.played-turn-card .card-copy strong{font-size:.52rem !important;}
+.weapon-select-card .card-copy small,
+.weapon-select-card .card-copy span,
+.played-turn-card .card-copy small,
+.played-turn-card .card-copy span{font-size:.44rem !important;}
+
+.action-row{height:42px !important;display:grid !important;grid-template-columns:repeat(5, minmax(0,1fr)) 1.35fr !important;gap:7px !important;}
+.turn-command{height:42px !important;min-width:0 !important;font-size:.72rem !important;padding:0 6px !important;white-space:nowrap !important;overflow:hidden !important;text-overflow:ellipsis !important;}
+.turn-footer{height:42px !important;}
+#turn-timer{height:42px !important;font-size:1.05rem !important;}
+.dice-roll-grid{display:flex !important;justify-content:center !important;gap:8px !important;}
+.dice-result{height:38px !important;min-width:46px !important;border-radius:8px !important;}
+.dice-result strong{font-size:1rem !important;}
+
+/* Rail derecho */
+.right-rail{display:grid !important;grid-template-rows: 235px 230px 70px minmax(0,1fr) !important;gap:8px !important;}
+.right-rail .panel{padding:10px !important;}
+.chat-panel{display:grid !important;grid-template-rows:26px minmax(0,1fr) 36px !important;}
+#chat-form{grid-template-columns:minmax(0,1fr) 55px 60px !important;gap:5px !important;}
+#chat-form input,#chat-form button{height:32px !important;font-size:.6rem !important;}
+.resources-panel{display:grid !important;grid-template-rows:28px 30px minmax(0,1fr) !important;}
+.resource-grid,#resource-area{overflow:auto !important;min-height:0 !important;}
+.resource-group-grid{grid-template-columns:repeat(3,minmax(0,1fr)) !important;gap:7px !important;}
+.resource-card .card-face{height:96px !important;min-height:96px !important;}
+.resource-card footer{font-size:.62rem !important;line-height:1.15 !important;}
+.achievements-panel{display:grid !important;grid-template-rows:28px minmax(0,1fr) !important;}
+.history-panel{display:grid !important;grid-template-rows:28px minmax(0,1fr) !important;}
+.match-history,.achievement-list{overflow:auto !important;min-height:0 !important;}
+
+/* Escalas para pantallas más bajas o notebooks */
+@media (max-width: 1450px), (max-height: 820px){
+  :root{--v12-left:220px;--v12-right:220px;--v12-gap:6px;--v12-card-w:118px;--v12-weapon-w:64px;}
+  .app-shell{grid-template-columns:var(--v12-left) minmax(700px,1fr) var(--v12-right) !important;}
+  .sidebar{grid-template-rows:58px 120px minmax(110px,1fr) 360px !important;gap:6px !important;}
+  .game-surface{grid-template-rows:58px minmax(0,1fr) !important;gap:6px !important;}
+  .topbar{height:58px !important;min-height:58px !important;padding:8px 12px !important;}
+  .topbar h2{font-size:.95rem !important;}
+  .volume-controls label{width:105px !important;height:42px !important;}
+  .top-actions button{height:30px !important;font-size:.66rem !important;padding:0 10px !important;}
+  .turn-pill{width:48px !important;height:44px !important;font-size:.68rem !important;}
+  .board{grid-template-rows:94px 30px minmax(0,1fr) !important;gap:5px !important;}
+  .table-grid{height:94px !important;gap:5px !important;}
+  .player-card,.player-slot-empty,.player-card:nth-child(n+4){height:94px !important;max-height:94px !important;}
+  .player-card{grid-template-columns:56px minmax(0,1fr) !important;grid-template-rows:17px 15px 18px 7px 15px !important;padding:5px !important;gap:1px 5px !important;}
+  .player-card .portrait{width:56px !important;height:80px !important;}
+  .character-read-btn{height:17px !important;font-size:.46rem !important;}
+  .player-name-row strong{font-size:.64rem !important;}
+  .player-card>span,.player-meta{font-size:.48rem !important;}
+  .play-area{grid-template-columns:180px minmax(0,1fr) !important;gap:6px !important;}
+  .mansion-panel{grid-template-rows:24px minmax(0,1fr) 92px !important;padding:7px !important;gap:6px !important;}
+  .mansion-row{grid-template-rows:minmax(0,1fr) 76px !important;gap:6px !important;}
+  .deck-card,.mansion-card{width:min(118px,78%) !important;}
+  .discard-slot{height:76px !important;min-height:76px !important;}
+  .controls-panel{grid-template-rows:24px 44px 52px minmax(126px,1fr) 50px 88px 44px 40px !important;padding:7px !important;gap:5px !important;}
+  .current-hero{height:44px !important;grid-template-columns:34px minmax(0,1fr) !important;}
+  .current-hero .portrait{width:32px !important;height:32px !important;}
+  .live-trackers{grid-auto-rows:22px !important;gap:4px !important;}
+  .hand{min-height:126px !important;padding:6px !important;gap:7px !important;}
+  .weapon-list{height:58px !important;}
+  .played-cards{min-height:74px !important;}
+  .section-title h2{font-size:.78rem !important;}
+  .section-title span{font-size:.66rem !important;}
+  .action-row,.turn-command,.turn-footer,#turn-timer{height:36px !important;}
+  .turn-command{font-size:.58rem !important;}
+  .right-rail{grid-template-rows:200px 210px 62px minmax(0,1fr) !important;gap:6px !important;}
+  .resource-card .card-face{height:82px !important;min-height:82px !important;}
+}
+
+/* Muy angosto: conservar columnas, bajar escala sin romper */
+@media (max-width: 1180px){
+  :root{--v12-left:200px;--v12-right:205px;--v12-card-w:104px;--v12-weapon-w:58px;}
+  .app-shell{grid-template-columns:var(--v12-left) minmax(640px,1fr) var(--v12-right) !important;}
+  .volume-controls{display:none !important;}
+  .play-area{grid-template-columns:160px minmax(0,1fr) !important;}
+  .deck-card,.mansion-card{width:min(104px,78%) !important;}
+}
+
+/* v13 - mesa estable: evita compresion, huecos falsos y textos montados. */
+:root{
+  --v13-gap:8px;
+  --v13-left:260px;
+  --v13-right:310px;
+  --v13-hand-w:108px;
+  --v13-hand-h:151px;
+  --v13-mini-w:78px;
+  --v13-mini-h:110px;
+}
+
+.app-shell{
+  height:100dvh !important;
+  width:100vw !important;
+  display:grid !important;
+  grid-template-columns:var(--v13-left) minmax(920px,1fr) var(--v13-right) !important;
+  gap:var(--v13-gap) !important;
+  padding:var(--v13-gap) !important;
+  overflow:hidden !important;
+}
+
+.sidebar,
+.game-surface,
+.right-rail{
+  min-width:0 !important;
+  min-height:0 !important;
+}
+
+.sidebar{
+  display:grid !important;
+  grid-template-rows:auto auto minmax(130px,1fr) minmax(250px,auto) !important;
+  overflow:hidden !important;
+}
+
+.sidebar > .panel:last-child{
+  min-height:0 !important;
+  overflow:auto !important;
+}
+
+.game-surface{
+  display:grid !important;
+  grid-template-rows:74px minmax(0,1fr) !important;
+  gap:var(--v13-gap) !important;
+  overflow:hidden !important;
+}
+
+.topbar{
+  height:74px !important;
+  min-height:74px !important;
+  align-items:center !important;
+  overflow:hidden !important;
+}
+
+.topbar h2,
+.section-title h2,
+.player-name-row strong,
+.card-copy strong{
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+}
+
+.top-actions{
+  min-width:0 !important;
+  flex-wrap:nowrap !important;
+}
+
+.volume-controls{
+  min-width:0 !important;
+}
+
+.volume-controls label{
+  width:130px !important;
+}
+
+.board{
+  display:grid !important;
+  grid-template-rows:116px 36px minmax(0,1fr) !important;
+  gap:var(--v13-gap) !important;
+  min-height:0 !important;
+  overflow:hidden !important;
+}
+
+.table-grid{
+  height:auto !important;
+  min-height:0 !important;
+  display:grid !important;
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  gap:var(--v13-gap) !important;
+  overflow:hidden !important;
+}
+
+.player-card,
+.player-slot-empty{
+  height:116px !important;
+  max-height:116px !important;
+  min-height:0 !important;
+}
+
+.player-card{
+  grid-template-columns:70px minmax(0,1fr) !important;
+  grid-template-rows:20px 18px 20px 10px 18px !important;
+  gap:3px 8px !important;
+}
+
+.player-card .portrait{
+  width:70px !important;
+  height:98px !important;
+}
+
+.global-trackers{
+  height:36px !important;
+  min-height:0 !important;
+  display:grid !important;
+  grid-template-columns:repeat(8,minmax(0,1fr)) !important;
+  gap:6px !important;
+}
+
+.global-trackers div,
+.live-trackers div{
+  min-width:0 !important;
+}
+
+.play-area{
+  display:grid !important;
+  grid-template-columns:290px minmax(0,1fr) !important;
+  gap:var(--v13-gap) !important;
+  min-height:0 !important;
+  height:100% !important;
+  overflow:hidden !important;
+}
+
+.mansion-panel{
+  display:grid !important;
+  grid-template-rows:30px minmax(0,1fr) 138px !important;
+  gap:8px !important;
+  min-height:0 !important;
+  overflow:hidden !important;
+}
+
+.mansion-row{
+  display:grid !important;
+  grid-template-rows:minmax(160px,1fr) 100px !important;
+  gap:8px !important;
+  min-height:0 !important;
+}
+
+.deck-stack{
+  min-height:0 !important;
+  overflow:hidden !important;
+}
+
+.mansion-card,
+.deck-card{
+  width:min(160px,78%) !important;
+  height:auto !important;
+  aspect-ratio:5 / 7 !important;
+  max-height:96% !important;
+}
+
+.discard-slot{
+  height:100px !important;
+  min-height:0 !important;
+}
+
+.controls-panel{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
+  grid-template-rows:24px 48px 156px 54px 72px 34px !important;
+  gap:8px !important;
+  min-height:0 !important;
+  height:100% !important;
+  overflow:hidden !important;
+}
+
+.controls-panel > .section-title{
+  grid-column:1 / -1 !important;
+  grid-row:1 !important;
+}
+
+.current-hero{
+  grid-column:1 !important;
+  grid-row:2 !important;
+  height:48px !important;
+}
+
+.live-trackers{
+  grid-column:2 !important;
+  grid-row:2 !important;
+  height:48px !important;
+  display:grid !important;
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  grid-auto-rows:21px !important;
+  gap:6px !important;
+  overflow:hidden !important;
+}
+
+.hand{
+  grid-column:1 / -1 !important;
+  grid-row:3 !important;
+  min-height:var(--v13-hand-h) !important;
+  height:var(--v13-hand-h) !important;
+  display:grid !important;
+  grid-template-columns:repeat(5,minmax(0,var(--v13-hand-w))) !important;
+  justify-content:space-evenly !important;
+  align-items:center !important;
+  gap:10px !important;
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+}
+
+.hand .card,
+.hand .card-face{
+  width:var(--v13-hand-w) !important;
+  height:var(--v13-hand-h) !important;
+  min-width:var(--v13-hand-w) !important;
+  max-width:var(--v13-hand-w) !important;
+  max-height:var(--v13-hand-h) !important;
+  flex:0 0 var(--v13-hand-w) !important;
+}
+
+.card-art{
+  min-height:0 !important;
+}
+
+.card-art img{
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+  display:block !important;
+}
+
+.player-card-zones{
+  grid-column:1 !important;
+  grid-row:4 !important;
+  min-height:0 !important;
+}
+
+.action-picker{
+  display:none !important;
+}
+
+.weapon-picker{
+  grid-column:1 !important;
+  grid-row:5 !important;
+  min-height:0 !important;
+  overflow:hidden !important;
+}
+
+.played-row{
+  grid-column:2 !important;
+  grid-row:4 / 6 !important;
+  min-height:0 !important;
+  overflow:hidden !important;
+}
+
+.weapon-list,
+.played-cards{
+  min-height:0 !important;
+  overflow:auto !important;
+}
+
+.weapon-select-card,
+.played-turn-card{
+  width:var(--v13-mini-w) !important;
+  height:var(--v13-mini-h) !important;
+  min-width:var(--v13-mini-w) !important;
+}
+
+.dice-roll-panel,
+.dice-roll-panel.hidden{
+  display:grid !important;
+  visibility:visible !important;
+  grid-column:1 / -1 !important;
+  grid-row:6 !important;
+  height:34px !important;
+  min-height:0 !important;
+  padding:5px 8px !important;
+}
+
+.mansion-command-zone{
+  grid-column:1 !important;
+  grid-row:3 !important;
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  grid-template-rows:minmax(0,1fr) 34px !important;
+  gap:6px !important;
+  min-height:0 !important;
+  padding:8px !important;
+  border:1px solid rgba(224,172,64,.45) !important;
+  border-radius:10px !important;
+  background:rgba(5,8,13,.78) !important;
+}
+
+.action-row{
+  height:auto !important;
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  grid-auto-rows:34px !important;
+  gap:6px !important;
+  min-height:0 !important;
+}
+
+.turn-command,
+#turn-timer{
+  height:34px !important;
+}
+
+.mansion-command-zone .turn-command{
+  font-size:.72rem !important;
+  padding:0 6px !important;
+}
+
+.mansion-command-zone .turn-footer{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) 92px !important;
+  gap:6px !important;
+  align-items:center !important;
+  min-width:0 !important;
+}
+
+.mansion-command-zone .turn-footer .status{
+  display:block !important;
+  margin:0 !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+  font-size:.62rem !important;
+}
+
+.mansion-command-zone #turn-timer{
+  width:100% !important;
+  font-size:.95rem !important;
+}
+
+.right-rail{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:var(--v13-gap) !important;
+  overflow:hidden !important;
+}
+
+.right-rail > .panel{
+  min-height:0 !important;
+  overflow:hidden !important;
+}
+
+.chat-panel{
+  flex:0 1 275px !important;
+}
+
+.resources-panel{
+  flex:1 1 260px !important;
+}
+
+.right-achievements-panel,
+.history-panel{
+  flex:0 0 94px !important;
+}
+
+body.offline-mode .resources-panel{
+  flex:1 1 auto !important;
+}
+
+body.offline-mode .history-panel{
+  flex:0 0 82px !important;
+}
+
+#chat-log,
+#resource-area,
+.achievement-list,
+.match-history{
+  min-height:0 !important;
+  overflow:auto !important;
+}
+
+@media (max-width:1600px), (max-height:820px){
+  :root{
+    --v13-left:232px;
+    --v13-right:250px;
+    --v13-hand-w:96px;
+    --v13-hand-h:134px;
+    --v13-mini-w:68px;
+    --v13-mini-h:96px;
+    --v13-gap:6px;
+  }
+
+  .app-shell{
+    grid-template-columns:var(--v13-left) minmax(760px,1fr) var(--v13-right) !important;
+  }
+
+  .game-surface{
+    grid-template-rows:62px minmax(0,1fr) !important;
+  }
+
+  .topbar{
+    height:62px !important;
+    min-height:62px !important;
+  }
+
+  .volume-controls label{
+    width:105px !important;
+    height:40px !important;
+  }
+
+  .board{
+    grid-template-rows:94px 30px minmax(0,1fr) !important;
+  }
+
+  .player-card,
+  .player-slot-empty{
+    height:94px !important;
+    max-height:94px !important;
+  }
+
+  .player-card{
+    grid-template-columns:56px minmax(0,1fr) !important;
+  }
+
+  .player-card .portrait{
+    width:56px !important;
+    height:80px !important;
+  }
+
+  .play-area{
+    grid-template-columns:220px minmax(0,1fr) !important;
+  }
+
+  .mansion-row{
+    grid-template-rows:minmax(112px,1fr) 68px !important;
+  }
+
+  .mansion-card,
+  .deck-card{
+    width:min(104px,74%) !important;
+  }
+
+  .discard-slot{
+    height:68px !important;
+  }
+
+  .controls-panel{
+    grid-template-rows:24px 48px 156px 54px 72px 34px !important;
+    gap:6px !important;
+  }
+
+  .current-hero,
+  .live-trackers{
+    height:48px !important;
+  }
+
+  .live-trackers{
+    grid-auto-rows:21px !important;
+  }
+
+  .action-row,
+  .turn-command,
+  #turn-timer{
+    height:32px !important;
+  }
+
+  .mansion-panel{
+    grid-template-rows:26px minmax(0,1fr) 154px !important;
+  }
+
+  .mansion-command-zone{
+    grid-template-rows:minmax(0,1fr) 30px !important;
+    padding:6px !important;
+    gap:5px !important;
+  }
+
+  .mansion-command-zone .action-row{
+    height:auto !important;
+    grid-auto-rows:28px !important;
+  }
+
+  .mansion-command-zone .turn-command{
+    height:28px !important;
+    font-size:.58rem !important;
+  }
+
+  .mansion-command-zone .turn-footer{
+    grid-template-columns:minmax(0,1fr) 80px !important;
+  }
+}
+
+@media (max-width:1180px){
+  :root{
+    --v13-left:205px;
+    --v13-right:220px;
+    --v13-hand-w:96px;
+    --v13-hand-h:134px;
+    --v13-mini-w:60px;
+    --v13-mini-h:84px;
+  }
+
+  .app-shell{
+    grid-template-columns:var(--v13-left) minmax(650px,1fr) var(--v13-right) !important;
+  }
+
+  .play-area{
+    grid-template-columns:170px minmax(0,1fr) !important;
+  }
+
+  .volume-controls{
+    display:none !important;
+  }
+}
+
+/* v15 - cartas solo imagen y zona inferior sin solapes. */
+.hand .card-copy,
+.resource-card .card-copy,
+.weapon-select-card .card-copy,
+.played-turn-card .card-copy{
+  display:none !important;
+}
+
+.hand .card-art,
+.resource-card .card-art,
+.weapon-select-card .card-art,
+.played-turn-card .card-art{
+  height:100% !important;
+}
+
+.hand .card-face,
+.resource-card .card-face,
+.weapon-select-card,
+.played-turn-card{
+  display:block !important;
+}
+
+.controls-panel{
+  grid-template-rows:24px 48px 132px 64px 92px 42px !important;
+  align-content:start !important;
+}
+
+.hand{
+  height:132px !important;
+  min-height:132px !important;
+  align-items:center !important;
+  overflow:hidden !important;
+}
+
+.hand .card,
+.hand .card-face{
+  height:120px !important;
+  max-height:120px !important;
+}
+
+.player-card-zones{
+  grid-row:4 !important;
+  height:64px !important;
+  overflow:hidden !important;
+}
+
+.player-zone{
+  height:64px !important;
+  min-height:0 !important;
+  overflow:hidden !important;
+}
+
+.player-stack-zone,
+.player-discard-zone{
+  height:30px !important;
+  min-height:0 !important;
+}
+
+.weapon-picker{
+  grid-row:5 !important;
+  height:92px !important;
+  min-height:0 !important;
+}
+
+.weapon-list{
+  height:50px !important;
+  min-height:0 !important;
+  align-items:center !important;
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+}
+
+.weapon-select-card{
+  width:54px !important;
+  height:46px !important;
+  min-width:54px !important;
+  max-width:54px !important;
+}
+
+.played-row{
+  grid-row:4 / 6 !important;
+  height:164px !important;
+  min-height:0 !important;
+}
+
+.played-cards{
+  height:124px !important;
+  min-height:0 !important;
+  overflow:auto !important;
+}
+
+.dice-roll-panel,
+.dice-roll-panel.hidden{
+  grid-row:6 !important;
+  height:42px !important;
+  min-height:42px !important;
+  overflow:hidden !important;
+}
+
+.dice-roll-panel .section-title{
+  min-width:0 !important;
+}
+
+.dice-roll-panel .section-title h2,
+.dice-roll-panel .section-title span{
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+}
+
+.resource-card .card-face{
+  height:86px !important;
+  min-height:86px !important;
+}
+
+.resource-card footer{
+  margin-top:4px !important;
+}
+
+@media (max-width:1600px), (max-height:820px){
+  .controls-panel{
+    grid-template-rows:22px 44px 126px 58px 78px 38px !important;
+  }
+
+  .hand{
+    height:126px !important;
+    min-height:126px !important;
+  }
+
+  .hand .card,
+  .hand .card-face{
+    height:112px !important;
+    max-height:112px !important;
+  }
+
+  .player-card-zones,
+  .player-zone{
+    height:58px !important;
+  }
+
+  .player-stack-zone,
+  .player-discard-zone{
+    height:24px !important;
+  }
+
+  .weapon-picker{
+    height:78px !important;
+  }
+
+  .weapon-list{
+    height:42px !important;
+  }
+
+  .weapon-select-card{
+    width:48px !important;
+    height:40px !important;
+    min-width:48px !important;
+    max-width:48px !important;
+  }
+
+  .played-row{
+    height:142px !important;
+  }
+
+  .played-cards{
+    height:104px !important;
+  }
+
+  .dice-roll-panel,
+  .dice-roll-panel.hidden{
+    height:38px !important;
+    min-height:38px !important;
+  }
+
+  .resource-card .card-face{
+    height:74px !important;
+    min-height:74px !important;
+  }
+}
