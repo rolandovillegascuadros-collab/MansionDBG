@@ -10,7 +10,7 @@
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23111827'/%3E%3Cpath d='M14 50V20h8v30h9V10h11v40h8V26h7v24' fill='none' stroke='%23d8a84d' stroke-width='5' stroke-linejoin='round'/%3E%3C/svg%3E" />
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="improvements.css?v=layout-fix-v15-clean-cards" />
+    <link rel="stylesheet" href="improvements.css?v=layout-fix-v16-icons" />
   </head>
   <body>
     <section class="entry-screen" id="entry-screen" aria-label="Ingreso">
@@ -42,19 +42,19 @@
             </div>
             <div class="screenshot-grid">
               <figure>
-                <img src="assets/board/Tablero A4-1.jpg" alt="Vista del tablero de juego" />
+                <img src="assets/board/Tablero A4-1.png" alt="Vista del tablero de juego" />
                 <figcaption>Tablero de mesa</figcaption>
               </figure>
               <figure>
-                <img src="assets/cards/CH-001.jpg" alt="Carta de personaje" />
+                <img src="assets/cards/CH-001.png" alt="Carta de personaje" />
                 <figcaption>Personajes</figcaption>
               </figure>
               <figure>
-                <img src="assets/cards/WE-001.jpg" alt="Carta de arma" />
+                <img src="assets/cards/WE-001.png" alt="Carta de arma" />
                 <figcaption>Armas</figcaption>
               </figure>
               <figure>
-                <img src="assets/cards/MA-001.jpg" alt="Carta de mansion" />
+                <img src="assets/cards/MA-001.png" alt="Carta de mansion" />
                 <figcaption>Mansion</figcaption>
               </figure>
             </div>
@@ -73,11 +73,11 @@
               </ul>
               <div class="rules-details hidden" id="rules-details">
                 <div class="rules-sim">
-                  <img src="assets/cards/AM-001.jpg" alt="Carta de municion simulada" />
+                  <img src="assets/cards/AM-001.png" alt="Carta de municion simulada" />
                   <span>+</span>
-                  <img src="assets/cards/WE-009.jpg" alt="Carta de arma simulada" />
+                  <img src="assets/cards/WE-009.png" alt="Carta de arma simulada" />
                   <span>→</span>
-                  <img src="assets/cards/MA-001.jpg" alt="Carta de mansion simulada" />
+                  <img src="assets/cards/MA-001.png" alt="Carta de mansion simulada" />
                 </div>
                 <ol>
                   <li>Prepara la sala, elige modo y escenario. En online invita jugadores reales conectados.</li>
@@ -171,6 +171,33 @@
             <span><strong id="saved-losses">0</strong> derrotas</span>
             <span><strong id="saved-achievements">0</strong> logros</span>
           </div>
+          
+          <nav class="sidebar-nav">
+            <button class="nav-button" type="button" data-nav-target="achievements-nav">
+              <span>🏆 Logros</span>
+              <span class="chevron">›</span>
+            </button>
+            <div class="nav-content hidden" id="achievements-nav">
+              <div class="section-title compact-title">
+                <h2>Tus Logros</h2>
+                <button class="ghost-button compact-button" type="button" id="clear-progress-nav">Limpiar</button>
+              </div>
+              <ul class="achievement-list" id="achievements-list-nav"></ul>
+            </div>
+
+            <button class="nav-button" type="button" data-nav-target="history-nav">
+              <span>📜 Historial</span>
+              <span class="chevron">›</span>
+            </button>
+            <div class="nav-content hidden" id="history-nav">
+              <div class="section-title compact-title">
+                <h2>Partidas</h2>
+                <span id="match-history-status-nav">0 partidas</span>
+              </div>
+              <ul class="achievement-list match-history" id="match-history-list-nav"></ul>
+            </div>
+          </nav>
+
           <label class="availability-toggle">
             <input type="checkbox" id="availability-toggle" checked />
             <span>Disponible online</span>
@@ -247,16 +274,6 @@
 
         <section class="board">
           <section class="table-grid" id="players"></section>
-          <section class="global-trackers" aria-label="Resumen del turno">
-            <div><span>Vida</span><strong id="global-health">0/0</strong></div>
-            <div><span>Medallas</span><strong id="global-decorations">0</strong></div>
-            <div><span>Muertes</span><strong id="global-deaths">0/3</strong></div>
-            <div><span>Acciones</span><strong id="global-actions">0</strong></div>
-            <div><span>Compras</span><strong id="global-buys">0</strong></div>
-            <div><span>Explorar</span><strong id="global-explores">0</strong></div>
-            <div><span>Oro</span><strong id="global-gold">0</strong></div>
-            <div><span>Munición</span><strong id="global-ammo">0</strong></div>
-          </section>
 
           <section class="play-area">
             <div class="table-zone mansion-panel">
@@ -281,12 +298,31 @@
 
               <div class="mansion-command-zone">
                 <div class="action-row">
-                  <button class="turn-command" type="button" id="explore" aria-label="Explorar o atacar">Explorar</button>
-                  <button class="turn-command" type="button" id="buy-resource" aria-label="Comprar carta">Comprar</button>
-                  <button class="turn-command" type="button" id="play-action" aria-label="Jugar accion">Accion</button>
-                  <button class="turn-command" type="button" id="use-item" aria-label="Utilizar objeto">Objeto</button>
-                  <button class="turn-command" type="button" id="character-effect" aria-label="Efecto personaje">Personaje</button>
-                  <button class="turn-command end-command" type="button" id="end-turn" aria-label="Finalizar turno">Fin turno</button>
+                  <!-- Botones con iconos RE -->
+                  <button class="turn-command re-btn-icon" type="button" id="explore" aria-label="Explorar o atacar" data-re-icon="btn-explore">
+                    <img class="re-btn-img" src="assets/icons/btn-explore.png" alt="" aria-hidden="true" />
+                    <span>Explorar</span>
+                  </button>
+                  <button class="turn-command re-btn-icon" type="button" id="buy-resource" aria-label="Comprar carta" data-re-icon="btn-buy">
+                    <img class="re-btn-img" src="assets/icons/btn-buy.png" alt="" aria-hidden="true" />
+                    <span>Comprar</span>
+                  </button>
+                  <button class="turn-command re-btn-icon" type="button" id="play-action" aria-label="Jugar accion" data-re-icon="btn-action">
+                    <img class="re-btn-img" src="assets/icons/btn-action.png" alt="" aria-hidden="true" />
+                    <span>Accion</span>
+                  </button>
+                  <!-- HIDDEN: Objeto button removed per optimization -->
+                  <!-- <button class="turn-command" type="button" id="use-item" aria-label="Utilizar objeto">Objeto</button> -->
+                  <button class="turn-command re-btn-icon" type="button" id="character-effect" aria-label="Efecto personaje" data-re-icon="btn-character">
+                    <img class="re-btn-img" src="assets/icons/btn-character.png" alt="" aria-hidden="true" />
+                    <span>Personaje</span>
+                  </button>
+                </div>
+                <div class="action-row action-row-end">
+                  <button class="turn-command end-command re-btn-icon" type="button" id="end-turn" aria-label="Finalizar turno">
+                    <img class="re-btn-img" src="assets/icons/btn-end-turn.png" alt="" aria-hidden="true" />
+                    <span>Fin turno</span>
+                  </button>
                 </div>
                 <div class="turn-footer">
                   <p class="status" id="game-status">Crea una sala y comienza para repartir personajes al azar.</p>
@@ -301,45 +337,63 @@
                 <h2>Mano del jugador</h2>
                 <span id="current-player">Sin jugador</span>
               </div>
-              <div class="current-hero" id="current-hero">
-                <div class="portrait portrait-scout" aria-hidden="true"><span>PJ</span></div>
-                <div>
-                  <strong>Sin personaje</strong>
-                  <span>Comienza una partida</span>
-                </div>
-              </div>
+              <!-- Indicadores con iconos RE -->
               <div class="live-trackers" aria-label="Estado en tiempo real">
-                <div>
-                  <span>Vida</span>
-                  <strong id="live-health">0/0</strong>
+                <div class="tracker-health" data-tracker="health">
+                  <img class="tracker-icon" src="assets/icons/ind-health.png" alt="Vida" />
+                  <div class="tracker-info">
+                    <span>Vida</span>
+                    <strong id="live-health">0/0</strong>
+                  </div>
                 </div>
-                <div>
-                  <span>Acciones</span>
-                  <strong id="live-actions">0</strong>
+                <div class="tracker-action" data-tracker="actions">
+                  <img class="tracker-icon" src="assets/icons/ind-action.png" alt="Acciones" />
+                  <div class="tracker-info">
+                    <span>Acciones</span>
+                    <strong id="live-actions">0</strong>
+                  </div>
                 </div>
-                <div>
-                  <span>Compras</span>
-                  <strong id="live-buys">0</strong>
+                <div class="tracker-buy" data-tracker="buys">
+                  <img class="tracker-icon" src="assets/icons/ind-buy.png" alt="Compras" />
+                  <div class="tracker-info">
+                    <span>Compras</span>
+                    <strong id="live-buys">0</strong>
+                  </div>
                 </div>
-                <div>
-                  <span>Explorar</span>
-                  <strong id="live-explores">0</strong>
+                <div class="tracker-explore" data-tracker="explores">
+                  <img class="tracker-icon" src="assets/icons/ind-explore.png" alt="Explorar" />
+                  <div class="tracker-info">
+                    <span>Explorar</span>
+                    <strong id="live-explores">0</strong>
+                  </div>
                 </div>
-                <div>
-                  <span>Medallas</span>
-                  <strong id="live-decorations">0</strong>
+                <div class="tracker-medal" data-tracker="decorations">
+                  <img class="tracker-icon" src="assets/icons/ind-medal.png" alt="Medallas" />
+                  <div class="tracker-info">
+                    <span>Medallas</span>
+                    <strong id="live-decorations">0</strong>
+                  </div>
                 </div>
-                <div>
-                  <span>Daño</span>
-                  <strong id="live-damage">0</strong>
+                <div class="tracker-damage" data-tracker="damage">
+                  <img class="tracker-icon" src="assets/icons/ind-damage.png" alt="Daño" />
+                  <div class="tracker-info">
+                    <span>Daño</span>
+                    <strong id="live-damage">0</strong>
+                  </div>
                 </div>
-                <div>
-                  <span>Oro</span>
-                  <strong id="live-gold">0</strong>
+                <div class="tracker-gold" data-tracker="gold">
+                  <img class="tracker-icon" src="assets/icons/ind-gold.png" alt="Oro" />
+                  <div class="tracker-info">
+                    <span>Oro</span>
+                    <strong id="live-gold">0</strong>
+                  </div>
                 </div>
-                <div>
-                  <span>Munición</span>
-                  <strong id="live-ammo">0</strong>
+                <div class="tracker-ammo" data-tracker="ammo">
+                  <img class="tracker-icon" src="assets/icons/ind-ammo.png" alt="Munición" />
+                  <div class="tracker-info">
+                    <span>Munición</span>
+                    <strong id="live-ammo">0</strong>
+                  </div>
                 </div>
               </div>
               <div class="hand" id="hand"></div>
@@ -405,10 +459,10 @@
             <button class="voice-button" type="button" id="voice-toggle">Voz</button>
           </div>
           <ul id="chat-log"></ul>
-          <form id="chat-form">
-            <input id="chat-input" type="text" placeholder="Mensaje a la sala" />
+          <form id="chat-form" onsubmit="return false;">
+            <input id="chat-input" type="text" placeholder="Mensaje a la sala" autocomplete="off" />
             <button type="button" id="voice-message">Audio</button>
-            <button type="submit">Enviar</button>
+            <button type="submit" id="chat-submit">Enviar</button>
           </form>
         </section>
 
@@ -421,21 +475,7 @@
           <div class="resource-grid collapsed" id="resource-area"></div>
         </section>
 
-        <section class="panel room-panel right-achievements-panel hidden" aria-hidden="true">
-          <div class="section-title">
-            <h2>Logros</h2>
-            <button class="ghost-button" type="button" id="clear-progress">Limpiar</button>
-          </div>
-          <ul class="achievement-list" id="achievements"></ul>
-        </section>
-
-        <section class="panel history-panel">
-          <div class="section-title">
-            <h2>Historial</h2>
-            <span id="match-history-status">0 partidas</span>
-          </div>
-          <ul class="achievement-list match-history" id="match-history"></ul>
-        </section>
+        <!-- Logros e Historial movidos a la columna izquierda -->
 
         <section class="panel rules-panel hidden">
           <h2>Reglas cargadas</h2>
@@ -474,6 +514,6 @@
     </div>
     <audio id="ambient-audio" src="assets/audio/resident-evil.mp3" loop preload="auto"></audio>
     <script type="module" src="online-backend.js"></script>
-    <script src="script.js?v=layout-corregido-v11"></script>
+    <script src="script.js?v=layout-corregido-v12-icons"></script>
   </body>
 </html>

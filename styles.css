@@ -1937,7 +1937,7 @@ input {
   border-radius: 8px;
   background:
     linear-gradient(rgba(36, 32, 42, 0.18), rgba(36, 32, 42, 0.18)),
-    url("assets/cards/ReversoMansi%C3%B3n.jpg") center / cover,
+    url("assets/cards/ReversoMansi%C3%B3n.png") center / cover,
     #24202a;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.24);
 }
@@ -1975,6 +1975,7 @@ input {
 .mansion-card.has-card-image .card-art img {
   object-fit: contain;
   background: #080a0e;
+  filter: brightness(1.2) contrast(1.1);
 }
 
 .mansion-card.has-card-image .card-copy {
@@ -2290,7 +2291,7 @@ input {
   border-radius: 5px;
   background:
     linear-gradient(135deg, rgba(71, 25, 25, 0.8), rgba(18, 23, 32, 0.95)),
-    url("assets/cards/ReversoRecursos.jpg") center / cover;
+    url("assets/cards/ReversoRecursos.png") center / cover;
   transform: translateX(calc(var(--i) * 5px)) translateY(calc(var(--i) * -1px)) rotate(calc(var(--i) * 1deg));
   box-shadow: 0 5px 12px rgba(0, 0, 0, 0.35);
 }
@@ -2691,6 +2692,7 @@ input {
 .selected-card {
   border-color: var(--ok);
   box-shadow:
+    0 0 15px rgba(79, 191, 138, 0.4),
     0 0 0 2px rgba(79, 191, 138, 0.45),
     0 14px 30px rgba(0, 0, 0, 0.35);
 }
@@ -2713,6 +2715,12 @@ input {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  filter: brightness(1.2) contrast(1.1);
+  transition: filter 0.3s ease;
+}
+
+.card-face:hover .card-art img {
+  filter: brightness(1.4) contrast(1.15) saturate(1.1);
 }
 
 .card-art:has(img)::before,
@@ -2792,7 +2800,7 @@ input {
   gap: 8px;
   background:
     linear-gradient(rgba(17, 24, 39, 0.78), rgba(17, 24, 39, 0.94)),
-    url("assets/cards/ReversoMansi%C3%B3n.jpg") center / cover,
+    url("assets/cards/ReversoMansi%C3%B3n.png") center / cover,
     repeating-linear-gradient(45deg, rgba(216, 168, 77, 0.18) 0 8px, transparent 8px 18px);
 }
 

@@ -26,53 +26,53 @@ const modes = {
 };
 
 const characters = [
-  { name: "Albert Wesker", health: 90, trait: "Nivel 1 (2 medallas): Cuando Albert wesker aqtaque a un personaje o explore mansion, consigue +20 oro durante este turno. | Nivel 2 (9 medallas): Durante tu turno, elige a un jugador. Ese jugador consigue +1 exploracion y debe explorar ese turno obligatorio.", levels: [{ min: 2, text: "Cuando Albert wesker aqtaque a un personaje o explore mansion, consigue +20 oro durante este turno." }, { min: 9, text: "Durante tu turno, elige a un jugador. Ese jugador consigue +1 exploracion y debe explorar ese turno obligatorio." }], portrait: "scout", image: `${CARD_PATH}CH-001.jpg` },
-  { name: "Leon S. Kennedy", health: 80, trait: "Nivel 1 (2 medallas): Todas mis Armas Pistolas reciben -10 de municion | Nivel 2 (6 medallas): Todas mis Armas Pistolas pueden ser usada dos veces por turno.", levels: [{ min: 2, text: "Todas mis Armas Pistolas reciben -10 de municion" }, { min: 6, text: "Todas mis Armas Pistolas pueden ser usada dos veces por turno." }], portrait: "medic", image: `${CARD_PATH}CH-002.jpg` },
-  { name: "Claire Redfield", health: 100, trait: "Nivel 1 (2 medallas): Cada carta municion otorga +10 municion | Nivel 2 (6 medallas): Cada carta municion otorga +10 oro", levels: [{ min: 2, text: "Cada carta municion otorga +10 municion" }, { min: 6, text: "Cada carta municion otorga +10 oro" }], portrait: "tactician", image: `${CARD_PATH}CH-003.jpg` },
-  { name: "Sheva Alomar", health: 70, trait: "Nivel 1 (2 medallas): Durante tu turno, puedes intercambiar 1 carta de tu mano con la primera de tu inventario. | Nivel 2 (4 medallas): Todas mis Armas Rifles reciben -20 de municion", levels: [{ min: 2, text: "Durante tu turno, puedes intercambiar 1 carta de tu mano con la primera de tu inventario." }, { min: 4, text: "Todas mis Armas Rifles reciben -20 de municion" }], portrait: "warden", image: `${CARD_PATH}CH-004.jpg` },
-  { name: "Barry Burton", health: 85, trait: "Nivel 1 (2 medallas): Cuando ataca a otro personaje o explora, puedes dar +5 dano a un arma. | Nivel 2 (7 medallas): Todas mis Armas Magnun reciben +20 de dano", levels: [{ min: 2, text: "Cuando ataca a otro personaje o explora, puedes dar +5 dano a un arma." }, { min: 7, text: "Todas mis Armas Magnun reciben +20 de dano" }], portrait: "agent", image: `${CARD_PATH}CH-005.jpg` },
-  { name: "Ada Wong", health: 75, trait: "Nivel 1 (4 medallas): Cuando explora, puede mirar la carta superior de la mansion y dejar al principio o al final del  mazo de la mancion. | Nivel 2 (8 medallas): Al principio de tu turno, puedes tener +1 Accion y -1 compra", levels: [{ min: 4, text: "Cuando explora, puede mirar la carta superior de la mansion y dejar al principio o al final del  mazo de la mancion." }, { min: 8, text: "Al principio de tu turno, puedes tener +1 Accion y -1 compra" }], portrait: "operator", image: `${CARD_PATH}CH-006.jpg` },
-  { name: "Jack Krauser", health: 90, trait: "Nivel 1 (1 medallas): Al principio de tu turno, puedes seleccionar un cuchillo, que va a tu pila de descarte. | Nivel 2 (7 medallas): Todos tus  cuchillos consiguen +5 dano", levels: [{ min: 1, text: "Al principio de tu turno, puedes seleccionar un cuchillo, que va a tu pila de descarte." }, { min: 7, text: "Todos tus  cuchillos consiguen +5 dano" }], portrait: "scout", image: `${CARD_PATH}CH-007.jpg` },
-  { name: "Chris Redfield", health: 90, trait: "Nivel 1 (0 medallas): Este jugador No se puede ser curado por ninguna hierba o spray. Desde la mansion si sale una carta que adquiera un spray o hierba. No la tome. | Nivel 2 (3 medallas): Un arma selecionada gana +5 dano por cada infectado que explore en la mansion en este turno.", levels: [{ min: 0, text: "Este jugador No se puede ser curado por ninguna hierba o spray. Desde la mansion si sale una carta que adquiera un spray o hierba. No la tome." }, { min: 3, text: "Un arma selecionada gana +5 dano por cada infectado que explore en la mansion en este turno." }], portrait: "tactician", image: `${CARD_PATH}CH-008.jpg` },
-  { name: "Jill Valentine", health: 80, trait: "Nivel 1 (5 medallas): Todas mis Armas Explosiva reciben +5 de dano | Nivel 2 (8 medallas): Todas mis Armas Explosiva van a la pila de descarte en ves de recurso.", levels: [{ min: 5, text: "Todas mis Armas Explosiva reciben +5 de dano" }, { min: 8, text: "Todas mis Armas Explosiva van a la pila de descarte en ves de recurso." }], portrait: "operator", image: `${CARD_PATH}CH-009.jpg` },
-  { name: "Rebecca Chambers", health: 70, trait: "Nivel 1 (2 medallas): Cuando tengas que devolver alguna carta al area de recurso puedes enviarla a otro jugador a su pila de descarte. | Nivel 2 (3 medallas): Al principio de tu turno, puedes devolver al area de recurso de tu area de pila de descarte", levels: [{ min: 2, text: "Cuando tengas que devolver alguna carta al area de recurso puedes enviarla a otro jugador a su pila de descarte." }, { min: 3, text: "Al principio de tu turno, puedes devolver al area de recurso de tu area de pila de descarte" }], portrait: "medic", image: `${CARD_PATH}CH-010.jpg` },
+  { name: "Albert Wesker", health: 90, trait: "Nivel 1 (2 medallas): Cuando Albert wesker aqtaque a un personaje o explore mansion, consigue +20 oro durante este turno. | Nivel 2 (9 medallas): Durante tu turno, elige a un jugador. Ese jugador consigue +1 exploracion y debe explorar ese turno obligatorio.", levels: [{ min: 2, text: "Cuando Albert wesker aqtaque a un personaje o explore mansion, consigue +20 oro durante este turno." }, { min: 9, text: "Durante tu turno, elige a un jugador. Ese jugador consigue +1 exploracion y debe explorar ese turno obligatorio." }], portrait: "scout", image: `${CARD_PATH}CH-001.png` },
+  { name: "Leon S. Kennedy", health: 80, trait: "Nivel 1 (2 medallas): Todas mis Armas Pistolas reciben -10 de municion | Nivel 2 (6 medallas): Todas mis Armas Pistolas pueden ser usada dos veces por turno.", levels: [{ min: 2, text: "Todas mis Armas Pistolas reciben -10 de municion" }, { min: 6, text: "Todas mis Armas Pistolas pueden ser usada dos veces por turno." }], portrait: "medic", image: `${CARD_PATH}CH-002.png` },
+  { name: "Claire Redfield", health: 100, trait: "Nivel 1 (2 medallas): Cada carta municion otorga +10 municion | Nivel 2 (6 medallas): Cada carta municion otorga +10 oro", levels: [{ min: 2, text: "Cada carta municion otorga +10 municion" }, { min: 6, text: "Cada carta municion otorga +10 oro" }], portrait: "tactician", image: `${CARD_PATH}CH-003.png` },
+  { name: "Sheva Alomar", health: 70, trait: "Nivel 1 (2 medallas): Durante tu turno, puedes intercambiar 1 carta de tu mano con la primera de tu inventario. | Nivel 2 (4 medallas): Todas mis Armas Rifles reciben -20 de municion", levels: [{ min: 2, text: "Durante tu turno, puedes intercambiar 1 carta de tu mano con la primera de tu inventario." }, { min: 4, text: "Todas mis Armas Rifles reciben -20 de municion" }], portrait: "warden", image: `${CARD_PATH}CH-004.png` },
+  { name: "Barry Burton", health: 85, trait: "Nivel 1 (2 medallas): Cuando ataca a otro personaje o explora, puedes dar +5 dano a un arma. | Nivel 2 (7 medallas): Todas mis Armas Magnun reciben +20 de dano", levels: [{ min: 2, text: "Cuando ataca a otro personaje o explora, puedes dar +5 dano a un arma." }, { min: 7, text: "Todas mis Armas Magnun reciben +20 de dano" }], portrait: "agent", image: `${CARD_PATH}CH-005.png` },
+  { name: "Ada Wong", health: 75, trait: "Nivel 1 (4 medallas): Cuando explora, puede mirar la carta superior de la mansion y dejar al principio o al final del  mazo de la mancion. | Nivel 2 (8 medallas): Al principio de tu turno, puedes tener +1 Accion y -1 compra", levels: [{ min: 4, text: "Cuando explora, puede mirar la carta superior de la mansion y dejar al principio o al final del  mazo de la mancion." }, { min: 8, text: "Al principio de tu turno, puedes tener +1 Accion y -1 compra" }], portrait: "operator", image: `${CARD_PATH}CH-006.png` },
+  { name: "Jack Krauser", health: 90, trait: "Nivel 1 (1 medallas): Al principio de tu turno, puedes seleccionar un cuchillo, que va a tu pila de descarte. | Nivel 2 (7 medallas): Todos tus  cuchillos consiguen +5 dano", levels: [{ min: 1, text: "Al principio de tu turno, puedes seleccionar un cuchillo, que va a tu pila de descarte." }, { min: 7, text: "Todos tus  cuchillos consiguen +5 dano" }], portrait: "scout", image: `${CARD_PATH}CH-007.png` },
+  { name: "Chris Redfield", health: 90, trait: "Nivel 1 (0 medallas): Este jugador No se puede ser curado por ninguna hierba o spray. Desde la mansion si sale una carta que adquiera un spray o hierba. No la tome. | Nivel 2 (3 medallas): Un arma selecionada gana +5 dano por cada infectado que explore en la mansion en este turno.", levels: [{ min: 0, text: "Este jugador No se puede ser curado por ninguna hierba o spray. Desde la mansion si sale una carta que adquiera un spray o hierba. No la tome." }, { min: 3, text: "Un arma selecionada gana +5 dano por cada infectado que explore en la mansion en este turno." }], portrait: "tactician", image: `${CARD_PATH}CH-008.png` },
+  { name: "Jill Valentine", health: 80, trait: "Nivel 1 (5 medallas): Todas mis Armas Explosiva reciben +5 de dano | Nivel 2 (8 medallas): Todas mis Armas Explosiva van a la pila de descarte en ves de recurso.", levels: [{ min: 5, text: "Todas mis Armas Explosiva reciben +5 de dano" }, { min: 8, text: "Todas mis Armas Explosiva van a la pila de descarte en ves de recurso." }], portrait: "operator", image: `${CARD_PATH}CH-009.png` },
+  { name: "Rebecca Chambers", health: 70, trait: "Nivel 1 (2 medallas): Cuando tengas que devolver alguna carta al area de recurso puedes enviarla a otro jugador a su pila de descarte. | Nivel 2 (3 medallas): Al principio de tu turno, puedes devolver al area de recurso de tu area de pila de descarte", levels: [{ min: 2, text: "Cuando tengas que devolver alguna carta al area de recurso puedes enviarla a otro jugador a su pila de descarte." }, { min: 3, text: "Al principio de tu turno, puedes devolver al area de recurso de tu area de pila de descarte" }], portrait: "medic", image: `${CARD_PATH}CH-010.png` },
 ];
 
 const catalog = {
-  ammo10: { id: "ammo10", name: "Ammo x10", type: "Municion", ammo: 10, gold: 10, art: "ammo", cost: 0, image: `${CARD_PATH}AM-001.jpg` },
-  ammo20: { id: "ammo20", name: "Ammo x20", type: "Municion", ammo: 20, gold: 20, art: "ammo", cost: 30, image: `${CARD_PATH}AM-002.jpg` },
-  ammo30: { id: "ammo30", name: "Ammo x30", type: "Municion", ammo: 30, gold: 30, art: "ammo", cost: 60, image: `${CARD_PATH}AM-003.jpg` },
-  knife: { id: "knife", name: "Combat Knife", type: "Arma", damage: 10, ammoCost: 0, art: "knife", cost: 20, image: `${CARD_PATH}WE-004.jpg` },
-  handgun: { id: "handgun", name: "Handgun", type: "Arma", damage: 20, ammoCost: 20, art: "handgun", cost: 40, image: `${CARD_PATH}WE-009.jpg` },
-  bow: { id: "bow", name: "Longbow", type: "Arma", damage: 30, ammoCost: 20, art: "handgun", cost: 50, image: `${CARD_PATH}WE-002.jpg` },
-  grenade: { id: "grenade", name: "Grenade", type: "Arma", damage: 40, ammoCost: 0, splash: 10, explosive: true, art: "shotgun", cost: 60, image: `${CARD_PATH}WE-001.jpg`, text: "-5 dano a sus puntos de vida de cada jugador de los costado del jugador que explora. Se activa al explorar mansion esta carta." },
-  six: { id: "six", name: "Six Shooter", type: "Arma", damage: 50, ammoCost: 50, art: "handgun", cost: 90, image: `${CARD_PATH}WE-006.jpg` },
-  gatling: { id: "gatling", name: "Gatling Gun", type: "Arma", damage: 0, ammoCost: 0, damagePerAmmo: { step: 20, damage: 10 }, art: "shotgun", cost: 110, image: `${CARD_PATH}WE-007.jpg`, text: "Al explorar con esta arma puedes seleccionar cuanta municion tengas disponible para poder hacer daño." },
-  rocket: { id: "rocket", name: "Rocket Launcher", type: "Arma", damage: 90, ammoCost: 0, damageXAmmo: true, explosive: true, art: "shotgun", cost: 110, image: `${CARD_PATH}WE-008.jpg`, text: "Dano X por municion disponible del turno." },
-  submission: { id: "submission", name: "Submission", type: "Arma", damage: 5, ammoCost: 0, art: "knife", cost: 20, image: `${CARD_PATH}WE-003.jpg`, text: "Si tu vida es 80 o superior, esta arma gana +5 dano.", weaponClass: "cuchillo" },
-  survivalKnife: { id: "survivalKnife", name: "Survival Knife", type: "Arma", damage: 10, ammoCost: 0, art: "knife", cost: 50, image: `${CARD_PATH}WE-005.jpg`, text: "+5 dano por cada otro cuchillo usado este turno.", weaponClass: "cuchillo" },
-  burstHandgun: { id: "burstHandgun", name: "Burst-Fire Handgun", type: "Arma", damage: 20, ammoCost: 30, art: "handgun", cost: 60, image: `${CARD_PATH}WE-010.jpg`, text: "Si atacas con mas de 1 arma, esta pistola gana +20 dano.", weaponClass: "pistola" },
-  assaultMachineGun: { id: "assaultMachineGun", name: "Assault Machine Gun", type: "Arma", damage: 20, ammoCost: 40, art: "shotgun", cost: 30, image: `${CARD_PATH}WE-011.jpg`, weaponClass: "machine gun" },
-  fullBoreMachineGun: { id: "fullBoreMachineGun", name: "Full-Bore Machine Gun", type: "Arma", damage: 40, ammoCost: 70, art: "shotgun", cost: 100, image: `${CARD_PATH}WE-012.jpg`, text: "Si tienes mas de 100 municion, esta arma gana +30 dano.", weaponClass: "machine gun" },
-  pumpShotgun: { id: "pumpShotgun", name: "Pump-Action Shotgun", type: "Arma", damage: 25, ammoCost: 40, extraExplore: 1, art: "shotgun", cost: 40, image: `${CARD_PATH}WE-013.jpg`, text: "+1 exploracion este turno.", weaponClass: "escopeta" },
-  automaticShotgun: { id: "automaticShotgun", name: "Automatic Shotgun", type: "Arma", damage: 50, ammoCost: 80, extraExplore: 1, art: "shotgun", cost: 80, image: `${CARD_PATH}WE-014.jpg`, text: "Si el proximo infectado tiene 40 o menos vida, lo derrotas. +1 exploracion.", weaponClass: "escopeta" },
-  boltRifle: { id: "boltRifle", name: "Bolt-Action Rifle", type: "Arma", damage: 20, ammoCost: 50, art: "handgun", cost: 50, image: `${CARD_PATH}WE-015.jpg`, weaponClass: "rifle" },
-  semiRifle: { id: "semiRifle", name: "Semi-Automatic Rifle", type: "Arma", damage: 30, ammoCost: 70, art: "handgun", cost: 90, image: `${CARD_PATH}WE-016.jpg`, text: "+10 dano por cada accion jugada este turno.", weaponClass: "rifle" },
-  green: { id: "green", name: "Green Herb", type: "Objeto", heal: 20, art: "herb", cost: 30, image: `${CARD_PATH}IT-001.jpg`, text: "cura 20" },
-  yellow: { id: "yellow", name: "Yellow Herb", type: "Objeto", maxHeal: 10, art: "herb", cost: 50, image: `${CARD_PATH}IT-002.jpg`, text: "vida maxima +10" },
-  spray: { id: "spray", name: "First Aid Spray", type: "Objeto", fullHeal: true, art: "herb", cost: 70, image: `${CARD_PATH}IT-003.jpg`, text: "cura completa" },
-  action1: { id: "action1", name: "Mansion Foyer", type: "Accion", art: "action", cost: 30, image: `${CARD_PATH}AC-001.jpg`, text: "roba 2 cartas", draw: 2 },
-  action2: { id: "action2", name: "Deadly Aim", type: "Accion", art: "action", cost: 50, image: `${CARD_PATH}AC-002.jpg`, text: "+20 municion / todas mis armas selecionadad al atacar dan+10 dano", damageBonus: 10, ammoBonus: 20 },
-  action3: { id: "action3", name: "Shattered memories", type: "Accion", art: "action", cost: 20, image: `${CARD_PATH}AC-003.jpg`, text: "Seleciona 2 cartas de tu descarte y devuelvela al area de recurso, esta carta al finalizar el turno es devuelta la zona de recurso." },
-  action4: { id: "action4", name: "Escape from the dead city", type: "Accion", art: "action", cost: 70, image: `${CARD_PATH}AC-004.jpg`, text: "+2 accion / roba 1", extraAction: 2, draw: 1 },
-  action5: { id: "action5", name: "Reload", type: "Accion", art: "action", cost: 50, image: `${CARD_PATH}AC-005.jpg`, text: "+20 municion /+2 accion", ammoBonus: 20, extraAction: 2 },
-  action6: { id: "action6", name: "The Merchant", type: "Accion", art: "action", cost: 50, image: `${CARD_PATH}AC-006.jpg`, text: "+20 oro  / roba 1/ +1 compra", goldBonus: 20, extraBuy: 1, draw: 1 },
-  action7: { id: "action7", name: "Umbrella Corporation", type: "Accion", art: "action", cost: 50, image: `${CARD_PATH}AC-007.jpg`, text: "roba 2 / +1 accion", extraAction: 1, draw: 2 },
-  action8: { id: "action8", name: "Back To Back", type: "Accion", art: "action", cost: 30, image: `${CARD_PATH}AC-008.jpg`, text: "+10 oro / +1 accion", goldBonus: 10, extraAction: 1 },
-  action9: { id: "action9", name: "Item Mangament", type: "Accion", art: "action", cost: 30, image: `${CARD_PATH}AC-009.jpg`, text: "Devuelve al area de recursos 1 carta de municion y puedes conseguir otra carta de municion de hasta 30 de oro mas que la carta devuelta." },
-  action10: { id: "action10", name: "Ominous Battle", type: "Accion", art: "action", cost: 60, image: `${CARD_PATH}AC-010.jpg`, text: "+10 oro / roba 3", goldBonus: 10, draw: 3 },
-  action11: { id: "action11", name: "Master of Unlocking", type: "Accion", art: "action", cost: 30, image: `${CARD_PATH}AC-011.jpg`, text: "+1 accion / los dejamas jugadores entregan la primera carta del maso y si es un arma puedo escogerla y llevarla a mi pila de descarte.", extraAction: 1 },
-  action12: { id: "action12", name: "Struggle for Survival", type: "Accion", art: "action", cost: 30, image: `${CARD_PATH}AC-012.jpg`, text: "+1 accion / +1 exploracion", extraAction: 1, extraExplore: 1 },
+  ammo10: { id: "ammo10", name: "Ammo x10", type: "Municion", ammo: 10, gold: 10, art: "ammo", cost: 0, image: `${CARD_PATH}AM-001.png` },
+  ammo20: { id: "ammo20", name: "Ammo x20", type: "Municion", ammo: 20, gold: 20, art: "ammo", cost: 30, image: `${CARD_PATH}AM-002.png` },
+  ammo30: { id: "ammo30", name: "Ammo x30", type: "Municion", ammo: 30, gold: 30, art: "ammo", cost: 60, image: `${CARD_PATH}AM-003.png` },
+  knife: { id: "knife", name: "Combat Knife", type: "Arma", damage: 10, ammoCost: 0, art: "knife", cost: 20, image: `${CARD_PATH}WE-004.png` },
+  handgun: { id: "handgun", name: "Handgun", type: "Arma", damage: 20, ammoCost: 20, art: "handgun", cost: 40, image: `${CARD_PATH}WE-009.png` },
+  bow: { id: "bow", name: "Longbow", type: "Arma", damage: 30, ammoCost: 20, art: "handgun", cost: 50, image: `${CARD_PATH}WE-002.png` },
+  grenade: { id: "grenade", name: "Grenade", type: "Arma", damage: 40, ammoCost: 0, splash: 10, explosive: true, art: "shotgun", cost: 60, image: `${CARD_PATH}WE-001.png`, text: "-5 dano a sus puntos de vida de cada jugador de los costado del jugador que explora. Se activa al explorar mansion esta carta." },
+  six: { id: "six", name: "Six Shooter", type: "Arma", damage: 50, ammoCost: 50, art: "handgun", cost: 90, image: `${CARD_PATH}WE-006.png` },
+  gatling: { id: "gatling", name: "Gatling Gun", type: "Arma", damage: 0, ammoCost: 0, damagePerAmmo: { step: 20, damage: 10 }, art: "shotgun", cost: 110, image: `${CARD_PATH}WE-007.png`, text: "Al explorar con esta arma puedes seleccionar cuanta municion tengas disponible para poder hacer daño." },
+  rocket: { id: "rocket", name: "Rocket Launcher", type: "Arma", damage: 90, ammoCost: 0, damageXAmmo: true, explosive: true, art: "shotgun", cost: 110, image: `${CARD_PATH}WE-008.png`, text: "Dano X por municion disponible del turno." },
+  submission: { id: "submission", name: "Submission", type: "Arma", damage: 5, ammoCost: 0, art: "knife", cost: 20, image: `${CARD_PATH}WE-003.png`, text: "Si tu vida es 80 o superior, esta arma gana +5 dano.", weaponClass: "cuchillo" },
+  survivalKnife: { id: "survivalKnife", name: "Survival Knife", type: "Arma", damage: 10, ammoCost: 0, art: "knife", cost: 50, image: `${CARD_PATH}WE-005.png`, text: "+5 dano por cada otro cuchillo usado este turno.", weaponClass: "cuchillo" },
+  burstHandgun: { id: "burstHandgun", name: "Burst-Fire Handgun", type: "Arma", damage: 20, ammoCost: 30, art: "handgun", cost: 60, image: `${CARD_PATH}WE-010.png`, text: "Si atacas con mas de 1 arma, esta pistola gana +20 dano.", weaponClass: "pistola" },
+  assaultMachineGun: { id: "assaultMachineGun", name: "Assault Machine Gun", type: "Arma", damage: 20, ammoCost: 40, art: "shotgun", cost: 30, image: `${CARD_PATH}WE-011.png`, weaponClass: "machine gun" },
+  fullBoreMachineGun: { id: "fullBoreMachineGun", name: "Full-Bore Machine Gun", type: "Arma", damage: 40, ammoCost: 70, art: "shotgun", cost: 100, image: `${CARD_PATH}WE-012.png`, text: "Si tienes mas de 100 municion, esta arma gana +30 dano.", weaponClass: "machine gun" },
+  pumpShotgun: { id: "pumpShotgun", name: "Pump-Action Shotgun", type: "Arma", damage: 25, ammoCost: 40, extraExplore: 1, art: "shotgun", cost: 40, image: `${CARD_PATH}WE-013.png`, text: "+1 exploracion este turno.", weaponClass: "escopeta" },
+  automaticShotgun: { id: "automaticShotgun", name: "Automatic Shotgun", type: "Arma", damage: 50, ammoCost: 80, extraExplore: 1, art: "shotgun", cost: 80, image: `${CARD_PATH}WE-014.png`, text: "Si el proximo infectado tiene 40 o menos vida, lo derrotas. +1 exploracion.", weaponClass: "escopeta" },
+  boltRifle: { id: "boltRifle", name: "Bolt-Action Rifle", type: "Arma", damage: 20, ammoCost: 50, art: "handgun", cost: 50, image: `${CARD_PATH}WE-015.png`, weaponClass: "rifle" },
+  semiRifle: { id: "semiRifle", name: "Semi-Automatic Rifle", type: "Arma", damage: 30, ammoCost: 70, art: "handgun", cost: 90, image: `${CARD_PATH}WE-016.png`, text: "+10 dano por cada accion jugada este turno.", weaponClass: "rifle" },
+  green: { id: "green", name: "Green Herb", type: "Objeto", heal: 20, art: "herb", cost: 30, image: `${CARD_PATH}IT-001.png`, text: "cura 20" },
+  yellow: { id: "yellow", name: "Yellow Herb", type: "Objeto", maxHeal: 10, art: "herb", cost: 50, image: `${CARD_PATH}IT-002.png`, text: "vida maxima +10" },
+  spray: { id: "spray", name: "First Aid Spray", type: "Objeto", fullHeal: true, art: "herb", cost: 70, image: `${CARD_PATH}IT-003.png`, text: "cura completa" },
+  action1: { id: "action1", name: "Mansion Foyer", type: "Accion", art: "action", cost: 30, image: `${CARD_PATH}AC-001.png`, text: "roba 2 cartas", draw: 2 },
+  action2: { id: "action2", name: "Deadly Aim", type: "Accion", art: "action", cost: 50, image: `${CARD_PATH}AC-002.png`, text: "+20 municion / todas mis armas selecionadad al atacar dan+10 dano", damageBonus: 10, ammoBonus: 20 },
+  action3: { id: "action3", name: "Shattered memories", type: "Accion", art: "action", cost: 20, image: `${CARD_PATH}AC-003.png`, text: "Seleciona 2 cartas de tu descarte y devuelvela al area de recurso, esta carta al finalizar el turno es devuelta la zona de recurso." },
+  action4: { id: "action4", name: "Escape from the dead city", type: "Accion", art: "action", cost: 70, image: `${CARD_PATH}AC-004.png`, text: "+2 accion / roba 1", extraAction: 2, draw: 1 },
+  action5: { id: "action5", name: "Reload", type: "Accion", art: "action", cost: 50, image: `${CARD_PATH}AC-005.png`, text: "+20 municion /+2 accion", ammoBonus: 20, extraAction: 2 },
+  action6: { id: "action6", name: "The Merchant", type: "Accion", art: "action", cost: 50, image: `${CARD_PATH}AC-006.png`, text: "+20 oro  / roba 1/ +1 compra", goldBonus: 20, extraBuy: 1, draw: 1 },
+  action7: { id: "action7", name: "Umbrella Corporation", type: "Accion", art: "action", cost: 50, image: `${CARD_PATH}AC-007.png`, text: "roba 2 / +1 accion", extraAction: 1, draw: 2 },
+  action8: { id: "action8", name: "Back To Back", type: "Accion", art: "action", cost: 30, image: `${CARD_PATH}AC-008.png`, text: "+10 oro / +1 accion", goldBonus: 10, extraAction: 1 },
+  action9: { id: "action9", name: "Item Mangament", type: "Accion", art: "action", cost: 30, image: `${CARD_PATH}AC-009.png`, text: "Devuelve al area de recursos 1 carta de municion y puedes conseguir otra carta de municion de hasta 30 de oro mas que la carta devuelta." },
+  action10: { id: "action10", name: "Ominous Battle", type: "Accion", art: "action", cost: 60, image: `${CARD_PATH}AC-010.png`, text: "+10 oro / roba 3", goldBonus: 10, draw: 3 },
+  action11: { id: "action11", name: "Master of Unlocking", type: "Accion", art: "action", cost: 30, image: `${CARD_PATH}AC-011.png`, text: "+1 accion / los dejamas jugadores entregan la primera carta del maso y si es un arma puedo escogerla y llevarla a mi pila de descarte.", extraAction: 1 },
+  action12: { id: "action12", name: "Struggle for Survival", type: "Accion", art: "action", cost: 30, image: `${CARD_PATH}AC-012.png`, text: "+1 accion / +1 exploracion", extraAction: 1, extraExplore: 1 },
 };
 
 const baseResourceIds = ["ammo10", "ammo20", "ammo30", "knife", "handgun", "green"];
@@ -97,23 +97,23 @@ const scenarios = {
 };
 
 const mansionStory = [
-  { name: "Majini", type: "Infectado", health: 15, damage: 10, decorations: 1, art: "infected", image: `${CARD_PATH}MA-001.jpg` },
-  { name: "Zombie Male", type: "Infectado", health: 20, damage: 20, decorations: 1, art: "runner", image: `${CARD_PATH}MA-002.jpg` },
-  { name: "Zombie Female", type: "Infectado", health: 15, damage: 20, decorations: 1, art: "runner", image: `${CARD_PATH}MA-003.jpg` },
-  { name: "Zombie Butcher", type: "Infectado", health: 15, damage: 10, decorations: 1, art: "brute", image: `${CARD_PATH}MA-004.jpg` },
-  { name: "Bui Kichwa", type: "Infectado", health: 10, damage: 10, decorations: 1, art: "brute", image: `${CARD_PATH}MA-005.jpg` },
-  { name: "Licker", type: "Infectado", health: 40, damage: 30, decorations: 3, art: "brute", image: `${CARD_PATH}MA-006.jpg` },
-  { name: "Hunter", type: "Infectado", health: 40, damage: 30, decorations: 4, art: "brute", image: `${CARD_PATH}MA-008.jpg` },
-  { name: "Nemesis T-Type", type: "Infectado", health: 60, damage: 40, decorations: 5, nemesis: true, art: "boss", image: `${CARD_PATH}MA-007.jpg` },
-  { name: "Yellow Herb", type: "Objeto", health: 0, damage: 0, decorations: 0, mansionItem: "yellow", art: "herb", image: `${CARD_PATH}IT-002.jpg` },
-  { name: "Gatling Case", type: "Objeto", health: 0, damage: 0, decorations: 1, mansionItem: "gatling", art: "shotgun", image: `${CARD_PATH}WE-007.jpg` },
-  { name: "Rocket Case", type: "Objeto", health: 0, damage: 0, decorations: 1, mansionItem: "rocket", art: "shotgun", image: `${CARD_PATH}WE-008.jpg` },
-  { name: "Uroboros Aheri", type: "Jefe", health: 90, damage: 70, decorations: 8, boss: true, art: "boss", image: `${CARD_PATH}MA-010.jpg` },
+  { name: "Majini", type: "Infectado", health: 15, damage: 10, decorations: 1, art: "infected", image: `${CARD_PATH}MA-001.png` },
+  { name: "Zombie Male", type: "Infectado", health: 20, damage: 20, decorations: 1, art: "runner", image: `${CARD_PATH}MA-002.png` },
+  { name: "Zombie Female", type: "Infectado", health: 15, damage: 20, decorations: 1, art: "runner", image: `${CARD_PATH}MA-003.png` },
+  { name: "Zombie Butcher", type: "Infectado", health: 15, damage: 10, decorations: 1, art: "brute", image: `${CARD_PATH}MA-004.png` },
+  { name: "Bui Kichwa", type: "Infectado", health: 10, damage: 10, decorations: 1, art: "brute", image: `${CARD_PATH}MA-005.png` },
+  { name: "Licker", type: "Infectado", health: 40, damage: 30, decorations: 3, art: "brute", image: `${CARD_PATH}MA-006.png` },
+  { name: "Hunter", type: "Infectado", health: 40, damage: 30, decorations: 4, art: "brute", image: `${CARD_PATH}MA-008.png` },
+  { name: "Nemesis T-Type", type: "Infectado", health: 60, damage: 40, decorations: 5, nemesis: true, art: "boss", image: `${CARD_PATH}MA-007.png` },
+  { name: "Yellow Herb", type: "Objeto", health: 0, damage: 0, decorations: 0, mansionItem: "yellow", art: "herb", image: `${CARD_PATH}IT-002.png` },
+  { name: "Gatling Case", type: "Objeto", health: 0, damage: 0, decorations: 1, mansionItem: "gatling", art: "shotgun", image: `${CARD_PATH}WE-007.png` },
+  { name: "Rocket Case", type: "Objeto", health: 0, damage: 0, decorations: 1, mansionItem: "rocket", art: "shotgun", image: `${CARD_PATH}WE-008.png` },
+  { name: "Uroboros Aheri", type: "Jefe", health: 90, damage: 70, decorations: 8, boss: true, art: "boss", image: `${CARD_PATH}MA-010.png` },
 ];
 
 const mercenaryBonus = [
-  { name: "Time Bonus", type: "Bonus", health: 0, damage: 0, decorations: 0, bonusTurns: 1, art: "action", image: `${CARD_PATH}MA-018.jpg` },
-  { name: "Combo Bonus", type: "Bonus", health: 0, damage: 0, decorations: 2, art: "action", image: `${CARD_PATH}MA-019.jpg` },
+  { name: "Time Bonus", type: "Bonus", health: 0, damage: 0, decorations: 0, bonusTurns: 1, art: "action", image: `${CARD_PATH}MA-018.png` },
+  { name: "Combo Bonus", type: "Bonus", health: 0, damage: 0, decorations: 2, art: "action", image: `${CARD_PATH}MA-019.png` },
 ];
 
 localStorage.removeItem("mdbg-site-users");
@@ -909,6 +909,10 @@ function cleanText(value) {
 }
 
 function addChat(author, text, extra = {}) {
+  // Restricción: Solo permitir chat si hay una sala online activa
+  if (!isOnlineRoomActive()) {
+    return notify("Chat deshabilitado", "El chat solo funciona en partidas Online.", "error");
+  }
   const message = {
     id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
     author,
@@ -985,6 +989,12 @@ async function stopVoiceMessageRecording() {
 
 async function toggleVoiceMessage() {
   const button = $("#voice-message");
+  
+  // Verificar que sea online
+  if (!isOnlineRoomActive()) {
+    return notify("Audio deshabilitado", "El audio solo funciona en partidas Online.", "error");
+  }
+  
   if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
     return notify("Audio no disponible", "Este navegador no permite grabar mensajes de voz.", "error");
   }
@@ -1048,8 +1058,13 @@ function renderChatMessages(messages = []) {
     item.innerHTML = `
       <div class="chat-avatar">${chatAuthorInitials(message)}</div>
       <div class="chat-bubble">
-        <div class="chat-meta"><strong>${chatAuthorInitials(message)}</strong><span>${time}</span></div>
-        ${message.audioData ? `<audio controls preload="metadata" src="${message.audioData}"></audio>` : `<p>${escapeHtml(message.text)}</p>`}
+        <div class="chat-meta"><strong>${message.author || chatAuthorInitials(message)}</strong><span>${time}</span></div>
+        ${message.audioData ? `
+          <div class="chat-audio-container">
+            <audio controls preload="metadata" src="${message.audioData}"></audio>
+            <span class="audio-label">Mensaje de voz</span>
+          </div>
+        ` : `<p>${escapeHtml(message.text)}</p>`}
         <div class="chat-reactions" data-message-id="${message.id}">
           <button type="button" data-reaction="👍" aria-label="Me gusta">👍</button>
           <button type="button" data-reaction="❤️" aria-label="Me encanta">❤️</button>
@@ -1369,6 +1384,13 @@ function renderAuth() {
   $("#auth-panel").classList.toggle("hidden", state.entryDone);
   $("#profile-panel").classList.toggle("hidden", !state.entryDone);
   $("#online-panel").classList.toggle("hidden", !state.entryDone || state.sessionType === "offline");
+  
+  // Ocultar chat en modo offline
+  const chatPanel = $(".chat-panel");
+  if (chatPanel) {
+    chatPanel.classList.toggle("hidden", state.sessionType === "offline");
+  }
+
   $("#availability-toggle").checked = state.currentUser?.online !== false;
   document.body.classList.toggle("offline-mode", state.entryDone && state.sessionType === "offline");
   $$("[data-session]").forEach((item) => {
@@ -1473,6 +1495,20 @@ function renderRoom() {
   renderPlayers();
   renderResources();
   enhanceButtonIcons();
+  
+  // Deshabilitar chat si no es online
+  const chatInput = $("#chat-input");
+  const chatSubmit = $("#chat-form button[type='submit']");
+  const voiceToggle = $("#voice-toggle");
+  const isOnline = isOnlineRoomActive();
+  
+  if (chatInput) {
+    chatInput.disabled = !isOnline;
+    chatInput.placeholder = isOnline ? "Mensaje a la sala" : "Chat solo en modo Online";
+  }
+  if (chatSubmit) chatSubmit.disabled = !isOnline;
+  if (voiceToggle) voiceToggle.disabled = !isOnline;
+
   if (state.tutorialActive) renderTutorial();
 }
 
@@ -1528,18 +1564,22 @@ function renderResources() {
   typeBar.innerHTML = "";
   area.classList.toggle("collapsed", !state.resourceMarketOpen);
 
-  const types = ["Todos", ...new Set(state.resourceArea.map((pile) => pile.card.type))];
+  const availableTypes = new Set(state.resourceArea.map((pile) => pile.card.type));
+  const types = ["Todos", ...Array.from(availableTypes)];
   types.forEach((type) => {
     const button = document.createElement("button");
     button.type = "button";
     button.className = type === state.resourceFilter ? "active" : "";
     button.textContent = type;
-    button.addEventListener("click", () => {
+    const handleFilter = (e) => {
+      e.preventDefault();
       state.resourceFilter = type;
       state.resourceMarketOpen = true;
       randomizeMarketOrder();
       renderResources();
-    });
+    };
+    button.addEventListener("click", handleFilter);
+    button.addEventListener("touchend", handleFilter);
     typeBar.append(button);
   });
 
@@ -1573,13 +1613,65 @@ function resourceCardElement(pile, index) {
     const item = document.createElement("div");
     item.className = `resource-card ${pile.count <= 0 ? "empty" : ""}`;
     item.innerHTML = `
-      <button type="button" aria-label="Comprar ${pile.card.name}" ${pile.count <= 0 ? "disabled" : ""}>
+      <header class="resource-name"><strong>${pile.card.name}</strong></header>
+      <button class="inspect-btn" type="button" title="Ver detalles">🔍</button>
+      <button class="card-face-btn" type="button" aria-label="Comprar ${pile.card.name}" ${pile.count <= 0 ? "disabled" : ""}>
         <div class="card-face card-${pile.card.art}">${cardFace(pile.card, "resource")}</div>
       </button>
-      <footer><span>${pile.card.cost} oro</span><span class="remaining">Quedan ${pile.count}</span></footer>
+      <footer><span class="cost-gold">${pile.card.cost} oro</span><span class="remaining">Quedan ${pile.count}</span></footer>
     `;
-    item.querySelector("button").addEventListener("click", () => buyResource(index));
+    
+    const btn = item.querySelector(".card-face-btn");
+    const inspect = item.querySelector(".inspect-btn");
+
+    const handlePurchase = (e) => {
+        if (e.type === 'touchend') e.preventDefault();
+        buyResource(index);
+    };
+    
+    const handleInspect = (e) => {
+        if (e.type === 'touchend') e.preventDefault();
+        e.stopPropagation();
+        inspectCard(pile.card);
+    };
+
+    btn.addEventListener("click", handlePurchase);
+    btn.addEventListener("touchend", handlePurchase);
+    inspect.addEventListener("click", handleInspect);
+    inspect.addEventListener("touchend", handleInspect);
+    
     return item;
+}
+
+function inspectCard(card) {
+  const overlay = document.createElement("div");
+  overlay.className = "modal-overlay";
+  overlay.innerHTML = `
+    <div class="inspect-modal">
+      <button class="close-btn" type="button">X</button>
+      <img src="${card.image}" class="inspect-image" alt="${card.name}">
+      <div class="inspect-info">
+        <h2>${card.name}</h2>
+        <span class="type-badge">${card.type}</span>
+        <div class="inspect-details">
+          ${card.damage ? `<p><strong>Daño:</strong> ${card.damage}</p>` : ""}
+          ${card.ammoCost ? `<p><strong>Costo Munición:</strong> ${card.ammoCost}</p>` : ""}
+          ${card.cost ? `<p><strong>Costo Oro:</strong> ${card.cost}</p>` : ""}
+          ${card.text ? `<p><strong>Efecto:</strong> ${card.text}</p>` : "<p>Sin efectos adicionales.</p>"}
+        </div>
+      </div>
+    </div>
+  `;
+  
+  const close = () => {
+    overlay.remove();
+    sound("click");
+  };
+  
+  overlay.querySelector(".close-btn").addEventListener("click", close);
+  overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
+  document.body.appendChild(overlay);
+  sound("click");
 }
 
 function renderGame() {
@@ -1773,15 +1865,34 @@ function renderHand(current) {
     hand.innerHTML = "<p class=\"status\">Sin cartas en mano. Finaliza el turno para robar 5.</p>";
     return;
   }
-  cards.forEach((card) => {
+    cards.forEach((card) => {
     const el = document.createElement("button");
     el.type = "button";
     const selected = current?.selectedWeapons?.some((weapon) => weapon.instanceId === card.instanceId);
     const isAction = card.type === "Accion";
     el.className = `card card-face card-${card.art} ${selected ? "selected-card" : ""} ${isAction ? "action-hand-card" : ""}`;
     el.setAttribute("aria-label", card.type === "Arma" ? `Ver arma ${card.name}` : `Jugar ${card.name}`);
-    el.innerHTML = cardFace(card, "hand");
-    el.addEventListener("click", () => playHandCard(card.instanceId));
+    el.style.position = "relative";
+    el.innerHTML = `
+      <button class="inspect-btn" type="button" style="top:2px; right:2px; width:20px; height:20px; font-size:10px; position:absolute; z-index:10;">🔍</button>
+      ${cardFace(card, "hand")}
+    `;
+    
+    const handlePlay = (e) => {
+        if (e.type === 'touchend') e.preventDefault();
+        playHandCard(card.instanceId);
+    };
+    const handleInspect = (e) => {
+        if (e.type === 'touchend') e.preventDefault();
+        e.stopPropagation();
+        inspectCard(card);
+    };
+
+    el.addEventListener("click", handlePlay);
+    el.addEventListener("touchend", handlePlay);
+    el.querySelector(".inspect-btn").addEventListener("click", handleInspect);
+    el.querySelector(".inspect-btn").addEventListener("touchend", handleInspect);
+    
     hand.append(el);
   });
 }
@@ -1846,14 +1957,34 @@ function renderActionCards(current) {
     return;
   }
   actions.forEach((card) => {
-    const item = document.createElement("button");
-    item.type = "button";
-    item.className = "action-choice action-select-card card-face card-action";
+    const item = document.createElement("div");
+    item.className = "action-choice action-select-card";
+    item.style.position = "relative";
     item.innerHTML = `
-      ${cardFace(card, "action")}
-      <span class="action-effect">${actionEffectText(card)}</span>
+      <button class="inspect-btn" type="button" style="top:5px; right:5px; width:20px; height:20px; font-size:10px;">🔍</button>
+      <button class="card-face card-action" type="button">
+        ${cardFace(card, "action")}
+        <span class="action-effect">${actionEffectText(card)}</span>
+      </button>
     `;
-    item.addEventListener("click", () => playHandCard(card.instanceId));
+    
+    const btn = item.querySelector(".card-face");
+    const inspect = item.querySelector(".inspect-btn");
+
+    const handlePlay = (e) => {
+        if (e.type === 'touchend') e.preventDefault();
+        playHandCard(card.instanceId);
+    };
+    const handleInspect = (e) => {
+        if (e.type === 'touchend') e.preventDefault();
+        e.stopPropagation();
+        inspectCard(card);
+    };
+
+    btn.addEventListener("click", handlePlay);
+    btn.addEventListener("touchend", handlePlay);
+    inspect.addEventListener("click", handleInspect);
+    inspect.addEventListener("touchend", handleInspect);
     list.append(item);
   });
 }
@@ -1868,7 +1999,7 @@ function renderWeapons(current) {
     list.innerHTML = "<p class=\"status\">No hay armas en tu mano. Puedes intentar explorar sin arma.</p>";
     return;
   }
-  weapons.forEach((card) => {
+    weapons.forEach((card) => {
     const selectedWeapon = current.selectedWeapons.some((weapon) => weapon.instanceId === card.instanceId);
     const usedUp = weaponUseCount(card) >= weaponUseLimit(current, card);
     const button = document.createElement("button");
@@ -1876,8 +2007,27 @@ function renderWeapons(current) {
     button.className = `card card-face weapon-select-card card-${card.art} ${selectedWeapon ? "selected-card" : ""} ${usedUp ? "used-card" : ""}`;
     button.disabled = usedUp && !selectedWeapon;
     button.setAttribute("aria-label", `${selectedWeapon ? "Quitar" : "Seleccionar"} ${card.name}`);
-    button.innerHTML = cardFace(card, "weapon");
-    button.addEventListener("click", () => selectWeapon(card));
+    button.style.position = "relative";
+    button.innerHTML = `
+      <button class="inspect-btn" type="button" style="top:2px; right:2px; width:18px; height:18px; font-size:8px; position:absolute; z-index:10;">🔍</button>
+      ${cardFace(card, "weapon")}
+    `;
+    
+    const handleSelect = (e) => {
+        if (e.type === 'touchend') e.preventDefault();
+        selectWeapon(card);
+    };
+    const handleInspect = (e) => {
+        if (e.type === 'touchend') e.preventDefault();
+        e.stopPropagation();
+        inspectCard(card);
+    };
+
+    button.addEventListener("click", handleSelect);
+    button.addEventListener("touchend", handleSelect);
+    button.querySelector(".inspect-btn").addEventListener("click", handleInspect);
+    button.querySelector(".inspect-btn").addEventListener("touchend", handleInspect);
+    
     list.append(button);
   });
 }
@@ -1902,21 +2052,12 @@ function renderPlayed(current) {
 function renderLiveTrackers(current) {
   const mine = myPlayer();
   if (!mine) {
-    $("#current-hero").innerHTML = `<div class="portrait portrait-scout" aria-hidden="true"><span>PJ</span></div><div><strong>Sin personaje</strong><span>Comienza una partida</span></div>`;
     ["health", "actions", "buys", "explores", "decorations", "damage", "gold", "ammo"].forEach((key) => {
-      $(`#live-${key}`).textContent = key === "health" ? "0/0" : "0";
+      const el = $(`#live-${key}`);
+      if (el) el.textContent = key === "health" ? "0/0" : "0";
     });
     return;
   }
-  $("#current-hero").innerHTML = `
-    ${characterPortrait(mine.character)}
-    <div>
-      <strong>${mine.character.name}</strong>
-      <span>Tu personaje - Nivel ${levelFor(mine)}</span>
-      <button class="character-read-btn hero-read-btn" type="button">Leer caracteristicas</button>
-    </div>
-  `;
-  $("#current-hero .hero-read-btn")?.addEventListener("click", () => showCharacterDetails(mine));
   $("#live-health").textContent = `${mine.health}/${mine.maxHealth}`;
   $("#live-decorations").textContent = mine.decorations;
   const isMyTurnNow = isMyTurn();
@@ -1934,14 +2075,6 @@ function renderLiveTrackers(current) {
   $("#live-damage").textContent = liveValues.damage;
   $("#live-gold").textContent = liveValues.gold;
   $("#live-ammo").textContent = liveValues.ammo;
-  $("#global-health") && ($("#global-health").textContent = `${mine.health}/${mine.maxHealth}`);
-  $("#global-decorations") && ($("#global-decorations").textContent = mine.decorations);
-  $("#global-deaths") && ($("#global-deaths").textContent = `${mine.deaths || 0}/3`);
-  $("#global-actions") && ($("#global-actions").textContent = liveValues.actions);
-  $("#global-buys") && ($("#global-buys").textContent = liveValues.buys);
-  $("#global-explores") && ($("#global-explores").textContent = liveValues.explores);
-  $("#global-gold") && ($("#global-gold").textContent = liveValues.gold);
-  $("#global-ammo") && ($("#global-ammo").textContent = liveValues.ammo);
 }
 
 function cardFace(card) {
@@ -2250,18 +2383,18 @@ async function markCurrentUserOffline() {
 }
 
 async function returnHome(options = {}) {
-  const { force = false, logout = true } = options;
+  const { force = false, logout = true, returnToOnline = false } = options;
   if (state.started && !force) {
     notify("Partida activa", "Termina tu partida antes de salir al inicio o cerrar sesion.", "error");
     return false;
   }
   stopTurnTimer();
-  if (logout) await markCurrentUserOffline();
+  if (logout && !returnToOnline) await markCurrentUserOffline();
   state.entryDone = false;
-  state.loggedIn = false;
-  state.provider = "";
+  state.loggedIn = returnToOnline && state.loggedIn ? true : false;
+  state.provider = returnToOnline ? state.provider : "";
   state.sessionType = "friends";
-  if (logout) state.currentUser = null;
+  if (logout && !returnToOnline) state.currentUser = null;
   state.players = [];
   state.started = false;
   state.activeIndex = 0;
@@ -2272,7 +2405,7 @@ async function returnHome(options = {}) {
   state.lastRevealed = null;
   state.resourceMarketOpen = false;
   $("#chat-log").innerHTML = "";
-  if (logout) {
+  if (logout && !returnToOnline) {
     stopOnlineSubscriptions();
     state.pendingFriendRequests = [];
     state.pendingRoomInvitations = [];
@@ -2458,6 +2591,15 @@ function resolveUsedWeaponsAfterExplore(player) {
     const isExplosive = weapon.explosive || weapon.id === "grenade" || weapon.id === "rocket";
     if (!isExplosive) return;
     player.hand = player.hand.filter((card) => card.instanceId !== weapon.instanceId);
+    
+    if (weapon.id === "rocket") {
+      // Lógica especial Rocket Launcher: barajar Rocket Launcher Case en la mansión
+      state.mansion = shuffle([...state.mansion, cloneCard(catalog.rocketCase)]);
+      notify("Rocket Launcher agotado", "Se ha barajado un 'Rocket Launcher Case' en la mansion.", "warning");
+      // La carta original se pierde (no va a descarte ni a recursos)
+      return;
+    }
+
     if (keepExplosive) player.discard.push(weapon);
     else returnCardToResource(weapon);
   });
@@ -2469,8 +2611,9 @@ function resolveUsedWeaponsAfterExplore(player) {
 
 function weaponDamage(card) {
   let damage = card.damage || 0;
+  if (card.id === "rocket") damage = 90; // Daño fijo de 90 solicitado
   if (card.damagePerAmmo) damage = Math.floor((state.turn.autoAmmo || 0) / card.damagePerAmmo.step) * card.damagePerAmmo.damage;
-  if (card.damageXAmmo) damage = state.turn.autoAmmo || 0;
+  if (card.damageXAmmo && card.id !== "rocket") damage = state.turn.autoAmmo || 0;
   if (card.id === "burstHandgun" && currentPlayer()?.selectedWeapons?.length > 0) damage += 20;
   if (card.id === "fullBoreMachineGun" && state.turn.ammo + state.turn.weaponAmmoSpent > 100) damage += 30;
   if (card.id === "semiRifle") damage += (state.turn.actionsPlayed || 0) * 10;
@@ -2559,9 +2702,8 @@ function buyResource(index) {
   if (["gatling", "rocket"].includes(pile.card.id)) return notify("Carta no comprable", "WE-007 y WE-008 solo se obtienen desde la mansion.", "error");
   if (state.turn.buys <= 0) return notify("No puedes comprar", "No quedan compras este turno.", "error");
   if (state.turn.gold < pile.card.cost) return notify("Oro insuficiente", `Necesitas ${pile.card.cost} oro para ${pile.card.name}. Disponible: ${state.turn.gold}.`, "error");
-  const confirmText = `¿Comprar ${pile.card.name} por ${pile.card.cost} oro?\n\nOro disponible: ${state.turn.gold}\nCompras disponibles: ${state.turn.buys}\nQuedan en recurso: ${pile.count}\n\nLa carta ira a tu descarte.`;
+  const confirmText = `¿Estás seguro de comprar ${pile.card.name} por ${pile.card.cost} oro?\n\nOro disponible: ${state.turn.gold}\nCompras disponibles: ${state.turn.buys}\n\nLa carta irá a tu descarte.`;
   if (!window.confirm(confirmText)) {
-    notify("Compra cancelada", "No se movio ninguna carta.", "error");
     return;
   }
   state.turn.buys -= 1;
@@ -3075,22 +3217,25 @@ function renderAchievements() {
   $("#saved-achievements").textContent = state.achievements.length;
   $("#saved-wins").textContent = state.wins;
   $("#saved-losses").textContent = state.losses;
-  const list = $("#achievements");
-  list.innerHTML = "";
-  const items = state.achievements.length ? state.achievements : ["Aun sin logros guardados"];
-  items.forEach((name) => {
-    const li = document.createElement("li");
-    li.textContent = name;
-    list.append(li);
-  });
+  const list = $("#achievements-list-nav");
+  if (list) {
+    list.innerHTML = "";
+    const items = state.achievements.length ? state.achievements : ["Aun sin logros guardados"];
+    items.forEach((name) => {
+      const li = document.createElement("li");
+      li.textContent = name;
+      list.append(li);
+    });
+  }
   renderMatchHistory();
 }
 
 function renderMatchHistory() {
-  const list = $("#match-history");
+  const list = $("#match-history-list-nav");
   if (!list) return;
   list.innerHTML = "";
-  $("#match-history-status").textContent = `${state.matchHistory.length} partidas`;
+  const statusEl = $("#match-history-status-nav");
+  if (statusEl) statusEl.textContent = `${state.matchHistory.length} partidas`;
   if (!state.matchHistory.length) {
     const li = document.createElement("li");
     li.textContent = "Aun sin partidas guardadas";
@@ -3110,8 +3255,43 @@ function renderMatchHistory() {
   });
 }
 
-$("#offline-entry").addEventListener("click", () => startEntry("Offline"));
-$("#rules-more").addEventListener("click", () => {
+  $("#offline-entry").addEventListener("click", () => startEntry("Offline"));
+  
+  // Lógica de navegación lateral (Logros/Historial) con soporte táctil
+  $$(".nav-button").forEach(btn => {
+    const toggleNav = (e) => {
+      if (e.type === 'touchend') e.preventDefault();
+      const targetId = btn.dataset.navTarget;
+      const content = $(`#${targetId}`);
+      const isHidden = content.classList.contains("hidden");
+      
+      // Cerrar otros
+      $$(".nav-content").forEach(c => c.classList.add("hidden"));
+      $$(".nav-button").forEach(b => b.classList.remove("active"));
+      
+      if (isHidden) {
+        content.classList.remove("hidden");
+        btn.classList.add("active");
+        sound("click");
+      }
+    };
+    btn.addEventListener("click", toggleNav);
+    btn.addEventListener("touchend", toggleNav);
+  });
+
+  $("#clear-progress-nav")?.addEventListener("click", () => {
+    if (window.confirm("¿Deseas borrar todos tus logros y victorias guardadas localmente?")) {
+      state.achievements = [];
+      state.wins = 0;
+      state.losses = 0;
+      state.matchHistory = [];
+      saveProgress();
+      renderAchievements();
+      notify("Progreso borrado", "Se han limpiado tus estadisticas locales.", "success");
+    }
+  });
+
+  $("#rules-more").addEventListener("click", () => {
   const details = $("#rules-details");
   const visible = !details.classList.toggle("hidden");
   $("#rules-more").textContent = visible ? "Ver menos" : "Ver mas";
@@ -3198,7 +3378,10 @@ $("#scenario").addEventListener("change", resetRoom);
 $("#fill-room").addEventListener("click", fillRoom);
 $("#reset-room").addEventListener("click", resetRoom);
 $("#start-game").addEventListener("click", startGame);
-$("#home-button").addEventListener("click", () => returnHome({ logout: true }));
+$("#home-button").addEventListener("click", () => {
+  const isOnline = state.loggedIn && state.currentUser;
+  returnHome({ logout: true, returnToOnline: isOnline });
+});
 $("#logout-button").addEventListener("click", () => returnHome({ logout: true }));
 $("#game-over-close").addEventListener("click", () => {
   $("#game-over-modal").classList.add("hidden");
@@ -3208,7 +3391,10 @@ $("#play-action").addEventListener("click", playAction);
 $("#buy-resource").addEventListener("click", () => buyResource());
 $("#explore").addEventListener("click", explore);
 $("#mansion-card").addEventListener("click", explore);
-$("#use-item").addEventListener("click", useItem);
+// Protección: Solo agregar listener si el botón existe
+if ($("#use-item")) {
+  $("#use-item").addEventListener("click", useItem);
+}
 $("#character-effect").addEventListener("click", useCharacterEffect);
 $("#end-turn").addEventListener("click", endTurn);
 $("#request-end-game").addEventListener("click", requestEndGameVote);
@@ -3235,11 +3421,21 @@ $("#clear-progress").addEventListener("click", () => {
 });
 $("#chat-form").addEventListener("submit", (event) => {
   event.preventDefault();
+  event.stopPropagation(); // Evitar que el evento suba
+  
   const input = $("#chat-input");
   const text = input.value.trim();
   if (!text) return;
+  
+  // Asegurar que el chat solo funcione si es online
+  if (!isOnlineRoomActive()) {
+    notify("Chat deshabilitado", "El chat solo funciona en partidas Online.", "error");
+    return;
+  }
+
   addChat(state.currentUser?.name || myPlayer()?.name || "Jugador", text);
   input.value = "";
+  return false; // Refuerzo para evitar submit tradicional
 });
 $("#voice-message").addEventListener("click", () => {
   toggleVoiceMessage().catch((error) => notify("Audio no enviado", error.message, "error"));
