@@ -1748,6 +1748,232 @@ html, body {
   }
 }
 
+/* v23: escritorio mediano y notebook, sin aplastar la mesa central. */
+@media (orientation: landscape) and (min-width: 901px) and (max-width: 1700px) {
+  :root {
+    --sidebar-w: clamp(218px, 16.5vw, 272px);
+    --right-rail-w: clamp(278px, 24vw, 354px);
+    --gap: clamp(4px, 0.55vw, 8px);
+  }
+
+  .app-shell {
+    grid-template-columns: var(--sidebar-w) minmax(520px, 1fr) var(--right-rail-w) !important;
+  }
+
+  .play-area {
+    grid-template-columns: clamp(180px, 23%, 270px) minmax(0, 1fr) !important;
+  }
+
+  .right-rail .chat-panel {
+    flex-basis: clamp(190px, 30dvh, 300px) !important;
+    min-height: 170px !important;
+  }
+
+  .right-rail .resources-panel {
+    min-height: 220px !important;
+  }
+}
+
+@media (orientation: landscape) and (min-width: 901px) and (max-height: 820px) {
+  .topbar {
+    height: clamp(52px, 9dvh, 68px) !important;
+    padding: 6px 10px !important;
+  }
+
+  .brand,
+  .profile-card,
+  .room-panel,
+  .table-zone {
+    border-radius: 8px !important;
+  }
+
+  .hand {
+    min-height: clamp(88px, 16dvh, 126px) !important;
+  }
+
+  .player-card-zones {
+    height: clamp(62px, 11dvh, 88px) !important;
+  }
+}
+
+/* v23: móvil horizontal con scroll por zonas: juego, chat y recursos. */
+@media (orientation: landscape) and (max-width: 1100px) and (max-height: 620px) {
+  html,
+  body {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+
+  .app-shell {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 100dvh !important;
+    max-height: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 5px !important;
+    padding: 5px !important;
+    overflow: visible !important;
+  }
+
+  .sidebar {
+    display: none !important;
+  }
+
+  .game-surface {
+    order: 1 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: calc(100dvh - 10px) !important;
+    max-height: none !important;
+    display: grid !important;
+    grid-template-rows: 34px minmax(0, 1fr) !important;
+    overflow: hidden !important;
+  }
+
+  .board {
+    height: calc(100dvh - 54px) !important;
+    min-height: 360px !important;
+    max-height: none !important;
+    display: grid !important;
+    grid-template-rows: clamp(46px, 13dvh, 66px) minmax(0, 1fr) !important;
+    overflow: hidden !important;
+  }
+
+  .play-area {
+    height: 100% !important;
+    display: grid !important;
+    grid-template-columns: clamp(132px, 23vw, 190px) minmax(0, 1fr) !important;
+    gap: 5px !important;
+    overflow: hidden !important;
+  }
+
+  .controls-panel {
+    display: grid !important;
+    grid-template-rows: auto auto minmax(70px, 1fr) 42px 44px 38px minmax(0, 28px) !important;
+    gap: 4px !important;
+    overflow: hidden !important;
+  }
+
+  .action-row-end #end-turn,
+  #end-turn {
+    min-height: 0 !important;
+    height: clamp(42px, 10dvh, 54px) !important;
+    padding: 4px 8px !important;
+    font-size: 12px !important;
+    line-height: 1 !important;
+  }
+
+  .action-row-end #end-turn .re-btn-img {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .turn-timer,
+  #turn-timer {
+    min-height: 0 !important;
+    height: 34px !important;
+    padding: 2px 8px !important;
+    font-size: 15px !important;
+  }
+
+  .right-rail {
+    order: 2 !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 5px !important;
+    overflow: visible !important;
+  }
+
+  .right-rail .chat-panel,
+  .right-rail .resources-panel {
+    width: 100% !important;
+    display: flex !important;
+    max-height: none !important;
+    overflow: hidden !important;
+  }
+
+  .right-rail .chat-panel {
+    height: clamp(150px, 42dvh, 230px) !important;
+    min-height: 150px !important;
+    flex: none !important;
+    padding: 6px !important;
+  }
+
+  #chat-log {
+    display: block !important;
+    min-height: 0 !important;
+    overflow: auto !important;
+  }
+
+  #chat-form {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 72px 78px !important;
+    gap: 4px !important;
+  }
+
+  #chat-input,
+  #chat-form button {
+    min-height: 34px !important;
+    height: 34px !important;
+    font-size: 12px !important;
+  }
+
+  .right-rail .resources-panel {
+    height: auto !important;
+    min-height: 360px !important;
+    flex: none !important;
+  }
+
+  .resource-list,
+  #resource-list {
+    min-height: 0 !important;
+    overflow: auto !important;
+  }
+}
+
+@media (orientation: landscape) and (max-width: 760px) and (max-height: 430px) {
+  .game-surface {
+    grid-template-rows: 30px minmax(0, 1fr) !important;
+  }
+
+  .board {
+    height: calc(100dvh - 46px) !important;
+    min-height: 330px !important;
+  }
+
+  .play-area {
+    grid-template-columns: 124px minmax(0, 1fr) !important;
+  }
+
+  .action-row-end #end-turn,
+  #end-turn {
+    height: 38px !important;
+    font-size: 11px !important;
+  }
+
+  .turn-timer,
+  #turn-timer {
+    height: 30px !important;
+  }
+
+  .right-rail .chat-panel {
+    height: 160px !important;
+    min-height: 160px !important;
+  }
+
+  .right-rail .resources-panel {
+    min-height: 330px !important;
+  }
+}
+
 /* Mobile landscape: keep the playable table as the main viewport. */
 @media (orientation: landscape) and (max-width: 1100px) and (max-height: 620px) {
   html,
@@ -2106,5 +2332,176 @@ html, body {
     min-height: 30px !important;
     height: 30px !important;
     font-size: 11px !important;
+  }
+}
+
+/* v23 final override: móvil horizontal con scroll por juego, chat y recursos. */
+@media (orientation: landscape) and (max-width: 1100px) and (max-height: 620px) {
+  html,
+  body {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+
+  .app-shell {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 100dvh !important;
+    max-height: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 5px !important;
+    padding: 5px !important;
+    overflow: visible !important;
+  }
+
+  .sidebar {
+    display: none !important;
+  }
+
+  .game-surface {
+    order: 1 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: calc(100dvh - 10px) !important;
+    max-height: none !important;
+    display: grid !important;
+    grid-template-rows: 34px minmax(0, 1fr) !important;
+    overflow: hidden !important;
+  }
+
+  .board {
+    height: calc(100dvh - 54px) !important;
+    min-height: 360px !important;
+    max-height: none !important;
+    display: grid !important;
+    grid-template-rows: clamp(46px, 13dvh, 66px) minmax(0, 1fr) !important;
+    overflow: hidden !important;
+  }
+
+  .play-area {
+    height: 100% !important;
+    display: grid !important;
+    grid-template-columns: clamp(132px, 23vw, 190px) minmax(0, 1fr) !important;
+    gap: 5px !important;
+    overflow: hidden !important;
+  }
+
+  .controls-panel {
+    display: grid !important;
+    grid-template-rows: auto auto minmax(70px, 1fr) 42px 44px 38px minmax(0, 28px) !important;
+    gap: 4px !important;
+    overflow: hidden !important;
+  }
+
+  #end-turn {
+    min-height: 0 !important;
+    height: clamp(42px, 10dvh, 54px) !important;
+    padding: 4px 8px !important;
+    font-size: 12px !important;
+    line-height: 1 !important;
+  }
+
+  .turn-timer,
+  #turn-timer {
+    min-height: 0 !important;
+    height: 34px !important;
+    padding: 2px 8px !important;
+    font-size: 15px !important;
+  }
+
+  .right-rail {
+    order: 2 !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 5px !important;
+    overflow: visible !important;
+  }
+
+  .right-rail .chat-panel,
+  .right-rail .resources-panel {
+    width: 100% !important;
+    display: flex !important;
+    max-height: none !important;
+    overflow: hidden !important;
+  }
+
+  .right-rail .chat-panel {
+    height: clamp(150px, 42dvh, 230px) !important;
+    min-height: 150px !important;
+    flex: none !important;
+    padding: 6px !important;
+  }
+
+  #chat-log {
+    display: block !important;
+    min-height: 0 !important;
+    overflow: auto !important;
+  }
+
+  #chat-form {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 72px 78px !important;
+    gap: 4px !important;
+  }
+
+  #chat-input,
+  #chat-form button {
+    min-height: 34px !important;
+    height: 34px !important;
+    font-size: 12px !important;
+  }
+
+  .right-rail .resources-panel {
+    height: auto !important;
+    min-height: 360px !important;
+    flex: none !important;
+  }
+
+  .resource-list,
+  #resource-list {
+    min-height: 0 !important;
+    overflow: auto !important;
+  }
+}
+
+@media (orientation: landscape) and (max-width: 760px) and (max-height: 430px) {
+  .game-surface {
+    grid-template-rows: 30px minmax(0, 1fr) !important;
+  }
+
+  .board {
+    height: calc(100dvh - 46px) !important;
+    min-height: 330px !important;
+  }
+
+  .play-area {
+    grid-template-columns: 124px minmax(0, 1fr) !important;
+  }
+
+  #end-turn {
+    height: 38px !important;
+    font-size: 11px !important;
+  }
+
+  .turn-timer,
+  #turn-timer {
+    height: 30px !important;
+  }
+
+  .right-rail .chat-panel {
+    height: 160px !important;
+    min-height: 160px !important;
+  }
+
+  .right-rail .resources-panel {
+    min-height: 330px !important;
   }
 }

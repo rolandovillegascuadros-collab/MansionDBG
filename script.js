@@ -1029,8 +1029,10 @@ async function addChat(author, text, extra = {}) {
       return false;
     }
   }
-  state.chatMessages = [message, ...state.chatMessages].slice(0, 80);
-  renderChatMessages(state.chatMessages);
+  if (!isOnlineRoomActive()) {
+    state.chatMessages = [message, ...state.chatMessages].slice(0, 80);
+    renderChatMessages(state.chatMessages);
+  }
   return true;
 }
 
@@ -1143,8 +1145,15 @@ async function toggleVoiceMessage() {
 function renderChatMessages(messages = []) {
   const list = $("#chat-log");
   if (!list) return;
-  const normalized = [...messages]
+  const byId = new Map();
+  [...messages]
     .filter((message) => message?.text || message?.audioData)
+    .forEach((message) => {
+      const key = message.id || `${message.uid || message.author || "anon"}-${message.time || message.createdAt || ""}-${message.text || message.audioData || ""}`;
+      const previous = byId.get(key);
+      byId.set(key, { ...(previous || {}), ...message });
+    });
+  const normalized = [...byId.values()]
     .sort((a, b) => (b.time || b.createdAt || 0) - (a.time || a.createdAt || 0))
     .slice(0, 80);
   state.chatMessages = normalized;
@@ -3276,6 +3285,7 @@ function handlePlayerDeath(player, source = "dano") {
 
   player.skipTurns = 2;
   notify("Personaje caido", `${player.name} cae por ${source}. Pierde 2 turnos y luego revive con -20 de vida.`, "error");
+  checkRemainingPlayers();
 }
 
 function revivePlayer(player) {
@@ -3293,8 +3303,13 @@ function showGameOverModal() {
 }
 
 function checkRemainingPlayers() {
-  const active = state.players.filter((player) => !player.eliminated);
-  if (state.started && active.length <= 1) finishGameByScore("Solo queda un jugador activo.");
+  if (!state.started) return;
+  const living = state.players.filter((player) => !player.eliminated && player.alive);
+  if (living.length !== 1) return;
+  const survivor = living[0];
+  const fallen = state.players.filter((player) => player !== survivor && (!player.alive || player.eliminated));
+  const hasScoreOverFallen = fallen.some((player) => (survivor.decorations || 0) > (player.decorations || 0));
+  if (hasScoreOverFallen) finishGameByScore("Solo queda un personaje vivo y supera en medallas a un personaje caido.");
 }
 
 function voteEligiblePlayers() {
@@ -3577,8 +3592,20 @@ function botTurn() {
   if (state.started) endTurn();
 }
 
+function calculateMatchWinner() {
+  return [...state.players].sort((a, b) => {
+    const medalDiff = (b.decorations || 0) - (a.decorations || 0);
+    if (medalDiff) return medalDiff;
+    const deathDiff = (a.deaths || 0) - (b.deaths || 0);
+    if (deathDiff) return deathDiff;
+    const aliveDiff = Number(b.alive && !b.eliminated) - Number(a.alive && !a.eliminated);
+    if (aliveDiff) return aliveDiff;
+    return (b.health || 0) - (a.health || 0);
+  })[0];
+}
+
 function finishGameByScore(reason) {
-  const winner = [...state.players].sort((a, b) => b.decorations - a.decorations || b.health - a.health)[0];
+  const winner = calculateMatchWinner();
   state.started = false;
   state.endVotes = {};
   stopTurnTimer();
@@ -3975,20 +4002,6 @@ $("#clear-progress")?.addEventListener("click", () => {
     return false;
   });
 
-// Soporte adicional: clic directo en botón Enviar
-  $("#chat-submit")?.addEventListener("click", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const input = $("#chat-input");
-    const text = input?.value.trim();
-    if (!text) return;
-    // Llamar directamente en vez de re-despachar el submit (evita bubbling indeseado)
-    addChat(state.currentUser?.name || myPlayer()?.name || "Jugador", text).then((sent) => {
-      if (!sent || !input) return;
-      input.value = "";
-      input.focus();
-    });
-  });
 $("#voice-message").addEventListener("click", () => {
   toggleVoiceMessage().catch((error) => notify("Audio no enviado", error.message, "error"));
 });

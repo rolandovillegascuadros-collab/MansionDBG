@@ -1,5 +1,5 @@
-// cache v22-mobile-landscape
-const CACHE_NAME = 'mansiondbg-v22-mobile-landscape';
+// cache v23-layout-chat-winner
+const CACHE_NAME = 'mansiondbg-v23-layout-chat-winner';
 const ASSETS = [
   "./",
   "./index.html",
