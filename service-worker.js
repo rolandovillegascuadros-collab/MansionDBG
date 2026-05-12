@@ -1,5 +1,5 @@
-// cache v26-mobile-landscape-ui
-const CACHE_NAME = 'mansiondbg-v26-mobile-landscape-ui';
+// cache v27-mobile-landscape-ui
+const CACHE_NAME = 'mansiondbg-v27-mobile-landscape-ui';
 const ASSETS = [
   "./",
   "./index.html",
