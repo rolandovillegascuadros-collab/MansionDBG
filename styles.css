@@ -6642,6 +6642,72 @@ input {
 
 .invite-modal-actions .ghost-button:hover { background: rgba(255,255,255,0.06); }
 
+.start-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.76);
+  backdrop-filter: blur(4px);
+}
+
+.start-confirm-overlay.hidden {
+  display: none;
+}
+
+.start-confirm-box {
+  width: min(390px, calc(100% - 32px));
+  padding: 30px 24px 22px;
+  text-align: center;
+  background: var(--surface, #1a1f2e);
+  border: 1px solid var(--accent, #e2312e);
+  border-radius: 12px;
+  box-shadow: 0 10px 46px rgba(0, 0, 0, 0.7);
+}
+
+.start-confirm-icon {
+  display: inline-grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  margin-bottom: 12px;
+  border-radius: 50%;
+  background: var(--accent, #e2312e);
+  color: #fff;
+  font-weight: 900;
+  font-size: 1.35rem;
+}
+
+.start-confirm-box h2 {
+  margin: 0 0 8px;
+  color: var(--fg, #eee);
+  font-size: 1.2rem;
+}
+
+.start-confirm-box p {
+  margin: 0 0 10px;
+  color: var(--muted, #aaa);
+}
+
+.start-confirm-status {
+  font-weight: 800;
+  color: var(--fg, #eee) !important;
+}
+
+.start-confirm-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.start-confirm-actions button {
+  min-width: 118px;
+}
+
 /* ══════════════════════════════════════════════════════════
    NOTIFICACIÓN FLOTANTE DE CHAT
    ══════════════════════════════════════════════════════════ */

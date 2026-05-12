@@ -145,6 +145,10 @@ const state = {
   matchHistory: JSON.parse(localStorage.getItem("mdbg-match-history") || "[]"),
   matchRecorded: false,
   endVotes: {},
+  startConfirmations: {},
+  startRequest: null,
+  lastStartPromptId: "",
+  roomOwnerUid: "",
   diceRoll: null,
   authMode: "login",
   currentUser: JSON.parse(localStorage.getItem("mdbg-current-user") || "null"),
@@ -421,8 +425,12 @@ function watchCurrentRoom() {
     if (!room) return;
     state.applyingRemoteRoom = true;
     try {
+      state.roomOwnerUid = room.ownerUid || state.roomOwnerUid || "";
+      state.startRequest = room.startRequest || null;
+      state.startConfirmations = room.startConfirmations || {};
       if (room.gameState) applyRemoteGameState(room.gameState);
       else if (room.players) syncPlayersFromRoom(room.players);
+      handleStartRequestUpdate(room);
       if (room.chatMessages?.length) {
         renderChatMessages(room.chatMessages || []);
         if (backend.cleanupRoomChatCache && !cleanedChatRooms.has(state.roomId)) {
@@ -675,6 +683,7 @@ async function ensureOnlineRoom() {
       sessionType: state.sessionType,
       maxPlayers: getMode().max,
     });
+    state.roomOwnerUid = state.currentUser.uid || "";
     saveProgress();
     watchCurrentRoom();
     notify("Sala online creada", `ID de sala: ${state.roomId}`, "success");
@@ -1244,6 +1253,23 @@ function createPlayer(name, isBot = false, isFriend = false) {
   };
 }
 
+function refreshRandomCharacters() {
+  const pool = shuffle(characters);
+  state.players.forEach((player, index) => {
+    const character = pool[index % pool.length] || shuffle(characters)[0];
+    player.character = character;
+    player.maxHealth = character.health;
+    player.health = character.health;
+    player.decorations = 0;
+    player.defeatedPlayers = 0;
+    player.deaths = 0;
+    player.skipTurns = 0;
+    player.eliminated = false;
+    player.selectedWeapons = [];
+    player.alive = true;
+  });
+}
+
 function getModeKey() {
   return $("#mode").value;
 }
@@ -1341,6 +1367,7 @@ async function restoreSavedSession() {
       const room = await backend.getRoom(state.roomId);
       if (room?.players?.some((player) => player.uid === state.currentUser.uid)) {
         state.sessionType = room.sessionType || state.sessionType;
+        state.roomOwnerUid = room.ownerUid || "";
         $("#mode").value = room.mode || $("#mode").value;
         populateScenarios();
         if (room.scenario) $("#scenario").value = room.scenario;
@@ -1548,6 +1575,124 @@ function showRoomInviteModal(invitation) {
   rejectBtn.addEventListener("click", onReject);
 }
 
+function onlineHumanPlayers() {
+  return state.players.filter((player) => !player.isBot && player.uid);
+}
+
+function startConfirmationKey() {
+  return state.currentUser?.uid || "";
+}
+
+function confirmedStartCount() {
+  const players = onlineHumanPlayers();
+  return players.filter((player) => state.startConfirmations?.[player.uid]).length;
+}
+
+function allPlayersConfirmedStart() {
+  const players = onlineHumanPlayers();
+  return Boolean(players.length) && players.every((player) => state.startConfirmations?.[player.uid]);
+}
+
+async function updateStartConfirmation(confirmed = true) {
+  const backend = getOnlineBackend();
+  const uid = startConfirmationKey();
+  if (!state.roomId || !backend?.updateRoom || !uid) return;
+  state.startConfirmations ||= {};
+  if (confirmed) {
+    state.startConfirmations[uid] = {
+      name: state.currentUser?.name || myPlayer()?.name || "Jugador",
+      time: Date.now(),
+    };
+  } else {
+    delete state.startConfirmations[uid];
+  }
+  await backend.updateRoom(state.roomId, {
+    startConfirmations: state.startConfirmations,
+  });
+  renderRoom();
+}
+
+function hideStartConfirmModal() {
+  const overlay = document.getElementById("start-confirm-overlay");
+  if (overlay) overlay.classList.add("hidden");
+}
+
+function showStartConfirmModal(request = state.startRequest) {
+  const overlay = document.getElementById("start-confirm-overlay");
+  const title = document.getElementById("start-confirm-title");
+  const message = document.getElementById("start-confirm-message");
+  const status = document.getElementById("start-confirm-status");
+  const acceptBtn = document.getElementById("start-confirm-accept");
+  const waitBtn = document.getElementById("start-confirm-wait");
+  if (!overlay || !request) return;
+  const total = Math.max(onlineHumanPlayers().length, Number(request.totalPlayers || 0), 1);
+  const accepted = confirmedStartCount();
+  title.textContent = "Confirmar inicio";
+  message.textContent = `${request.requestedByName || "El anfitrion"} quiere comenzar la partida.`;
+  status.textContent = `${accepted}/${total} jugadores listos.`;
+  acceptBtn.disabled = Boolean(state.startConfirmations?.[startConfirmationKey()]);
+  acceptBtn.textContent = acceptBtn.disabled ? "Listo confirmado" : "Estoy listo";
+  overlay.classList.remove("hidden");
+
+  acceptBtn.onclick = () => {
+    updateStartConfirmation(true).catch((error) => notify("Confirmacion no enviada", error.message, "error"));
+  };
+  waitBtn.onclick = () => hideStartConfirmModal();
+}
+
+async function requestOnlineStartConfirmation() {
+  const backend = getOnlineBackend();
+  if (!backend?.updateRoom || !state.roomId) return false;
+  const request = {
+    id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    requestedByUid: state.currentUser?.uid || "",
+    requestedByName: state.currentUser?.name || "Anfitrion",
+    totalPlayers: onlineHumanPlayers().length,
+    time: Date.now(),
+  };
+  state.startRequest = request;
+  state.startConfirmations = {};
+  await backend.updateRoom(state.roomId, {
+    startRequest: request,
+    startConfirmations: {},
+  });
+  await updateStartConfirmation(true);
+  showStartConfirmModal(request);
+  notify("Inicio solicitado", "Esperando confirmacion de todos los jugadores.", "success");
+  return true;
+}
+
+async function clearStartConfirmationRequest() {
+  const backend = getOnlineBackend();
+  state.startRequest = null;
+  state.startConfirmations = {};
+  state.lastStartPromptId = "";
+  hideStartConfirmModal();
+  if (backend?.updateRoom && state.roomId) {
+    await backend.updateRoom(state.roomId, {
+      startRequest: null,
+      startConfirmations: {},
+    }).catch(() => {});
+  }
+}
+
+function handleStartRequestUpdate(room = {}) {
+  if (state.started || !state.startRequest) {
+    hideStartConfirmModal();
+    return;
+  }
+  const requestId = state.startRequest.id || "";
+  if (requestId && state.lastStartPromptId !== requestId && !state.startConfirmations?.[startConfirmationKey()]) {
+    state.lastStartPromptId = requestId;
+    window.setTimeout(() => showStartConfirmModal(state.startRequest), 120);
+  }
+  if (state.roomOwnerUid && state.currentUser?.uid === state.roomOwnerUid && allPlayersConfirmedStart()) {
+    window.setTimeout(() => {
+      beginConfirmedGame().catch((error) => notify("No se pudo iniciar", error.message, "error"));
+    }, 0);
+  }
+}
+
 /* ── Notificación flotante de chat ──────────────────────── */
 function showChatNotification(author, text) {
   const existing = document.getElementById("chat-notif-toast");
@@ -1577,8 +1722,13 @@ function renderRoom() {
   $("#room-status").textContent = state.entryDone
     ? `Sala con ${state.players.length}/${mode.max}. Minimo: ${mode.min}. ${mode.objective} ${backendLabel} ${state.syncStatus}`
     : "Inicia sesion con tu cuenta del sitio o prueba offline para crear una sala.";
-  $("#start-game").disabled = !state.started && !canStart();
-  $("#start-game").textContent = state.started ? "Partida activa" : "Comenzar partida";
+  const waitingStart = Boolean(state.startRequest && !state.started);
+  $("#start-game").disabled = (!state.started && !canStart()) || waitingStart;
+  $("#start-game").textContent = state.started
+    ? "Partida activa"
+    : waitingStart
+      ? `Esperando ${confirmedStartCount()}/${Math.max(onlineHumanPlayers().length, 1)}`
+      : "Comenzar partida";
   $("#fill-room").hidden = state.sessionType !== "offline";
   renderAuth();
   renderFriends();
@@ -1590,6 +1740,7 @@ function renderRoom() {
   const chatInput = $("#chat-input");
   const chatSubmit = $("#chat-submit");
   const voiceToggle = $("#voice-toggle");
+  const voiceMessage = $("#voice-message");
   const isOnline = isInOnlineSession();
   
   if (chatInput) {
@@ -1598,6 +1749,7 @@ function renderRoom() {
   }
   if (chatSubmit) chatSubmit.disabled = !isOnline;
   if (voiceToggle) voiceToggle.disabled = !isOnlineRoomActive();
+  if (voiceMessage) voiceMessage.disabled = !isOnlineRoomActive();
 
   if (state.tutorialActive) renderTutorial();
 }
@@ -2286,6 +2438,7 @@ async function acceptRoomInvitation(invitation) {
     }
     if (room) {
       state.sessionType = room.sessionType || "friends";
+      state.roomOwnerUid = room.ownerUid || "";
       state.roomId = room.id;
       state.entryDone = true;
       state.loggedIn = true;
@@ -2386,6 +2539,7 @@ function fillRoom() {
 
 function resetRoom() {
   state.roomId = "";
+  state.roomOwnerUid = "";
   state.players = state.entryDone ? [{
     ...createPlayer("Tu", false),
     uid: state.currentUser?.uid || "",
@@ -2400,6 +2554,9 @@ function resetRoom() {
   state.resourceMarketOpen = false;
   state.matchRecorded = false;
   state.endVotes = {};
+  state.startConfirmations = {};
+  state.startRequest = null;
+  state.lastStartPromptId = "";
   state.diceRoll = null;
     buildResourceArea();
   state.chatMessages = [];
@@ -2424,9 +2581,22 @@ async function startGame() {
   }
   if (!canStart()) return;
   await ensureOnlineRoom();
+  if (isOnlineRoomActive()) {
+    await requestOnlineStartConfirmation();
+    return;
+  }
+  await beginConfirmedGame();
+}
+
+async function beginConfirmedGame() {
+  if (state.started) return;
+  if (!canStart()) return;
   state.started = true;
   state.matchRecorded = false;
   state.endVotes = {};
+  state.startConfirmations = {};
+  state.startRequest = null;
+  state.lastStartPromptId = "";
   state.diceRoll = null;
   state.lastPublishedState = "";
   state.round = 1;
@@ -2434,6 +2604,7 @@ async function startGame() {
   state.turn = freshTurn();
   state.mansion = buildMansion();
   state.lastRevealed = null;
+  refreshRandomCharacters();
   state.players.forEach((player) => {
     const deck = createStartingDeck();
     player.health = player.maxHealth;
@@ -2453,6 +2624,7 @@ async function startGame() {
   addAchievement("Primera sala iniciada");
   notify("Partida iniciada", "Tirada inicial para definir quien comienza.", "success");
   renderRoom();
+  await clearStartConfirmationRequest();
   runOpeningDiceRoll();
   renderGame();
 }
@@ -2490,6 +2662,7 @@ async function returnHome(options = {}) {
   state.activeIndex = 0;
   state.round = 0;
   state.roomId = "";
+  state.roomOwnerUid = "";
   state.turn = freshTurn();
   state.mansion = [];
   state.lastRevealed = null;
@@ -2978,6 +3151,7 @@ function requestEndGameVote() {
   notify("Voto registrado", `Terminar partida: ${votes}/${total} votos.`, "success");
   checkEndGameVote();
   renderGame();
+  schedulePublishRoomState();
 }
 
 function checkEndGameVote() {
@@ -2988,6 +3162,12 @@ function checkEndGameVote() {
   if (!allAccepted) return false;
   finishGameByScore("Todos los jugadores aceptaron terminar la partida.");
   return true;
+}
+
+function refreshPendingEndVotes() {
+  if (!state.started || !state.endVotes || !Object.keys(state.endVotes).length) return;
+  checkEndGameVote();
+  renderTurnControls();
 }
 
 function useItem() {
@@ -3236,9 +3416,11 @@ function finishGameByScore(reason) {
   saveProgress();
   sound("win");
   renderAchievements();
+  showWinnerAlert(winner, reason);
+  refreshRandomCharacters();
   renderRoom();
   renderGame();
-  showWinnerAlert(winner, reason);
+  notify("Personajes renovados", "La sala quedo lista con personajes aleatorios nuevos.", "success");
 }
 
 function showWinnerAlert(winner, reason) {
@@ -3652,6 +3834,8 @@ $("#add-user-form").addEventListener("submit", async (event) => {
 
 if ("serviceWorker" in navigator) navigator.serviceWorker.register("service-worker.js").catch(() => {});
 
+window.setInterval(refreshPendingEndVotes, 2000);
+
 populateScenarios();
 renderHomeCardGuide();
 enhanceButtonIcons();
@@ -3678,4 +3862,3 @@ playAmbient();
   else moveCommands();
   window.addEventListener('resize', moveCommands);
 })();
-

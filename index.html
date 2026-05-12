@@ -460,7 +460,7 @@
           <form id="chat-form" action="javascript:void(0)">
             <input id="chat-input" type="text" placeholder="Mensaje a la sala" autocomplete="off" />
             <button type="button" id="voice-message">Audio</button>
-            <button type="button" id="chat-submit">Enviar</button>
+            <button type="submit" id="chat-submit">Enviar</button>
           </form>
         </section>
 
@@ -532,6 +532,19 @@
         <div class="invite-modal-actions">
           <button class="primary-button" type="button" id="invite-modal-accept">✔ Aceptar</button>
           <button class="ghost-button" type="button" id="invite-modal-reject">✘ Rechazar</button>
+        </div>
+      </div>
+    </div>
+    <!-- Confirmacion centrada para comenzar partida online -->
+    <div class="start-confirm-overlay hidden" id="start-confirm-overlay" role="dialog" aria-modal="true" aria-labelledby="start-confirm-title">
+      <div class="start-confirm-box">
+        <div class="start-confirm-icon">!</div>
+        <h2 id="start-confirm-title">Confirmar inicio</h2>
+        <p id="start-confirm-message"></p>
+        <p id="start-confirm-status" class="start-confirm-status"></p>
+        <div class="start-confirm-actions">
+          <button class="primary-button" type="button" id="start-confirm-accept">Estoy listo</button>
+          <button class="ghost-button" type="button" id="start-confirm-wait">Esperar</button>
         </div>
       </div>
     </div>
