@@ -6531,3 +6531,167 @@ input {
 .winner-alert-close:active {
   transform: scale(0.97);
 }
+
+/* ══════════════════════════════════════════════════════════
+   MODAL CENTRAL DE INVITACIÓN A SALA
+   ══════════════════════════════════════════════════════════ */
+.invite-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(4px);
+  animation: invite-overlay-in 0.3s ease;
+}
+
+.invite-modal-overlay.hidden {
+  display: none;
+}
+
+@keyframes invite-overlay-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.invite-modal-box {
+  background: var(--surface, #1a1f2e);
+  border: 1px solid var(--accent, #e2312e);
+  border-radius: 18px;
+  padding: 32px 28px 24px;
+  max-width: 380px;
+  width: calc(100% - 32px);
+  text-align: center;
+  box-shadow: 0 8px 48px rgba(0,0,0,0.7), 0 0 0 1px rgba(226,49,46,0.25);
+  animation: invite-box-in 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes invite-box-in {
+  from { opacity: 0; transform: scale(0.82) translateY(24px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.invite-modal-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+  animation: invite-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes invite-pulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.18); }
+}
+
+.invite-modal-box h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--accent, #e2312e);
+  margin: 0 0 8px;
+  letter-spacing: 0.01em;
+}
+
+#invite-modal-from {
+  font-size: 1rem;
+  color: var(--fg, #eee);
+  margin: 0 0 6px;
+  font-weight: 600;
+}
+
+.invite-modal-details {
+  font-size: 0.8rem;
+  color: var(--muted, #888);
+  margin: 0 0 20px;
+}
+
+.invite-modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.invite-modal-actions .primary-button {
+  min-width: 120px;
+  font-size: 1rem;
+  padding: 10px 20px;
+  border-radius: 10px;
+  background: var(--accent, #e2312e);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  transition: opacity 0.15s;
+}
+
+.invite-modal-actions .primary-button:hover { opacity: 0.85; }
+
+.invite-modal-actions .ghost-button {
+  min-width: 120px;
+  font-size: 1rem;
+  padding: 10px 20px;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--fg, #eee);
+  border: 1px solid var(--line, #444);
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+
+.invite-modal-actions .ghost-button:hover { background: rgba(255,255,255,0.06); }
+
+/* ══════════════════════════════════════════════════════════
+   NOTIFICACIÓN FLOTANTE DE CHAT
+   ══════════════════════════════════════════════════════════ */
+.chat-notif-toast {
+  position: fixed;
+  bottom: 80px;
+  right: 18px;
+  z-index: 8888;
+  background: var(--surface, #1a1f2e);
+  border: 1px solid var(--line, #444);
+  border-left: 4px solid #3b82f6;
+  border-radius: 10px;
+  padding: 10px 14px;
+  max-width: 280px;
+  cursor: pointer;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  animation: chat-notif-in 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+@keyframes chat-notif-in {
+  from { opacity: 0; transform: translateX(60px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.chat-notif-toast strong {
+  font-size: 0.82rem;
+  color: #3b82f6;
+  font-weight: 700;
+}
+
+.chat-notif-toast span {
+  font-size: 0.78rem;
+  color: var(--fg, #eee);
+  opacity: 0.85;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 240px;
+}
+
+@media (max-width: 480px) {
+  .invite-modal-box {
+    padding: 24px 16px 20px;
+  }
+  .chat-notif-toast {
+    bottom: 60px;
+    right: 10px;
+    max-width: 230px;
+  }
+}

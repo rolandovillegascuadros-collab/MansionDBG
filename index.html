@@ -522,6 +522,19 @@
         <button class="primary-button winner-alert-close" type="button" id="winner-alert-close">Continuar en sala</button>
       </div>
     </div>
+    <!-- Modal de invitación a sala (centro de pantalla) -->
+    <div class="invite-modal-overlay hidden" id="invite-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="invite-modal-title">
+      <div class="invite-modal-box">
+        <div class="invite-modal-icon">🎮</div>
+        <h2 id="invite-modal-title">¡Invitación a partida!</h2>
+        <p id="invite-modal-from"></p>
+        <p id="invite-modal-details" class="invite-modal-details"></p>
+        <div class="invite-modal-actions">
+          <button class="primary-button" type="button" id="invite-modal-accept">✔ Aceptar</button>
+          <button class="ghost-button" type="button" id="invite-modal-reject">✘ Rechazar</button>
+        </div>
+      </div>
+    </div>
     <!-- Alerta de inicio de turno -->
     <div class="turn-alert hidden" id="turn-alert" role="dialog" aria-modal="true" aria-labelledby="turn-alert-title">
       <div class="turn-alert-box">

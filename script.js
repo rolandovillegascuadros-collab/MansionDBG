@@ -398,8 +398,14 @@ function startOnlineSubscriptions() {
   }
   if (!state.unsubRoomInvitations && backend.watchRoomInvitations) {
     state.unsubRoomInvitations = backend.watchRoomInvitations(state.currentUser.uid, (invitations) => {
+      const prev = state.pendingRoomInvitations || [];
       state.pendingRoomInvitations = invitations;
       renderInvitations();
+      // Detectar nueva invitación y mostrar modal central
+      const newInvite = invitations.find((inv) => !prev.some((p) => p.id === inv.id));
+      if (newInvite) {
+        showRoomInviteModal(newInvite);
+      }
     });
   }
 }
@@ -433,6 +439,19 @@ function watchCurrentRoom() {
   });
   if (backend.watchRoomChat) {
     state.unsubChat = backend.watchRoomChat(state.roomId, (messages) => {
+      const sorted = [...(messages || [])].sort((a, b) => (b.time || b.createdAt || 0) - (a.time || a.createdAt || 0));
+      const prev = state.chatMessages || [];
+      // Notificar si llegó un mensaje nuevo de otro jugador
+      if (sorted.length > 0 && prev.length > 0) {
+        const newest = sorted[0];
+        const alreadyKnown = prev.some((m) => m.id === newest.id);
+        const fromOther = newest.uid !== state.currentUser?.uid;
+        if (!alreadyKnown && fromOther) {
+          const author = newest.author || "Jugador";
+          const preview = newest.audioData ? "🎤 Mensaje de voz" : (newest.text || "").slice(0, 60);
+          showChatNotification(author, preview);
+        }
+      }
       renderChatMessages(messages || []);
     });
   }
@@ -544,6 +563,8 @@ function applyRemoteGameState(gameState) {
     populateScenarios();
   }
   if (gameState.scenario) $("#scenario").value = gameState.scenario;
+  const prevActiveIndex = state.activeIndex;
+  const wasStarted = state.started;
   state.started = Boolean(gameState.started);
   state.activeIndex = Number(gameState.activeIndex || 0);
   state.round = Number(gameState.round || 0);
@@ -565,6 +586,10 @@ function applyRemoteGameState(gameState) {
   state.diceRoll = gameState.diceRoll || null;
   state.turnEndsAt = gameState.turnEndsAt || null;
   checkEndGameVote();
+  // Mostrar alerta de turno si el turno cambió y ahora es mi turno
+  if (state.started && wasStarted && state.activeIndex !== prevActiveIndex && isMyTurn() && !currentPlayer()?.isBot) {
+    window.setTimeout(() => showTurnAlert(currentPlayer()), 300);
+  }
 }
 
 function schedulePublishRoomState() {
@@ -1481,6 +1506,64 @@ function renderInvitations() {
     card.querySelector('[data-action="reject"]').addEventListener("click", () => isRoom ? rejectRoomInvitation(item) : rejectFriendInvitation(item));
     list.append(card);
   });
+}
+
+/* ── Modal central de invitación a sala ─────────────────── */
+let _currentInviteModalItem = null;
+
+function showRoomInviteModal(invitation) {
+  const overlay = document.getElementById("invite-modal-overlay");
+  const fromEl = document.getElementById("invite-modal-from");
+  const detailsEl = document.getElementById("invite-modal-details");
+  const acceptBtn = document.getElementById("invite-modal-accept");
+  const rejectBtn = document.getElementById("invite-modal-reject");
+  if (!overlay) return;
+
+  _currentInviteModalItem = invitation;
+  fromEl.textContent = `De: ${invitation.fromName || "Jugador"}`;
+  const parts = [];
+  if (invitation.mode) parts.push(`Modo: ${invitation.mode}`);
+  if (invitation.scenario) parts.push(`Escenario: ${invitation.scenario}`);
+  if (invitation.maxPlayers) parts.push(`Max jugadores: ${invitation.maxPlayers}`);
+  detailsEl.textContent = parts.join("  ·  ");
+  overlay.classList.remove("hidden");
+
+  function close() {
+    overlay.classList.add("hidden");
+    _currentInviteModalItem = null;
+    acceptBtn.removeEventListener("click", onAccept);
+    rejectBtn.removeEventListener("click", onReject);
+  }
+  function onAccept() {
+    const inv = _currentInviteModalItem;
+    close();
+    if (inv) acceptRoomInvitation(inv);
+  }
+  function onReject() {
+    const inv = _currentInviteModalItem;
+    close();
+    if (inv) rejectRoomInvitation(inv);
+  }
+  acceptBtn.addEventListener("click", onAccept);
+  rejectBtn.addEventListener("click", onReject);
+}
+
+/* ── Notificación flotante de chat ──────────────────────── */
+function showChatNotification(author, text) {
+  const existing = document.getElementById("chat-notif-toast");
+  if (existing) existing.remove();
+  const toast = document.createElement("div");
+  toast.id = "chat-notif-toast";
+  toast.className = "chat-notif-toast";
+  toast.innerHTML = `<strong>💬 ${author}</strong><span>${text}</span>`;
+  document.body.appendChild(toast);
+  // Click lleva al panel de chat
+  toast.addEventListener("click", () => {
+    const chatPanel = document.querySelector(".chat-panel");
+    if (chatPanel) chatPanel.scrollIntoView({ behavior: "smooth", block: "center" });
+    toast.remove();
+  });
+  window.setTimeout(() => toast && toast.remove(), 5000);
 }
 
 function renderRoom() {
