@@ -908,9 +908,13 @@ function cleanText(value) {
     .replaceAll("mansion", "mansión");
 }
 
+function isInOnlineSession() {
+  return state.loggedIn && state.sessionType !== "offline" && Boolean(state.roomId);
+}
+
 function addChat(author, text, extra = {}) {
-  // Restricción: Solo permitir chat si hay una sala online activa
-  if (!isOnlineRoomActive()) {
+  // Restricción: Solo permitir chat si hay una sala online activa (con o sin backend real)
+  if (!isInOnlineSession()) {
     return notify("Chat deshabilitado", "El chat solo funciona en partidas Online.", "error");
   }
   const message = {
@@ -1496,18 +1500,18 @@ function renderRoom() {
   renderResources();
   enhanceButtonIcons();
   
-  // Deshabilitar chat si no es online
+  // Deshabilitar chat si no hay sesión online activa (roomId + sessionType online)
   const chatInput = $("#chat-input");
   const chatSubmit = $("#chat-form button[type='submit']");
   const voiceToggle = $("#voice-toggle");
-  const isOnline = isOnlineRoomActive();
+  const isOnline = isInOnlineSession();
   
   if (chatInput) {
     chatInput.disabled = !isOnline;
     chatInput.placeholder = isOnline ? "Mensaje a la sala" : "Chat solo en modo Online";
   }
   if (chatSubmit) chatSubmit.disabled = !isOnline;
-  if (voiceToggle) voiceToggle.disabled = !isOnline;
+  if (voiceToggle) voiceToggle.disabled = !isOnlineRoomActive();
 
   if (state.tutorialActive) renderTutorial();
 }
@@ -3421,21 +3425,24 @@ $("#clear-progress").addEventListener("click", () => {
 });
 $("#chat-form").addEventListener("submit", (event) => {
   event.preventDefault();
-  event.stopPropagation(); // Evitar que el evento suba
+  event.stopPropagation();
   
   const input = $("#chat-input");
   const text = input.value.trim();
   if (!text) return;
   
-  // Asegurar que el chat solo funcione si es online
-  if (!isOnlineRoomActive()) {
-    notify("Chat deshabilitado", "El chat solo funciona en partidas Online.", "error");
-    return;
-  }
-
   addChat(state.currentUser?.name || myPlayer()?.name || "Jugador", text);
   input.value = "";
-  return false; // Refuerzo para evitar submit tradicional
+  input.focus();
+});
+
+// Soporte adicional: clic directo en botón Enviar
+$("#chat-submit")?.addEventListener("click", () => {
+  const input = $("#chat-input");
+  const text = input?.value.trim();
+  if (!text) return;
+  const form = $("#chat-form");
+  form?.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
 });
 $("#voice-message").addEventListener("click", () => {
   toggleVoiceMessage().catch((error) => notify("Audio no enviado", error.message, "error"));

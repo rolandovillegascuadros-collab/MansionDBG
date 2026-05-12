@@ -2208,14 +2208,7 @@ input {
   font-weight: 900;
 }
 
-.live-trackers div:nth-child(1)::before { content: "+"; background: #57c789; }
-.live-trackers div:nth-child(2)::before { content: "A"; }
-.live-trackers div:nth-child(3)::before { content: "$"; }
-.live-trackers div:nth-child(4)::before { content: "?"; }
-.live-trackers div:nth-child(5)::before { content: "*"; }
-.live-trackers div:nth-child(6)::before { content: "!"; background: #e05656; }
-.live-trackers div:nth-child(7)::before { content: "$"; }
-.live-trackers div:nth-child(8)::before { content: "M"; }
+/* Pseudo-elementos eliminados para limpiar la interfaz */
 }
 
 .live-trackers span,

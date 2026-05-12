@@ -1,9 +1,10 @@
-// cache v7-responsive-horizontal
-const CACHE_NAME = 'mansiondbg-layout-corregido-v11';
+// cache v17-turn-chat-responsive
+const CACHE_NAME = 'mansiondbg-layout-corregido-v17-turn-chat-responsive';
 const ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
+  "./improvements.css",
   "./script.js",
   "./online-backend.js",
   "./firebase-config.js",
