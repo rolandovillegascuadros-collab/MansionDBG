@@ -1,5 +1,5 @@
-// cache v19-online-chat-start-responsive
-const CACHE_NAME = 'mansiondbg-v19-online-chat-start-responsive';
+// cache v21-online-presence-refresh
+const CACHE_NAME = 'mansiondbg-v21-online-presence-refresh';
 const ASSETS = [
   "./",
   "./index.html",

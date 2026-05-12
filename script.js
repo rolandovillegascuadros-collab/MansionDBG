@@ -158,6 +158,7 @@ const state = {
   roomCreationPromise: null,
   pendingFriendRequests: [],
   pendingRoomInvitations: [],
+  unsubUsers: null,
   unsubFriendRequests: null,
   unsubRoomInvitations: null,
   unsubRoom: null,
@@ -172,6 +173,8 @@ const state = {
   playedVoiceMessages: new Set(),
   applyingRemoteRoom: false,
   publishTimer: null,
+  onlineDirectoryTimer: null,
+  onlineDirectorySyncing: false,
   lastPublishedState: "",
   syncStatus: "",
   chatMessages: [],
@@ -191,6 +194,7 @@ const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 let cardInstanceSequence = 0;
 const cleanedChatRooms = new Set();
+const ONLINE_DIRECTORY_REFRESH_MS = 1000;
 
 const tutorialSteps = [
   {
@@ -381,10 +385,11 @@ function mergeSiteUsers(users) {
 }
 
 function stopOnlineSubscriptions() {
-  ["unsubFriendRequests", "unsubRoomInvitations", "unsubRoom", "unsubChat", "unsubVoice"].forEach((key) => {
+  ["unsubUsers", "unsubFriendRequests", "unsubRoomInvitations", "unsubRoom", "unsubChat", "unsubVoice"].forEach((key) => {
     if (typeof state[key] === "function") state[key]();
     state[key] = null;
   });
+  stopOnlineDirectoryRefresh();
   Object.values(state.voicePeers).forEach((peer) => peer.close?.());
   state.voicePeers = {};
   state.voiceCandidatesSeen = {};
@@ -395,6 +400,15 @@ function stopOnlineSubscriptions() {
 function startOnlineSubscriptions() {
   const backend = getOnlineBackend();
   if (!backend || !state.currentUser?.uid) return;
+  if (!state.unsubUsers && backend.watchUsers) {
+    state.unsubUsers = backend.watchUsers((users) => {
+      state.siteUsers = [];
+      mergeSiteUsers(users);
+      renderSiteUsers();
+      renderFriends();
+      renderRoom();
+    });
+  }
   if (!state.unsubFriendRequests && backend.watchFriendRequests) {
     state.unsubFriendRequests = backend.watchFriendRequests(state.currentUser.uid, (requests) => {
       state.pendingFriendRequests = requests;
@@ -656,7 +670,8 @@ function syncPlayersFromRoom(roomPlayers = []) {
 
 async function syncOnlineDirectory() {
   const backend = getOnlineBackend();
-  if (!backend || !state.currentUser?.uid) return;
+  if (!backend || !state.currentUser?.uid || state.onlineDirectorySyncing) return;
+  state.onlineDirectorySyncing = true;
   try {
     const [users, friendIds] = await Promise.all([
       backend.listUsers(),
@@ -672,7 +687,23 @@ async function syncOnlineDirectory() {
     renderRoom();
   } catch (error) {
     notify("Online no sincronizado", error.message, "error");
+  } finally {
+    state.onlineDirectorySyncing = false;
   }
+}
+
+function startOnlineDirectoryRefresh() {
+  if (state.onlineDirectoryTimer) return;
+  state.onlineDirectoryTimer = window.setInterval(() => {
+    if (!state.loggedIn || !state.currentUser?.uid || state.sessionType === "offline" || document.hidden) return;
+    syncOnlineDirectory();
+  }, ONLINE_DIRECTORY_REFRESH_MS);
+}
+
+function stopOnlineDirectoryRefresh() {
+  if (!state.onlineDirectoryTimer) return;
+  window.clearInterval(state.onlineDirectoryTimer);
+  state.onlineDirectoryTimer = null;
 }
 
 async function ensureOnlineRoom() {
@@ -1374,7 +1405,12 @@ function startEntry(provider, user = null, options = {}) {
   renderAuth();
   renderSiteUsers();
   if (!options.keepRoom) resetRoom();
-  if (provider !== "Offline") syncOnlineDirectory();
+  if (provider !== "Offline") {
+    startOnlineDirectoryRefresh();
+    syncOnlineDirectory();
+  } else {
+    stopOnlineDirectoryRefresh();
+  }
 }
 
 async function restoreSavedSession() {
@@ -1412,6 +1448,7 @@ async function restoreSavedSession() {
       resetRoom();
     }
     startOnlineSubscriptions();
+    startOnlineDirectoryRefresh();
     await syncOnlineDirectory();
     renderRoom();
     renderGame();
@@ -2711,19 +2748,86 @@ async function markCurrentUserOffline() {
   }
 }
 
+function removeUidFromGameState(gameState, uid) {
+  if (!gameState || !uid) return gameState;
+  const players = [...(gameState.players || [])];
+  const removedIndex = players.findIndex((player) => player.uid === uid);
+  const remainingPlayers = players.filter((player) => player.uid !== uid);
+  const nextStarted = Boolean(gameState.started) && remainingPlayers.length > 1;
+  let nextActiveIndex = Number(gameState.activeIndex || 0);
+  if (removedIndex >= 0) {
+    if (remainingPlayers.length === 0) nextActiveIndex = 0;
+    else if (removedIndex < nextActiveIndex) nextActiveIndex -= 1;
+    else if (removedIndex === nextActiveIndex) nextActiveIndex = Math.min(nextActiveIndex, remainingPlayers.length - 1);
+  }
+  return {
+    ...gameState,
+    started: nextStarted,
+    players: remainingPlayers,
+    activeIndex: Math.max(0, Math.min(nextActiveIndex, Math.max(remainingPlayers.length - 1, 0))),
+    endVotes: Object.fromEntries(Object.entries(gameState.endVotes || {}).filter(([key]) => key !== uid)),
+    startConfirmations: Object.fromEntries(Object.entries(gameState.startConfirmations || {}).filter(([key]) => key !== uid)),
+    updatedBy: uid,
+    updatedAt: Date.now(),
+  };
+}
+
+async function leaveCurrentOnlineRoom(reason = "salio de su sesion") {
+  const backend = getOnlineBackend();
+  const user = state.currentUser;
+  const roomId = state.roomId;
+  if (!backend?.getRoom || !backend?.updateRoom || !roomId || !user?.uid || state.sessionType === "offline") return;
+  try {
+    const room = await backend.getRoom(roomId);
+    if (!room?.players?.some((player) => player.uid === user.uid)) return;
+    const displayName = user.name || myPlayer()?.name || "Jugador";
+    if (backend.addRoomChat) {
+      await backend.addRoomChat(roomId, {
+        id: `leave-${user.uid}-${Date.now()}`,
+        author: "Sistema",
+        uid: user.uid,
+        text: `El jugador ${displayName} ${reason}.`,
+        type: "system",
+        time: Date.now(),
+      }).catch(() => {});
+    }
+    const remainingPlayers = (room.players || []).filter((player) => player.uid !== user.uid);
+    const remainingUids = remainingPlayers.map((player) => player.uid).filter(Boolean);
+    const nextGameState = removeUidFromGameState(room.gameState || roomGameState(), user.uid);
+    const nextOwner = remainingPlayers[0] || null;
+    await backend.updateRoom(roomId, {
+      players: remainingPlayers,
+      playerUids: remainingUids,
+      ownerUid: nextOwner?.uid || "",
+      ownerName: nextOwner?.name || "",
+      gameState: nextGameState,
+      started: Boolean(nextGameState?.started),
+      status: nextGameState?.started ? "playing" : "waiting",
+      startRequest: null,
+      startConfirmations: {},
+    });
+  } catch (error) {
+    notify("Salida no sincronizada", error.message, "error");
+  }
+}
+
 async function returnHome(options = {}) {
   const { force = false, logout = true, returnToOnline = false } = options;
-  if (state.started && !force) {
+  if (state.started && !force && (!logout || state.sessionType === "offline")) {
     notify("Partida activa", "Termina tu partida antes de salir al inicio o cerrar sesion.", "error");
     return false;
   }
   stopTurnTimer();
-  if (logout && !returnToOnline) await markCurrentUserOffline();
+  if (logout && !returnToOnline) {
+    await leaveCurrentOnlineRoom();
+    await markCurrentUserOffline();
+  }
   state.entryDone = false;
   state.loggedIn = returnToOnline && state.loggedIn ? true : false;
   state.provider = returnToOnline ? state.provider : "";
   state.sessionType = "friends";
   if (logout && !returnToOnline) state.currentUser = null;
+  if (logout && !returnToOnline) stopOnlineDirectoryRefresh();
   state.players = [];
   state.started = false;
   state.activeIndex = 0;
@@ -3784,8 +3888,15 @@ window.addEventListener("online-backend-ready", async (event) => {
   state.onlineReady = event.detail?.isEnabled?.() || false;
   addEntryMessage(state.onlineReady ? "Online real listo: cuentas del sitio, usuarios, amigos y salas usan Firebase." : "Modo demo activo. Para online real configura Firebase en firebase-config.js.");
   await restoreSavedSession();
-  if (state.loggedIn) syncOnlineDirectory();
+  if (state.loggedIn) {
+    startOnlineDirectoryRefresh();
+    syncOnlineDirectory();
+  }
   renderRoom();
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden && state.loggedIn && state.sessionType !== "offline") syncOnlineDirectory();
 });
 
 $$("[data-session]").forEach((button) => {

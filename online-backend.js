@@ -128,6 +128,13 @@ async function createBackend() {
     return snapshot.docs.map(publicUserFromDoc);
   }
 
+  function watchUsers(callback) {
+    const usersQuery = query(collection(db, "users"), orderBy("name"), limit(80));
+    return onSnapshot(usersQuery, (snapshot) => {
+      callback(snapshot.docs.map(publicUserFromDoc));
+    });
+  }
+
   async function getMyFriends(uid) {
     const snapshot = await getDoc(doc(db, "users", uid));
     return snapshot.exists() ? snapshot.data().friends || [] : [];
@@ -483,6 +490,7 @@ async function createBackend() {
     resetPassword,
     getCurrentUserProfile,
     listUsers,
+    watchUsers,
     getMyFriends,
     findUser,
     getUser,
