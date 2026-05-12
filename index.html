@@ -507,7 +507,19 @@
       <div>
         <h2 id="game-over-title">Perdiste</h2>
         <p id="game-over-text">Tu personaje murio tres veces. Tu juego se acabo.</p>
-        <button class="primary-button" type="button" id="game-over-close">Volver al inicio</button>
+        <button class="primary-button" type="button" id="game-over-close">Cerrar</button>
+      </div>
+    </div>
+
+    <!-- Modal ganador de partida -->
+    <div class="winner-alert hidden" id="winner-alert" role="dialog" aria-modal="true" aria-labelledby="winner-alert-title">
+      <div class="winner-alert-box">
+        <div class="winner-alert-trophy">🏆</div>
+        <h2 id="winner-alert-title">¡Partida Finalizada!</h2>
+        <p id="winner-alert-reason" class="winner-alert-reason"></p>
+        <div class="winner-alert-name" id="winner-alert-name"></div>
+        <div class="winner-alert-stats" id="winner-alert-stats"></div>
+        <button class="primary-button winner-alert-close" type="button" id="winner-alert-close">Continuar en sala</button>
       </div>
     </div>
     <!-- Alerta de inicio de turno -->

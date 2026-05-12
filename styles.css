@@ -6418,3 +6418,116 @@ input {
 .turn-alert-close:active {
   transform: scale(0.97);
 }
+
+/* ─── Modal ganador de partida ───────────────────────────── */
+.winner-alert {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(8, 10, 14, 0.9);
+  animation: turn-alert-bg-in 0.35s ease;
+}
+
+.winner-alert.hidden {
+  display: none;
+}
+
+.winner-alert-box {
+  width: min(520px, 100%);
+  padding: 40px 32px 36px;
+  border: 2px solid rgba(100, 200, 100, 0.7);
+  border-radius: 10px;
+  text-align: center;
+  background: #171b22;
+  box-shadow: 0 0 48px rgba(80, 200, 80, 0.2), var(--shadow, 0 4px 24px #000a);
+  animation: turn-alert-box-in 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.winner-alert-trophy {
+  font-size: 3.5rem;
+  margin-bottom: 10px;
+  animation: turn-alert-pulse 1.4s ease-in-out infinite;
+}
+
+.winner-alert-box h2 {
+  margin: 0 0 6px;
+  color: #64c864;
+  font-size: 1.7rem;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 16px rgba(80, 200, 80, 0.45);
+}
+
+.winner-alert-reason {
+  margin: 0 0 18px;
+  color: var(--ink-muted, #8a9baf);
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.winner-alert-name {
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: #f5e97a;
+  margin-bottom: 18px;
+  letter-spacing: 0.03em;
+  text-shadow: 0 0 12px rgba(245, 233, 122, 0.4);
+}
+
+.winner-alert-stats {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+.winner-stat {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 10px 18px;
+  min-width: 90px;
+}
+
+.winner-stat-value {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+
+.winner-stat-label {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--ink-muted, #8a9baf);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.winner-alert-close {
+  min-width: 180px;
+  padding: 12px 28px;
+  font-size: 1rem;
+  background: #64c864;
+  color: #0d1117;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.winner-alert-close:hover {
+  background: #7ade7a;
+  transform: scale(1.04);
+}
+
+.winner-alert-close:active {
+  transform: scale(0.97);
+}

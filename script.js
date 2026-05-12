@@ -1364,7 +1364,10 @@ function buildResourceArea() {
   const ids = [...new Set([...baseResourceIds, ...getScenario().resources, ...weaponResourceIds, ...actionResourceIds])]
     .filter((id) => catalog[id] && !forbidden.has(id));
   while (ids.length < 18) ids.push(baseResourceIds[ids.length % baseResourceIds.length]);
-  state.resourceArea = ids.map((id) => ({ card: catalog[id], count: id === "ammo10" ? 28 : 6 }));
+  state.resourceArea = ids.map((id) => ({
+    card: catalog[id],
+    count: id === "ammo10" ? 10 : id === "ammo20" ? 16 : id === "ammo30" ? 16 : 10,
+  }));
   state.selectedResource = 0;
   state.resourceFilter = "Todos";
   randomizeMarketOrder();
@@ -3148,11 +3151,49 @@ function finishGameByScore(reason) {
   addAchievement("Partida finalizada");
   if (winner.name === "Tu") addAchievement("Victoria guardada");
   saveProgress();
-  notify("Partida finalizada", `${reason} Gana ${winner.name} con ${winner.decorations} condecoraciones.`, "success");
   sound("win");
   renderAchievements();
   renderRoom();
   renderGame();
+  showWinnerAlert(winner, reason);
+}
+
+function showWinnerAlert(winner, reason) {
+  const overlay = document.getElementById("winner-alert");
+  if (!overlay) return;
+
+  document.getElementById("winner-alert-reason").textContent = reason || "";
+  document.getElementById("winner-alert-name").textContent =
+    winner.name === "Tu" ? "¡Tú eres el ganador!" : `Ganador: ${winner.name}`;
+
+  const statsEl = document.getElementById("winner-alert-stats");
+  statsEl.innerHTML = `
+    <div class="winner-stat">
+      <span class="winner-stat-value">${winner.health}/${winner.maxHealth}</span>
+      <span class="winner-stat-label">Vida</span>
+    </div>
+    <div class="winner-stat">
+      <span class="winner-stat-value">${winner.decorations}</span>
+      <span class="winner-stat-label">Medallas</span>
+    </div>
+    <div class="winner-stat">
+      <span class="winner-stat-value">${winner.deaths || 0}</span>
+      <span class="winner-stat-label">Muertes</span>
+    </div>
+    <div class="winner-stat">
+      <span class="winner-stat-value">${winner.defeatedPlayers || 0}</span>
+      <span class="winner-stat-label">Rivales</span>
+    </div>
+  `;
+
+  overlay.classList.remove("hidden");
+
+  const closeBtn = document.getElementById("winner-alert-close");
+  function closeWinnerAlert() {
+    overlay.classList.add("hidden");
+    closeBtn.removeEventListener("click", closeWinnerAlert);
+  }
+  closeBtn.addEventListener("click", closeWinnerAlert);
 }
 
 function voiceConnectionId(uidA, uidB) {
@@ -3441,7 +3482,6 @@ $("#start-game").addEventListener("click", startGame);
 $("#logout-button").addEventListener("click", () => returnHome({ logout: true }));
 $("#game-over-close").addEventListener("click", () => {
   $("#game-over-modal").classList.add("hidden");
-  returnHome({ force: true, logout: true });
 });
 $("#play-action").addEventListener("click", playAction);
 $("#buy-resource").addEventListener("click", () => buyResource());
