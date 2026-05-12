@@ -933,20 +933,20 @@ input {
 
 @media (min-width: 861px) {
   .play-area {
-    grid-template-columns: clamp(180px, 19vw, 280px) minmax(0, 1fr);
+    grid-template-columns: clamp(220px, 22vw, 280px) minmax(0, 1fr);
   }
 
   .mansion-row {
-    grid-template-rows: minmax(132px, 1fr) auto;
+    grid-template-rows: minmax(160px, 1fr) auto;
   }
 
   .deck-stack {
-    min-height: 132px;
+    min-height: 160px;
   }
 
   .mansion-card,
   .deck-card {
-    width: min(164px, 90%);
+    width: min(190px, 90%);
   }
 
   .mansion-card.card-face {
@@ -1006,12 +1006,12 @@ input {
   }
 
   .deck-stack {
-    min-height: 112px;
+    min-height: 140px;
   }
 
   .mansion-card,
   .deck-card {
-    width: min(136px, 92%);
+    width: min(162px, 92%);
   }
 
   .mansion-card.card-face {
@@ -1168,8 +1168,8 @@ input {
   }
 
   .live-trackers {
-    max-height: 20px;
-    overflow: hidden;
+    max-height: none;
+    overflow: visible;
   }
 
   .hand {
@@ -1341,8 +1341,8 @@ input {
   }
 
   .live-trackers {
-    max-height: 20px;
-    overflow: hidden;
+    max-height: none;
+    overflow: visible;
   }
 
   .hand {
@@ -1368,20 +1368,20 @@ input {
 
 @media (min-width: 861px) {
   .play-area {
-    grid-template-columns: clamp(180px, 19vw, 280px) minmax(0, 1fr);
+    grid-template-columns: clamp(220px, 22vw, 280px) minmax(0, 1fr);
   }
 
   .mansion-row {
-    grid-template-rows: minmax(132px, 1fr) auto;
+    grid-template-rows: minmax(160px, 1fr) auto;
   }
 
   .deck-stack {
-    min-height: 132px;
+    min-height: 160px;
   }
 
   .mansion-card,
   .deck-card {
-    width: min(164px, 90%);
+    width: min(190px, 90%);
   }
 
   .dice-roll-panel {
@@ -1434,12 +1434,12 @@ input {
   }
 
   .deck-stack {
-    min-height: 112px;
+    min-height: 140px;
   }
 
   .mansion-card,
   .deck-card {
-    width: min(136px, 92%);
+    width: min(162px, 92%);
   }
 
   .turn-command {
@@ -1450,20 +1450,20 @@ input {
 
 @media (min-width: 861px) {
   .play-area {
-    grid-template-columns: clamp(180px, 19vw, 280px) minmax(0, 1fr);
+    grid-template-columns: clamp(220px, 22vw, 280px) minmax(0, 1fr);
   }
 
   .mansion-row {
-    grid-template-rows: minmax(132px, 1fr) auto;
+    grid-template-rows: minmax(160px, 1fr) auto;
   }
 
   .deck-stack {
-    min-height: 132px;
+    min-height: 160px;
   }
 
   .mansion-card,
   .deck-card {
-    width: min(164px, 90%);
+    width: min(190px, 90%);
   }
 
   .dice-roll-panel {
@@ -1516,12 +1516,12 @@ input {
   }
 
   .deck-stack {
-    min-height: 112px;
+    min-height: 140px;
   }
 
   .mansion-card,
   .deck-card {
-    width: min(136px, 92%);
+    width: min(162px, 92%);
   }
 
   .turn-command {
@@ -1665,7 +1665,7 @@ input {
   }
 
   .mansion-card {
-    width: min(154px, 90%);
+    width: min(180px, 90%);
   }
 
   .deck-card {
@@ -2018,7 +2018,7 @@ input {
 
 @media (min-width: 861px) {
   .play-area {
-    grid-template-columns: clamp(190px, 18vw, 220px) minmax(0, 1fr);
+    grid-template-columns: clamp(220px, 22vw, 270px) minmax(0, 1fr);
     gap: 6px;
   }
 
@@ -2032,11 +2032,11 @@ input {
   }
 
   .deck-card {
-    width: min(120px, 78%);
+    width: min(150px, 82%);
   }
 
   .mansion-card {
-    width: min(122px, 80%);
+    width: min(152px, 85%);
     padding: 8px;
   }
 
@@ -3476,7 +3476,7 @@ input {
   }
 
   .live-trackers {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(8, minmax(0, 1fr));
   }
 
   .tracker-icon {
@@ -4757,7 +4757,7 @@ input {
   }
 
   .deck-stack {
-    min-height: 112px;
+    min-height: 140px;
   }
 
   .deck-card {
@@ -4817,7 +4817,7 @@ input {
 
   .live-trackers {
     grid-row: 3;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(8, minmax(0, 1fr));
     gap: 3px;
     margin-bottom: 0;
   }
@@ -5190,7 +5190,7 @@ input {
 
   .live-trackers {
     grid-row: 2;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(8, minmax(0, 1fr));
     gap: 2px;
   }
 
@@ -5871,20 +5871,20 @@ input {
 /* Desktop/offline final visual normalization. */
 @media (min-width: 861px) {
   .play-area {
-    grid-template-columns: clamp(180px, 19vw, 280px) minmax(0, 1fr);
+    grid-template-columns: clamp(220px, 22vw, 280px) minmax(0, 1fr);
   }
 
   .mansion-row {
-    grid-template-rows: minmax(132px, 1fr) auto;
+    grid-template-rows: minmax(160px, 1fr) auto;
   }
 
   .deck-stack {
-    min-height: 132px;
+    min-height: 160px;
   }
 
   .mansion-card,
   .deck-card {
-    width: min(164px, 90%);
+    width: min(190px, 90%);
   }
 
   .mansion-card.card-face {
@@ -5944,12 +5944,12 @@ input {
   }
 
   .deck-stack {
-    min-height: 112px;
+    min-height: 140px;
   }
 
   .mansion-card,
   .deck-card {
-    width: min(136px, 92%);
+    width: min(162px, 92%);
   }
 
   .mansion-card.card-face {
@@ -6105,8 +6105,8 @@ input {
   }
 
   .live-trackers {
-    max-height: 20px;
-    overflow: hidden;
+    max-height: none;
+    overflow: visible;
   }
 
   .hand {
@@ -6138,7 +6138,7 @@ input {
 /* Móvil vertical pequeño (≤480px) */
 @media (max-width: 480px) {
   .live-trackers {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(8, minmax(0, 1fr));
     gap: 3px;
   }
 
@@ -6186,7 +6186,7 @@ input {
 /* Móvil vertical muy pequeño (≤360px) */
 @media (max-width: 360px) {
   .live-trackers {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(8, minmax(0, 1fr));
     gap: 2px;
   }
 
