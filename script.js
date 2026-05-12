@@ -3382,10 +3382,11 @@ $("#scenario").addEventListener("change", resetRoom);
 $("#fill-room").addEventListener("click", fillRoom);
 $("#reset-room").addEventListener("click", resetRoom);
 $("#start-game").addEventListener("click", startGame);
-$("#home-button").addEventListener("click", () => {
-  const isOnline = state.loggedIn && state.currentUser;
-  returnHome({ logout: true, returnToOnline: isOnline });
-});
+  $("#home-button").addEventListener("click", (e) => {
+    if (e.target.closest("#chat-form") || e.target.closest(".chat-panel")) return;
+    const isOnline = state.loggedIn && state.currentUser;
+    returnHome({ logout: true, returnToOnline: isOnline });
+  });
 $("#logout-button").addEventListener("click", () => returnHome({ logout: true }));
 $("#game-over-close").addEventListener("click", () => {
   $("#game-over-modal").classList.add("hidden");
@@ -3423,27 +3424,35 @@ $("#clear-progress").addEventListener("click", () => {
   saveProgress();
   renderAchievements();
 });
-$("#chat-form").addEventListener("submit", (event) => {
-  event.preventDefault();
-  event.stopPropagation();
-  
-  const input = $("#chat-input");
-  const text = input.value.trim();
-  if (!text) return;
-  
-  addChat(state.currentUser?.name || myPlayer()?.name || "Jugador", text);
-  input.value = "";
-  input.focus();
-});
+  $("#chat-form").addEventListener("submit", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    const input = $("#chat-input");
+    const text = input.value.trim();
+    if (!text) return;
+    
+    console.log("Enviando mensaje de chat:", text);
+    addChat(state.currentUser?.name || myPlayer()?.name || "Jugador", text);
+    input.value = "";
+    input.focus();
+    return false;
+  });
 
 // Soporte adicional: clic directo en botón Enviar
-$("#chat-submit")?.addEventListener("click", () => {
-  const input = $("#chat-input");
-  const text = input?.value.trim();
-  if (!text) return;
-  const form = $("#chat-form");
-  form?.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
-});
+  $("#chat-submit")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const input = $("#chat-input");
+    const text = input?.value.trim();
+    if (!text) return;
+    const form = $("#chat-form");
+    if (form) {
+      // Disparar el evento submit directamente
+      const submitEvent = new Event("submit", { bubbles: true, cancelable: true });
+      form.dispatchEvent(submitEvent);
+    }
+  });
 $("#voice-message").addEventListener("click", () => {
   toggleVoiceMessage().catch((error) => notify("Audio no enviado", error.message, "error"));
 });

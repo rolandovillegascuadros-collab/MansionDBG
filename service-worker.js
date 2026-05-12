@@ -1,5 +1,5 @@
-// cache v17-turn-chat-responsive
-const CACHE_NAME = 'mansiondbg-layout-corregido-v17-turn-chat-responsive';
+// cache v18-chat-fix-icons-compact
+const CACHE_NAME = 'mansiondbg-layout-corregido-v18-chat-fix-icons-compact';
 const ASSETS = [
   "./",
   "./index.html",
