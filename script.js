@@ -3032,6 +3032,46 @@ function endTurn(auto = false) {
     renderGame();
   }, 900);
   if (currentPlayer()?.isBot) window.setTimeout(botTurn, 700);
+  // Mostrar alerta de turno si es el turno del jugador local
+  if (isMyTurn() && !currentPlayer()?.isBot) {
+    window.setTimeout(() => showTurnAlert(currentPlayer()), 300);
+  }
+}
+
+/* ── Alerta de inicio de turno ────────────────────────────── */
+function showTurnAlert(player) {
+  const overlay = document.getElementById("turn-alert");
+  const playerLabel = document.getElementById("turn-alert-player");
+  const closeBtn = document.getElementById("turn-alert-close");
+  const alertAudio = document.getElementById("turn-alert-audio");
+  if (!overlay) return;
+
+  playerLabel.textContent = player?.name ? `Jugador: ${player.name}` : "";
+  overlay.classList.remove("hidden");
+
+  // Reproducir sonido en loop hasta cerrar
+  if (alertAudio && state.sound && state.gameVolume > 0) {
+    alertAudio.volume = Math.min(1, Math.max(0, (state.gameVolume || 75) / 100));
+    alertAudio.currentTime = 0;
+    alertAudio.play().catch(() => {});
+  }
+
+  function closeTurnAlert() {
+    overlay.classList.add("hidden");
+    if (alertAudio) {
+      alertAudio.pause();
+      alertAudio.currentTime = 0;
+    }
+    closeBtn.removeEventListener("click", closeTurnAlert);
+    overlay.removeEventListener("click", handleOverlayClick);
+  }
+
+  function handleOverlayClick(e) {
+    if (e.target === overlay) closeTurnAlert();
+  }
+
+  closeBtn.addEventListener("click", closeTurnAlert);
+  overlay.addEventListener("click", handleOverlayClick);
 }
 
 function advanceToNextTurn() {

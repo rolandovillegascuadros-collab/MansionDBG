@@ -6332,3 +6332,89 @@ input {
     font-size: 0.58rem;
   }
 }
+
+/* ─── Alerta de inicio de turno ─────────────────────────── */
+.turn-alert {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(8, 10, 14, 0.88);
+  animation: turn-alert-bg-in 0.35s ease;
+}
+
+.turn-alert.hidden {
+  display: none;
+}
+
+@keyframes turn-alert-bg-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.turn-alert-box {
+  width: min(480px, 100%);
+  padding: 40px 32px 36px;
+  border: 2px solid rgba(216, 170, 50, 0.8);
+  border-radius: 10px;
+  text-align: center;
+  background: #171b22;
+  box-shadow: 0 0 40px rgba(216, 170, 50, 0.25), var(--shadow, 0 4px 24px #000a);
+  animation: turn-alert-box-in 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes turn-alert-box-in {
+  from { transform: scale(0.82) translateY(20px); opacity: 0; }
+  to   { transform: scale(1)    translateY(0);    opacity: 1; }
+}
+
+.turn-alert-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+  animation: turn-alert-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes turn-alert-pulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.15); }
+}
+
+.turn-alert-box h2 {
+  margin: 0 0 8px;
+  color: #d8aa32;
+  font-size: 1.85rem;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 16px rgba(216, 170, 50, 0.5);
+}
+
+.turn-alert-box p {
+  margin: 0 0 28px;
+  color: var(--ink, #cdd6e0);
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+
+.turn-alert-close {
+  min-width: 160px;
+  padding: 12px 28px;
+  font-size: 1rem;
+  background: #d8aa32;
+  color: #111;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.turn-alert-close:hover {
+  background: #e8c040;
+  transform: scale(1.04);
+}
+
+.turn-alert-close:active {
+  transform: scale(0.97);
+}

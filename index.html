@@ -510,7 +510,17 @@
         <button class="primary-button" type="button" id="game-over-close">Volver al inicio</button>
       </div>
     </div>
+    <!-- Alerta de inicio de turno -->
+    <div class="turn-alert hidden" id="turn-alert" role="dialog" aria-modal="true" aria-labelledby="turn-alert-title">
+      <div class="turn-alert-box">
+        <div class="turn-alert-icon">⚔️</div>
+        <h2 id="turn-alert-title">¡Ha comenzado tu turno!</h2>
+        <p id="turn-alert-player"></p>
+        <button class="primary-button turn-alert-close" type="button" id="turn-alert-close">Comenzar</button>
+      </div>
+    </div>
     <audio id="ambient-audio" src="assets/audio/resident-evil.mp3" loop preload="auto"></audio>
+    <audio id="turn-alert-audio" src="assets/audio/alerta.mp3" loop preload="auto"></audio>
     <script type="module" src="online-backend.js"></script>
     <script src="script.js?v=layout-corregido-v13-mansion-mobile-landscape"></script>
   </body>
