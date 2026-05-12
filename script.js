@@ -855,7 +855,6 @@ function renderHomeCardGuide() {
 function buttonIcon(button) {
   if (button.id === "site-auth-submit") return "↪";
   if (button.id === "reset-password") return "?";
-  if (button.id === "firebase-test" || button.id === "firebase-test-panel") return "◆";
   if (button.id === "offline-entry") return "▶";
   if (button.id === "add-user-form") return "+";
   if (button.id === "reset-room") return "↻";
@@ -1502,7 +1501,7 @@ function renderRoom() {
   
   // Deshabilitar chat si no hay sesión online activa (roomId + sessionType online)
   const chatInput = $("#chat-input");
-  const chatSubmit = $("#chat-form button[type='submit']");
+  const chatSubmit = $("#chat-submit");
   const voiceToggle = $("#voice-toggle");
   const isOnline = isInOnlineSession();
   
@@ -3311,8 +3310,6 @@ $$("[data-card-guide]").forEach((button) => {
     sound("click");
   });
 });
-$("#firebase-test").addEventListener("click", testFirebaseConnection);
-$("#firebase-test-panel").addEventListener("click", testFirebaseConnection);
 $("#site-birthdate").addEventListener("change", () => {
   const age = calculateAge($("#site-birthdate").value);
   if (age) $("#site-age").value = age;
@@ -3432,7 +3429,6 @@ $("#clear-progress").addEventListener("click", () => {
     const text = input.value.trim();
     if (!text) return;
     
-    console.log("Enviando mensaje de chat:", text);
     addChat(state.currentUser?.name || myPlayer()?.name || "Jugador", text);
     input.value = "";
     input.focus();
@@ -3446,11 +3442,11 @@ $("#clear-progress").addEventListener("click", () => {
     const input = $("#chat-input");
     const text = input?.value.trim();
     if (!text) return;
-    const form = $("#chat-form");
-    if (form) {
-      // Disparar el evento submit directamente
-      const submitEvent = new Event("submit", { bubbles: true, cancelable: true });
-      form.dispatchEvent(submitEvent);
+    // Llamar directamente en vez de re-despachar el submit (evita bubbling indeseado)
+    addChat(state.currentUser?.name || myPlayer()?.name || "Jugador", text);
+    if (input) {
+      input.value = "";
+      input.focus();
     }
   });
 $("#voice-message").addEventListener("click", () => {

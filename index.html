@@ -135,7 +135,6 @@
               <button class="ghost-button reset-password" type="button" id="reset-password">Recuperar clave por correo</button>
             </form>
             <p class="permission-note" id="permission-note">Ingresa con tu correo y clave del sitio, o crea una cuenta nueva para jugar online.</p>
-            <button class="ghost-button firebase-test-button" type="button" id="firebase-test">Probar Firebase</button>
             <button class="offline-entry" type="button" id="offline-entry">Probar offline</button>
           </div>
         </section>
@@ -155,7 +154,6 @@
         <section class="panel auth-panel" id="auth-panel">
           <h2>Cuenta del sitio</h2>
           <p class="small">Ingresa con una cuenta creada en este sitio para ubicar usuarios y agregarlos.</p>
-          <button class="ghost-button firebase-test-button" type="button" id="firebase-test-panel">Probar Firebase</button>
         </section>
 
         <section class="panel profile-panel hidden" id="profile-panel">
@@ -459,10 +457,10 @@
             <button class="voice-button" type="button" id="voice-toggle">Voz</button>
           </div>
           <ul id="chat-log"></ul>
-          <form id="chat-form">
+          <form id="chat-form" action="javascript:void(0)">
             <input id="chat-input" type="text" placeholder="Mensaje a la sala" autocomplete="off" />
             <button type="button" id="voice-message">Audio</button>
-            <button type="submit" id="chat-submit">Enviar</button>
+            <button type="button" id="chat-submit">Enviar</button>
           </form>
         </section>
 
