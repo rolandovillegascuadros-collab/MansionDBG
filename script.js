@@ -195,6 +195,10 @@ const $$ = (selector) => [...document.querySelectorAll(selector)];
 let cardInstanceSequence = 0;
 const cleanedChatRooms = new Set();
 const ONLINE_DIRECTORY_REFRESH_MS = 1000;
+const REVIVES_ALLOWED = 2;
+const MAX_PLAYER_DEATHS = REVIVES_ALLOWED + 1;
+const REVIVE_MAX_HEALTH_PENALTY = 20;
+const MIN_REVIVE_MAX_HEALTH = 10;
 
 const tutorialSteps = [
   {
@@ -1873,7 +1877,7 @@ function renderPlayers() {
       <div class="player-meta">
         <span>Vida ${player.health}/${player.maxHealth}</span>
         <span>Medallas ${player.decorations}</span>
-        <span>Muertes ${player.deaths || 0}/3</span>
+        <span>Revives ${Math.min(player.deaths || 0, REVIVES_ALLOWED)}/${REVIVES_ALLOWED}</span>
       </div>
     `;
     card.querySelector(".character-read-btn").addEventListener("click", () => showCharacterDetails(player));
@@ -3271,7 +3275,7 @@ function handlePlayerDeath(player, source = "dano") {
   player.hand = [];
   player.played = [];
 
-  if (player.deaths >= 3) {
+  if (player.deaths >= MAX_PLAYER_DEATHS) {
     player.eliminated = true;
     player.skipTurns = Infinity;
     notify("Jugador eliminado", `${player.name} murio por tercera vez. Su juego se acabo.`, "error");
@@ -3284,12 +3288,13 @@ function handlePlayerDeath(player, source = "dano") {
   }
 
   player.skipTurns = 2;
-  notify("Personaje caido", `${player.name} cae por ${source}. Pierde 2 turnos y luego revive con -20 de vida.`, "error");
+  notify("Personaje caido", `${player.name} cae por ${source}. Revive ${player.deaths}/${REVIVES_ALLOWED}: pierde 2 turnos y volvera con -${REVIVE_MAX_HEALTH_PENALTY} de vida maxima.`, "error");
   checkRemainingPlayers();
 }
 
 function revivePlayer(player) {
-  player.maxHealth = Math.max(10, player.maxHealth - 20);
+  if (player.eliminated || (player.deaths || 0) > REVIVES_ALLOWED) return;
+  player.maxHealth = Math.max(MIN_REVIVE_MAX_HEALTH, player.maxHealth - REVIVE_MAX_HEALTH_PENALTY);
   player.health = player.maxHealth;
   player.alive = true;
   player.skipTurns = 0;

@@ -1,5 +1,5 @@
-// cache v24-mobile-tablet-landscape
-const CACHE_NAME = 'mansiondbg-v24-mobile-tablet-landscape';
+// cache v25-revives-mobile-landscape
+const CACHE_NAME = 'mansiondbg-v25-revives-mobile-landscape';
 const ASSETS = [
   "./",
   "./index.html",
