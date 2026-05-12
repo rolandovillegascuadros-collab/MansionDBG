@@ -6708,6 +6708,62 @@ input {
   min-width: 118px;
 }
 
+.player-slot-empty {
+  min-width: 0;
+  display: grid;
+  align-items: center;
+  min-height: 62px;
+  padding: 8px;
+  border: 1px dashed rgba(216, 168, 77, 0.28);
+  border-radius: 8px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.025);
+  overflow: hidden;
+}
+
+.player-slot-empty strong,
+.player-slot-empty span {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.player-slot-empty strong {
+  color: var(--ink);
+  font-size: 0.82rem;
+}
+
+.player-slot-empty span {
+  margin-top: 2px;
+  font-size: 0.7rem;
+}
+
+@media (orientation: landscape) and (min-width: 1001px) and (max-width: 1500px) {
+  .app-shell {
+    grid-template-columns: clamp(215px, 16vw, 250px) minmax(0, 1fr) clamp(300px, 22vw, 340px);
+  }
+
+  .hand {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    overflow-x: hidden;
+  }
+
+  .hand .card-face {
+    min-width: 0;
+  }
+
+  .chat-panel {
+    grid-template-rows: auto minmax(170px, 1fr) auto;
+  }
+
+  #chat-form {
+    grid-template-columns: minmax(92px, 1fr) minmax(62px, auto) minmax(66px, auto);
+    gap: 6px;
+  }
+}
+
 /* ══════════════════════════════════════════════════════════
    NOTIFICACIÓN FLOTANTE DE CHAT
    ══════════════════════════════════════════════════════════ */

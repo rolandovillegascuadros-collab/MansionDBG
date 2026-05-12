@@ -155,6 +155,7 @@ const state = {
   siteUsers: [],
   friends: JSON.parse(localStorage.getItem("mdbg-friends") || "[]"),
   roomId: "",
+  roomCreationPromise: null,
   pendingFriendRequests: [],
   pendingRoomInvitations: [],
   unsubFriendRequests: null,
@@ -600,14 +601,14 @@ function applyRemoteGameState(gameState) {
   }
 }
 
-function schedulePublishRoomState() {
-  if (!isOnlineRoomActive() || state.applyingRemoteRoom) return;
+function schedulePublishRoomState(force = false) {
+  if (!isOnlineRoomActive() || (!force && state.applyingRemoteRoom)) return;
   window.clearTimeout(state.publishTimer);
-  state.publishTimer = window.setTimeout(publishRoomState, 180);
+  state.publishTimer = window.setTimeout(() => publishRoomState(force), 180);
 }
 
-async function publishRoomState() {
-  if (!isOnlineRoomActive() || state.applyingRemoteRoom) return;
+async function publishRoomState(force = false) {
+  if (!isOnlineRoomActive() || (!force && state.applyingRemoteRoom)) return;
   const backend = getOnlineBackend();
   const gameState = roomGameState();
   const serialized = JSON.stringify(gameState);
@@ -624,6 +625,8 @@ async function publishRoomState() {
       playerUids: state.players.map((player) => player.uid).filter(Boolean),
       status: state.started ? "playing" : "waiting",
       started: state.started,
+      startRequest: state.startRequest || null,
+      startConfirmations: state.startConfirmations || {},
     });
     state.lastPublishedState = serialized;
     state.syncStatus = "En vivo.";
@@ -676,6 +679,8 @@ async function ensureOnlineRoom() {
   const backend = getOnlineBackend();
   if (!backend || !state.loggedIn || state.sessionType === "offline" || !state.currentUser?.uid) return "";
   if (state.roomId) return state.roomId;
+  if (state.roomCreationPromise) return state.roomCreationPromise;
+  state.roomCreationPromise = (async () => {
   try {
     state.roomId = await backend.createRoom(state.currentUser, {
       mode: getModeKey(),
@@ -690,7 +695,13 @@ async function ensureOnlineRoom() {
   } catch (error) {
     notify("Sala online no creada", error.message, "error");
   }
-  return state.roomId;
+    return state.roomId;
+  })();
+  try {
+    return await state.roomCreationPromise;
+  } finally {
+    state.roomCreationPromise = null;
+  }
 }
 
 async function addFriendByUser(user) {
@@ -946,11 +957,27 @@ function isInOnlineSession() {
   return state.loggedIn && state.sessionType !== "offline" && Boolean(state.roomId);
 }
 
-function addChat(author, text, extra = {}) {
-  // Restricción: Solo permitir chat si hay una sala online activa (con o sin backend real)
-  if (!isInOnlineSession()) {
-    return notify("Chat deshabilitado", "El chat solo funciona en partidas Online.", "error");
+async function ensureChatRoomReady() {
+  if (!state.loggedIn || state.sessionType === "offline") {
+    notify("Chat deshabilitado", "El chat solo funciona en partidas Online.", "error");
+    return false;
   }
+  const backend = getOnlineBackend();
+  if (!backend?.addRoomChat) {
+    notify("Chat no disponible", "Firebase todavia no esta listo en este navegador. Recarga e intenta nuevamente.", "error");
+    return false;
+  }
+  if (!state.roomId) await ensureOnlineRoom();
+  if (!state.roomId) {
+    notify("Sin sala online", "Crea o entra a una sala antes de enviar mensajes.", "error");
+    return false;
+  }
+  return true;
+}
+
+async function addChat(author, text, extra = {}) {
+  // Restricción: Solo permitir chat si hay una sala online activa (con o sin backend real)
+  if (!(await ensureChatRoomReady())) return false;
   const message = {
     id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
     author,
@@ -962,12 +989,18 @@ function addChat(author, text, extra = {}) {
     reactions: {},
     time: Date.now(),
   };
-  state.chatMessages = [message, ...state.chatMessages].slice(0, 80);
-  renderChatMessages(state.chatMessages);
   const backend = getOnlineBackend();
   if (isOnlineRoomActive() && backend?.addRoomChat) {
-    backend.addRoomChat(state.roomId, message).catch((error) => notify("Chat no enviado", error.message, "error"));
+    try {
+      await backend.addRoomChat(state.roomId, message);
+    } catch (error) {
+      notify("Chat no enviado", error.message, "error");
+      return false;
+    }
   }
+  state.chatMessages = [message, ...state.chatMessages].slice(0, 80);
+  renderChatMessages(state.chatMessages);
+  return true;
 }
 
 async function publishChatMessages() {
@@ -1029,9 +1062,7 @@ async function toggleVoiceMessage() {
   const button = $("#voice-message");
   
   // Verificar que sea online
-  if (!isOnlineRoomActive()) {
-    return notify("Audio deshabilitado", "El audio solo funciona en partidas Online.", "error");
-  }
+  if (!(await ensureChatRoomReady())) return;
   
   if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
     return notify("Audio no disponible", "Este navegador no permite grabar mensajes de voz.", "error");
@@ -1064,12 +1095,12 @@ async function toggleVoiceMessage() {
       return;
     }
     const audioData = await blobToDataUrl(blob);
-    addChat(state.currentUser?.name || myPlayer()?.name || "Jugador", "Mensaje de voz", {
+    const sent = await addChat(state.currentUser?.name || myPlayer()?.name || "Jugador", "Mensaje de voz", {
       type: "voice",
       audioData,
       audioMime: blob.type,
     });
-    notify("Audio enviado", "El mensaje de voz quedo en el chat.", "success");
+    if (sent) notify("Audio enviado", "El mensaje de voz quedo en el chat.", "success");
   };
   recorder.start();
   button.textContent = "Grabando";
@@ -1597,7 +1628,15 @@ async function updateStartConfirmation(confirmed = true) {
   const backend = getOnlineBackend();
   const uid = startConfirmationKey();
   if (!state.roomId || !backend?.updateRoom || !uid) return;
-  state.startConfirmations ||= {};
+  if (backend.getRoom) {
+    const room = await backend.getRoom(state.roomId).catch(() => null);
+    state.startConfirmations = {
+      ...(room?.startConfirmations || {}),
+      ...(state.startConfirmations || {}),
+    };
+  } else {
+    state.startConfirmations ||= {};
+  }
   if (confirmed) {
     state.startConfirmations[uid] = {
       name: state.currentUser?.name || myPlayer()?.name || "Jugador",
@@ -1609,6 +1648,11 @@ async function updateStartConfirmation(confirmed = true) {
   await backend.updateRoom(state.roomId, {
     startConfirmations: state.startConfirmations,
   });
+  if (state.roomOwnerUid && state.currentUser?.uid === state.roomOwnerUid && allPlayersConfirmedStart()) {
+    window.setTimeout(() => {
+      beginConfirmedGame().catch((error) => notify("No se pudo iniciar", error.message, "error"));
+    }, 0);
+  }
   renderRoom();
 }
 
@@ -1643,6 +1687,11 @@ function showStartConfirmModal(request = state.startRequest) {
 async function requestOnlineStartConfirmation() {
   const backend = getOnlineBackend();
   if (!backend?.updateRoom || !state.roomId) return false;
+  if (state.startRequest && !state.started) {
+    showStartConfirmModal(state.startRequest);
+    notify("Inicio pendiente", "Ya hay una solicitud de inicio esperando confirmaciones.", "error");
+    return false;
+  }
   const request = {
     id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
     requestedByUid: state.currentUser?.uid || "",
@@ -1723,7 +1772,7 @@ function renderRoom() {
     ? `Sala con ${state.players.length}/${mode.max}. Minimo: ${mode.min}. ${mode.objective} ${backendLabel} ${state.syncStatus}`
     : "Inicia sesion con tu cuenta del sitio o prueba offline para crear una sala.";
   const waitingStart = Boolean(state.startRequest && !state.started);
-  $("#start-game").disabled = (!state.started && !canStart()) || waitingStart;
+  $("#start-game").disabled = state.started || (!state.started && !canStart()) || waitingStart;
   $("#start-game").textContent = state.started
     ? "Partida activa"
     : waitingStart
@@ -1736,20 +1785,21 @@ function renderRoom() {
   renderResources();
   enhanceButtonIcons();
   
-  // Deshabilitar chat si no hay sesión online activa (roomId + sessionType online)
+  // Deshabilitar chat si no hay sesión online activa.
   const chatInput = $("#chat-input");
   const chatSubmit = $("#chat-submit");
   const voiceToggle = $("#voice-toggle");
   const voiceMessage = $("#voice-message");
-  const isOnline = isInOnlineSession();
+  const canUseOnlineChat = state.loggedIn && state.sessionType !== "offline";
+  const isVoiceReady = canUseOnlineChat && Boolean(getOnlineBackend()?.addRoomChat);
   
   if (chatInput) {
-    chatInput.disabled = !isOnline;
-    chatInput.placeholder = isOnline ? "Mensaje a la sala" : "Chat solo en modo Online";
+    chatInput.disabled = !canUseOnlineChat;
+    chatInput.placeholder = canUseOnlineChat ? "Mensaje a la sala" : "Chat solo en modo Online";
   }
-  if (chatSubmit) chatSubmit.disabled = !isOnline;
+  if (chatSubmit) chatSubmit.disabled = !canUseOnlineChat;
   if (voiceToggle) voiceToggle.disabled = !isOnlineRoomActive();
-  if (voiceMessage) voiceMessage.disabled = !isOnlineRoomActive();
+  if (voiceMessage) voiceMessage.disabled = !isVoiceReady;
 
   if (state.tutorialActive) renderTutorial();
 }
@@ -2007,8 +2057,8 @@ function runOpeningDiceRoll() {
   renderDiceRoll();
   renderTurnTimer();
   renderTurnControls();
-  publishRoomState();
-  schedulePublishRoomState();
+  publishRoomState(true);
+  schedulePublishRoomState(true);
   let ticks = 0;
   const spin = window.setInterval(() => {
     ticks += 1;
@@ -2539,6 +2589,7 @@ function fillRoom() {
 
 function resetRoom() {
   state.roomId = "";
+  state.roomCreationPromise = null;
   state.roomOwnerUid = "";
   state.players = state.entryDone ? [{
     ...createPlayer("Tu", false),
@@ -2581,6 +2632,22 @@ async function startGame() {
   }
   if (!canStart()) return;
   await ensureOnlineRoom();
+  const backend = getOnlineBackend();
+  if (state.roomId && backend?.getRoom) {
+    try {
+      const room = await backend.getRoom(state.roomId);
+      if (room?.started || room?.status === "playing" || room?.gameState?.started) {
+        notify("Partida activa", "Esta sala ya tiene una partida en juego. Deben terminarla antes de iniciar otra.", "error");
+        if (room.gameState) applyRemoteGameState(room.gameState);
+        renderRoom();
+        renderGame();
+        return;
+      }
+    } catch (error) {
+      notify("Sala no verificada", error.message, "error");
+      return;
+    }
+  }
   if (isOnlineRoomActive()) {
     await requestOnlineStartConfirmation();
     return;
@@ -2624,7 +2691,7 @@ async function beginConfirmedGame() {
   addAchievement("Primera sala iniciada");
   notify("Partida iniciada", "Tirada inicial para definir quien comienza.", "success");
   renderRoom();
-  await clearStartConfirmationRequest();
+  hideStartConfirmModal();
   runOpeningDiceRoll();
   renderGame();
 }
@@ -2662,6 +2729,7 @@ async function returnHome(options = {}) {
   state.activeIndex = 0;
   state.round = 0;
   state.roomId = "";
+  state.roomCreationPromise = null;
   state.roomOwnerUid = "";
   state.turn = freshTurn();
   state.mansion = [];
@@ -3771,7 +3839,7 @@ $("#sound-toggle").addEventListener("click", () => {
 });
 $("#ambient-volume").addEventListener("input", (event) => setAmbientVolume(event.target.value));
 $("#game-volume").addEventListener("input", (event) => setGameVolume(event.target.value));
-$("#clear-progress").addEventListener("click", () => {
+$("#clear-progress")?.addEventListener("click", () => {
   state.achievements = [];
   state.wins = 0;
   state.losses = 0;
@@ -3788,9 +3856,11 @@ $("#clear-progress").addEventListener("click", () => {
     const text = input.value.trim();
     if (!text) return;
     
-    addChat(state.currentUser?.name || myPlayer()?.name || "Jugador", text);
-    input.value = "";
-    input.focus();
+    addChat(state.currentUser?.name || myPlayer()?.name || "Jugador", text).then((sent) => {
+      if (!sent) return;
+      input.value = "";
+      input.focus();
+    });
     return false;
   });
 
@@ -3802,11 +3872,11 @@ $("#clear-progress").addEventListener("click", () => {
     const text = input?.value.trim();
     if (!text) return;
     // Llamar directamente en vez de re-despachar el submit (evita bubbling indeseado)
-    addChat(state.currentUser?.name || myPlayer()?.name || "Jugador", text);
-    if (input) {
+    addChat(state.currentUser?.name || myPlayer()?.name || "Jugador", text).then((sent) => {
+      if (!sent || !input) return;
       input.value = "";
       input.focus();
-    }
+    });
   });
 $("#voice-message").addEventListener("click", () => {
   toggleVoiceMessage().catch((error) => notify("Audio no enviado", error.message, "error"));
