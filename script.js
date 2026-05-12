@@ -252,6 +252,7 @@ function freshTurn() {
     weaponUses: {},
     actionsPlayed: 0,
     drawAnimation: 0,
+    shuffleAnimation: false,
     weaponDamageBonus: 0,
     characterUsed: false,
     autoGold: 0,
@@ -1906,7 +1907,7 @@ function renderCardBackStack(count, label) {
   const cards = Array.from({ length: visible }, (_, index) => (
     `<div class="mini-back-card" style="--i:${index}"></div>`
   )).join("");
-  return `<div class="mini-stack ${state.turn.drawAnimation ? "dealing" : ""}">${cards}<span>${count}</span></div>`;
+  return `<div class="mini-stack ${state.turn.drawAnimation ? "dealing" : ""} ${state.turn.shuffleAnimation ? "shuffling" : ""}">${cards}<span>${count}</span></div>`;
 }
 
 function renderPlayerCardZones(player) {
@@ -2597,7 +2598,7 @@ function resolveUsedWeaponsAfterExplore(player) {
     
     if (weapon.id === "rocket") {
       // Lógica especial Rocket Launcher: barajar Rocket Launcher Case en la mansión
-      state.mansion = shuffle([...state.mansion, cloneCard(catalog.rocketCase)]);
+      state.mansion = shuffle([...state.mansion, cloneCard(catalog.rocket)]);
       notify("Rocket Launcher agotado", "Se ha barajado un 'Rocket Launcher Case' en la mansion.", "warning");
       // La carta original se pierde (no va a descarte ni a recursos)
       return;
@@ -2996,15 +2997,27 @@ function endTurn(auto = false) {
   if (!state.started) return;
   if (!auto && !requireMyTurn()) return;
   const player = currentPlayer();
+
+  // Detect if discard needs shuffling into deck before drawing new hand
+  const willShuffle = player && !player.eliminated && player.alive &&
+    (player.deck.length < 5 && player.discard.length > 0);
+
   if (!player.eliminated && player.alive) {
     player.discard.push(...player.hand, ...player.played);
     player.played = [];
     player.selectedWeapons = [];
     player.hand = drawHand(player);
   }
+
+  // Cierra la carta de mansion al terminar el turno
+  state.lastRevealed = null;
+
   advanceToNextTurn();
   state.turn = freshTurn();
   state.turn.drawAnimation = currentPlayer()?.hand?.length || 0;
+  if (willShuffle) {
+    state.turn.shuffleAnimation = true;
+  }
   state.turnEndsAt = Date.now() + 4 * 60 * 1000;
   applyHandResources(currentPlayer());
 
@@ -3015,8 +3028,9 @@ function endTurn(auto = false) {
   renderGame();
   window.setTimeout(() => {
     state.turn.drawAnimation = 0;
+    state.turn.shuffleAnimation = false;
     renderGame();
-  }, 650);
+  }, 900);
   if (currentPlayer()?.isBot) window.setTimeout(botTurn, 700);
 }
 
