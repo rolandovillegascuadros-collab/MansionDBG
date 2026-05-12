@@ -6764,6 +6764,560 @@ input {
   }
 }
 
+/* Mobile landscape: prioritize the playable board over secondary panels. */
+@media (orientation: landscape) and (max-width: 1100px) and (max-height: 540px) {
+  body {
+    overflow: hidden;
+  }
+
+  .app-shell {
+    width: 100vw;
+    height: 100dvh;
+    min-height: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 292px !important;
+    grid-template-rows: minmax(0, 1fr) 96px !important;
+    grid-template-areas:
+      "game side"
+      "game rail";
+    gap: 4px;
+    overflow: hidden;
+  }
+
+  .game-surface {
+    grid-area: game;
+    height: 100%;
+    max-height: 100%;
+    min-width: 0;
+    padding: 4px;
+    border-radius: 0;
+    grid-template-rows: 34px minmax(0, 1fr);
+    gap: 4px;
+    overflow: hidden;
+  }
+
+  .sidebar {
+    grid-area: side;
+    height: 100%;
+    max-height: 100%;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto minmax(0, 1fr);
+    gap: 4px;
+    overflow: hidden;
+    border-radius: 0;
+  }
+
+  .right-rail {
+    grid-area: rail;
+    height: 100%;
+    max-height: 100%;
+    min-width: 0;
+    display: grid !important;
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr);
+    gap: 0;
+    overflow: hidden;
+    border-radius: 0;
+  }
+
+  .panel,
+  .game-surface {
+    padding: 4px;
+  }
+
+  .brand {
+    min-height: 34px;
+    height: 34px;
+    padding: 3px 5px;
+  }
+
+  .brand-mark,
+  .avatar {
+    width: 26px;
+    height: 26px;
+    font-size: 0.68rem;
+  }
+
+  .brand h1,
+  #player-name {
+    font-size: 0.62rem;
+    line-height: 1;
+  }
+
+  .brand span,
+  .profile-panel .small,
+  .stats-row,
+  .availability-toggle,
+  .history-panel,
+  .right-rail .resources-panel,
+  .right-rail .rules-panel {
+    display: none !important;
+  }
+
+  .profile-panel {
+    min-height: 34px;
+    height: 34px;
+    overflow: hidden;
+  }
+
+  .profile-row {
+    gap: 5px;
+  }
+
+  .logout-button {
+    min-height: 24px;
+  }
+
+  .online-panel {
+    min-height: 0;
+    max-height: none;
+    overflow: hidden;
+  }
+
+  .online-panel .section-title,
+  .add-user-form {
+    margin-bottom: 3px;
+  }
+
+  #site-users,
+  #friend-list,
+  #invitation-list {
+    max-height: 66px;
+    overflow: hidden auto;
+  }
+
+  .friend {
+    min-height: 28px;
+    padding: 4px;
+  }
+
+  .friend strong {
+    font-size: 0.62rem;
+  }
+
+  .friend span {
+    font-size: 0.54rem;
+  }
+
+  .friend button {
+    min-height: 22px;
+    max-width: 64px;
+    font-size: 0.56rem;
+  }
+
+  .room-panel {
+    min-height: 0;
+    overflow: hidden auto;
+  }
+
+  .room-panel label,
+  .room-panel select,
+  .room-panel button {
+    min-height: 22px;
+    font-size: 0.58rem;
+  }
+
+  .room-panel .section-title,
+  .room-panel label {
+    margin-bottom: 2px;
+  }
+
+  .room-panel .segmented {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 3px;
+    margin-top: 4px;
+  }
+
+  .start-button,
+  .room-end-command {
+    margin-top: 4px;
+  }
+
+  #room-status {
+    display: none;
+  }
+
+  .topbar {
+    min-height: 0;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .topbar .eyebrow {
+    display: none;
+  }
+
+  #room-title {
+    font-size: 0.82rem;
+    line-height: 1.1;
+  }
+
+  .top-actions {
+    margin-left: auto;
+    gap: 4px;
+    flex-wrap: nowrap;
+  }
+
+  .top-actions button,
+  .turn-pill {
+    min-height: 24px;
+    height: 24px;
+    padding: 0 7px;
+    font-size: 0.6rem;
+  }
+
+  .volume-controls {
+    display: none;
+  }
+
+  .board {
+    min-height: 0;
+    height: 100%;
+    grid-template-rows: clamp(44px, 15dvh, 64px) minmax(0, 1fr);
+    gap: 4px;
+    padding: 4px;
+    overflow: hidden;
+  }
+
+  .table-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+    min-height: 0;
+  }
+
+  .table-grid .player-card,
+  .player-slot-empty {
+    min-height: 0;
+    height: 100%;
+    padding: 3px;
+    overflow: hidden;
+  }
+
+  .table-grid .player-card {
+    grid-template-columns: 30px minmax(0, 1fr);
+    gap: 4px;
+    align-items: center;
+  }
+
+  .table-grid .player-card .portrait {
+    width: 30px;
+    height: 38px;
+    min-height: 38px;
+    margin: 0;
+    grid-row: 1 / 4;
+  }
+
+  .table-grid .player-card > span,
+  .table-grid .character-read-btn,
+  .player-meta,
+  .player-name-row em,
+  .player-slot-empty span {
+    display: none;
+  }
+
+  .player-name-row strong,
+  .player-slot-empty strong {
+    font-size: 0.58rem;
+    line-height: 1.05;
+  }
+
+  .health-bar {
+    height: 5px;
+    margin: 2px 0 0;
+  }
+
+  .play-area {
+    grid-template-columns: clamp(128px, 25%, 190px) minmax(0, 1fr);
+    gap: 4px;
+    min-height: 0;
+    height: 100%;
+  }
+
+  .table-zone {
+    min-height: 0;
+    padding: 4px;
+    overflow: hidden;
+  }
+
+  .mansion-panel {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: 4px;
+  }
+
+  .mansion-row {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr);
+    min-height: 0;
+  }
+
+  .deck-stack {
+    min-height: 0;
+    height: 100%;
+  }
+
+  .mansion-card {
+    width: min(96px, 72%);
+    min-height: 0;
+    aspect-ratio: 2.5 / 3.5;
+    padding: 5px;
+    font-size: 0.62rem;
+  }
+
+  .deck-card {
+    width: min(92px, 70%);
+  }
+
+  .discard-slot {
+    display: none;
+  }
+
+  .mansion-command-zone {
+    display: grid;
+    gap: 3px;
+  }
+
+  .action-row {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 3px;
+    margin: 0;
+    padding: 3px;
+  }
+
+  .action-row-end {
+    grid-template-columns: 1fr;
+  }
+
+  .turn-command {
+    min-height: 24px;
+    height: 24px;
+    padding: 0 3px;
+    font-size: 0.48rem;
+  }
+
+  .re-btn-img {
+    width: 18px;
+    height: 18px;
+  }
+
+  .turn-footer {
+    min-height: 24px;
+    gap: 4px;
+  }
+
+  .turn-footer .status {
+    font-size: 0.52rem;
+    line-height: 1.15;
+  }
+
+  #turn-timer {
+    min-width: 52px;
+    height: 24px;
+    padding: 2px 5px;
+    font-size: 0.64rem;
+  }
+
+  .controls-panel {
+    display: grid;
+    grid-template-rows: auto auto minmax(70px, 1fr) 42px 44px 38px minmax(0, 28px);
+    gap: 4px;
+    overflow: hidden;
+  }
+
+  .controls-panel > .section-title {
+    margin-bottom: 0;
+  }
+
+  .controls-panel > .section-title h2 {
+    font-size: 0.72rem;
+  }
+
+  .live-trackers {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 3px;
+  }
+
+  .live-trackers div {
+    min-height: 24px;
+    padding: 2px;
+  }
+
+  .tracker-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .live-trackers span {
+    display: none;
+  }
+
+  .live-trackers strong {
+    font-size: 0.56rem;
+  }
+
+  .hand {
+    min-height: 0;
+    grid-template-columns: repeat(5, minmax(52px, 1fr));
+    gap: 4px;
+    overflow: hidden auto;
+  }
+
+  .hand .card-face,
+  .card-face {
+    min-height: 58px;
+    max-height: 88px;
+    padding: 3px;
+  }
+
+  .card-copy span {
+    display: none;
+  }
+
+  .card-copy small {
+    font-size: 0.46rem;
+  }
+
+  .card-copy strong {
+    font-size: 0.52rem;
+  }
+
+  .player-card-zones {
+    min-height: 0;
+    height: 42px;
+    gap: 4px;
+    overflow: hidden;
+  }
+
+  .player-zone {
+    padding: 3px;
+  }
+
+  .compact-title {
+    margin-bottom: 1px;
+  }
+
+  .compact-title h2,
+  .compact-title span {
+    font-size: 0.5rem;
+    line-height: 1;
+  }
+
+  .player-stack-zone,
+  .player-discard-zone {
+    min-height: 20px;
+    height: 20px;
+    overflow: hidden;
+  }
+
+  .action-picker,
+  .weapon-picker,
+  .played-row {
+    min-height: 0;
+    margin-top: 0;
+    padding: 3px;
+    overflow: hidden;
+  }
+
+  .action-card-list,
+  .weapon-list,
+  .played-cards {
+    max-height: 24px;
+    overflow: hidden auto;
+  }
+
+  .action-card-list .action-select-card,
+  .weapon-list .weapon-select-card,
+  .played-cards .played-turn-card {
+    height: 24px;
+    min-height: 24px;
+    max-height: 24px;
+    grid-template-columns: 22px minmax(0, 1fr);
+  }
+
+  .played-row .section-title,
+  .weapon-picker .section-title,
+  .action-picker .section-title {
+    margin-bottom: 2px;
+  }
+
+  .played-row .section-title h2,
+  .weapon-picker .section-title h2,
+  .action-picker .section-title h2 {
+    font-size: 0.58rem;
+  }
+
+  .chat-panel {
+    min-height: 0;
+    height: 100%;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    overflow: hidden;
+  }
+
+  .chat-panel .section-title {
+    margin-bottom: 2px;
+  }
+
+  #chat-log {
+    display: none;
+  }
+
+  #chat-form {
+    grid-template-columns: minmax(0, 1fr) minmax(56px, auto) minmax(58px, auto);
+    gap: 3px;
+    margin-top: 0;
+  }
+
+  #chat-input,
+  #voice-message,
+  #chat-submit {
+    min-height: 24px;
+    font-size: 0.58rem;
+  }
+}
+
+@media (orientation: landscape) and (max-width: 760px) and (max-height: 430px) {
+  .app-shell {
+    grid-template-columns: minmax(0, 1fr) 190px !important;
+    grid-template-rows: minmax(0, 1fr) 76px !important;
+  }
+
+  .online-panel {
+    display: none;
+  }
+
+  .sidebar {
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .brand {
+    display: none;
+  }
+
+  .play-area {
+    grid-template-columns: clamp(96px, 23%, 126px) minmax(0, 1fr);
+  }
+
+  .board {
+    grid-template-rows: 40px minmax(0, 1fr);
+  }
+
+  .controls-panel {
+    grid-template-rows: auto auto minmax(58px, 1fr) 34px 34px minmax(0, 24px);
+  }
+
+  .played-row {
+    display: none;
+  }
+
+  .turn-footer .status {
+    display: none;
+  }
+}
+
 /* ══════════════════════════════════════════════════════════
    NOTIFICACIÓN FLOTANTE DE CHAT
    ══════════════════════════════════════════════════════════ */

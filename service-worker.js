@@ -1,5 +1,5 @@
-// cache v21-online-presence-refresh
-const CACHE_NAME = 'mansiondbg-v21-online-presence-refresh';
+// cache v22-mobile-landscape
+const CACHE_NAME = 'mansiondbg-v22-mobile-landscape';
 const ASSETS = [
   "./",
   "./index.html",
