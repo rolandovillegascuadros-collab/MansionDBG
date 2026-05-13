@@ -1867,12 +1867,12 @@ function renderPlayers() {
     const stateLabel = player.eliminated ? "Eliminado" : player.skipTurns > 0 ? `Cae ${player.skipTurns} turno(s)` : index === state.activeIndex && state.started ? "Tu turno" : player.isBot ? "Bot" : "Jugador";
     card.innerHTML = `
       ${characterPortrait(player.character, "small")}
+      <button class="character-inspect-btn inspect-btn" type="button" title="Ver carta de personaje" aria-label="Ver carta de ${player.character.name}">🔍</button>
       <div class="player-name-row">
         <strong>${player.name}</strong>
         <em>${stateLabel}</em>
       </div>
       <span>${player.character.name} - Nivel ${levelFor(player)}</span>
-      <button class="character-read-btn" type="button">Ver caracteristicas</button>
       <div class="health-bar"><span style="width:${hpPercent}%"></span></div>
       <div class="player-meta">
         <span>Vida ${player.health}/${player.maxHealth}</span>
@@ -1880,7 +1880,10 @@ function renderPlayers() {
         <span>Revives ${Math.min(player.deaths || 0, REVIVES_ALLOWED)}/${REVIVES_ALLOWED}</span>
       </div>
     `;
-    card.querySelector(".character-read-btn").addEventListener("click", () => showCharacterDetails(player));
+    card.querySelector(".character-inspect-btn").addEventListener("click", (event) => {
+      event.stopPropagation();
+      showCharacterDetails(player);
+    });
     grid.append(card);
   });
   for (let index = visiblePlayers.length; index < maxSlots; index += 1) {
@@ -1894,9 +1897,13 @@ function renderPlayers() {
 function showCharacterDetails(player) {
   const rules = characterLevelRules(player.character)
     .map((rule) => `Nivel ${rule.level}: ${rule.min} medallas - ${rule.text || "Sin texto"}`)
-    .join("\n");
-  const passive = player.character.passive ? `\nPasivo: ${player.character.passive}` : "";
-  window.alert(`${player.character.name}\nVida base: ${player.character.health}\nMedallas actuales: ${player.decorations}\n\n${rules}${passive}`);
+    .join(" | ");
+  const passive = player.character.passive ? ` Pasivo: ${player.character.passive}` : "";
+  inspectCard({
+    ...player.character,
+    type: "Personaje",
+    text: `Medallas actuales: ${player.decorations}. ${rules}${passive}`,
+  });
 }
 
 function renderResources() {
@@ -1996,6 +2003,7 @@ function inspectCard(card) {
         <h2>${card.name}</h2>
         <span class="type-badge">${card.type}</span>
         <div class="inspect-details">
+          ${card.type === "Personaje" && card.health ? `<p><strong>Vida base:</strong> ${card.health}</p>` : ""}
           ${card.damage ? `<p><strong>Daño:</strong> ${card.damage}</p>` : ""}
           ${card.ammoCost ? `<p><strong>Costo Munición:</strong> ${card.ammoCost}</p>` : ""}
           ${card.cost ? `<p><strong>Costo Oro:</strong> ${card.cost}</p>` : ""}
