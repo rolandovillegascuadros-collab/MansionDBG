@@ -7402,3 +7402,188 @@ input {
 @media (max-width: 720px) {
   .hand-zone-tabs { grid-template-columns: 1fr; }
 }
+
+
+/* Inicio remake sangriento + lupa de cartas */
+.blood-title {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: Impact, Haettenschweiler, "Arial Black", sans-serif;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #f3f5f8;
+  text-shadow: 0 2px 0 #210000, 0 0 16px rgba(199, 0, 0, 0.8), 0 0 34px rgba(255, 178, 64, 0.35);
+}
+
+.blood-title span {
+  background: linear-gradient(180deg, #fff 0%, #f0c35b 34%, #b00000 66%, #4a0000 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 5px 0 rgba(20, 0, 0, 0.8));
+}
+
+.blood-title em {
+  width: fit-content;
+  padding: 3px 10px 4px;
+  border: 1px solid rgba(170, 0, 0, 0.75);
+  border-radius: 999px;
+  color: #fff1d6;
+  background: linear-gradient(135deg, rgba(70, 0, 0, 0.95), rgba(160, 0, 0, 0.78), rgba(24, 0, 0, 0.95));
+  box-shadow: inset 0 0 18px rgba(255, 0, 0, 0.22), 0 0 18px rgba(140, 0, 0, 0.35);
+  font-size: clamp(0.78rem, 2.4vw, 1.1rem);
+  font-style: normal;
+  letter-spacing: 2px;
+}
+
+.guide-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.guide-card-zoom {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 2;
+  width: 32px;
+  height: 32px;
+  min-height: 32px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(239, 190, 76, 0.92);
+  color: #f7c65c;
+  background: rgba(0, 0, 0, 0.72);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.25), 0 0 14px rgba(239, 190, 76, 0.28);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.guide-card-zoom:hover,
+.guide-card-zoom:focus-visible {
+  transform: scale(1.08);
+  color: #10141b;
+  background: var(--accent);
+}
+
+.home-card-zoom-modal.hidden {
+  display: none;
+}
+
+.home-card-zoom-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+}
+
+.home-card-zoom-backdrop {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 18%, rgba(90, 0, 0, 0.34), transparent 34%), rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(7px);
+}
+
+.home-card-zoom-panel {
+  position: relative;
+  z-index: 1;
+  width: min(920px, 96vw);
+  max-height: 94vh;
+  display: grid;
+  grid-template-columns: minmax(220px, 390px) minmax(240px, 1fr);
+  gap: 18px;
+  padding: 18px;
+  overflow: auto;
+  border: 1px solid rgba(239, 190, 76, 0.58);
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(12, 15, 22, 0.98), rgba(32, 8, 9, 0.97));
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.72), inset 0 0 46px rgba(150, 0, 0, 0.16);
+}
+
+.home-card-zoom-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 3;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(140, 0, 0, 0.86);
+  border: 1px solid rgba(255, 210, 105, 0.66);
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.home-card-zoom-image-wrap {
+  display: grid;
+  place-items: center;
+  min-height: 0;
+}
+
+.home-card-zoom-image-wrap img {
+  width: min(100%, 390px);
+  max-height: 82vh;
+  object-fit: contain;
+  border-radius: 12px;
+  border: 1px solid rgba(239, 190, 76, 0.38);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.68), 0 0 22px rgba(196, 0, 0, 0.22);
+}
+
+.home-card-zoom-info {
+  align-self: center;
+  color: #f5f7fb;
+}
+
+.home-card-zoom-info span {
+  display: inline-flex;
+  margin-bottom: 10px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  color: #10141b;
+  background: var(--accent);
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.home-card-zoom-info h3 {
+  margin: 0 0 8px;
+  color: #fff;
+  font-size: clamp(1.7rem, 4vw, 3rem);
+  text-shadow: 0 0 18px rgba(190, 0, 0, 0.66);
+}
+
+.home-card-zoom-info p {
+  color: #d9e1ee;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.home-card-zoom-info strong {
+  display: block;
+  margin-top: 14px;
+  color: var(--accent);
+  font-size: 1.05rem;
+}
+
+body.card-zoom-open {
+  overflow: hidden;
+}
+
+@media (max-width: 700px) {
+  .home-card-zoom-panel {
+    grid-template-columns: 1fr;
+    padding: 14px;
+  }
+
+  .home-card-zoom-image-wrap img {
+    max-height: 58vh;
+  }
+}

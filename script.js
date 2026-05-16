@@ -922,16 +922,70 @@ function renderHomeCardGuide() {
   cards.forEach((card) => {
     const item = document.createElement("article");
     item.className = "guide-card";
+    const effect = cardGuideEffect(card);
     item.innerHTML = `
+      <button class="guide-card-zoom" type="button" aria-label="Ver carta ${escapeHtml(card.name)}"
+        data-card-name="${escapeHtml(card.name)}"
+        data-card-type="${escapeHtml(card.type)}"
+        data-card-image="${card.image}"
+        data-card-cost="${escapeHtml(card.cost ? `${card.cost} oro` : "")}"
+        data-card-effect="${escapeHtml(effect)}">⌕</button>
       <img src="${card.image}" alt="${escapeHtml(card.name)}" loading="lazy" />
       <div>
         <strong>${escapeHtml(card.name)}</strong>
         <span>${escapeHtml(card.type)}${card.cost ? ` / ${card.cost} oro` : ""}</span>
-        <p>${escapeHtml(cardGuideEffect(card))}</p>
+        <p>${escapeHtml(effect)}</p>
       </div>
     `;
     grid.append(item);
   });
+}
+
+
+function openHomeCardZoom(button) {
+  let modal = document.getElementById("home-card-zoom-modal");
+  if (!modal) {
+    modal = document.createElement("div");
+    modal.id = "home-card-zoom-modal";
+    modal.className = "home-card-zoom-modal hidden";
+    modal.innerHTML = `
+      <div class="home-card-zoom-backdrop" data-close-card-zoom="1"></div>
+      <article class="home-card-zoom-panel" role="dialog" aria-modal="true" aria-label="Vista ampliada de carta">
+        <button class="home-card-zoom-close" type="button" data-close-card-zoom="1" aria-label="Cerrar">×</button>
+        <div class="home-card-zoom-image-wrap"><img id="home-card-zoom-image" alt="Carta ampliada" /></div>
+        <div class="home-card-zoom-info">
+          <span id="home-card-zoom-type"></span>
+          <h3 id="home-card-zoom-name"></h3>
+          <p id="home-card-zoom-cost"></p>
+          <div>
+            <strong>Descripción / efecto</strong>
+            <p id="home-card-zoom-effect"></p>
+          </div>
+        </div>
+      </article>
+    `;
+    document.body.append(modal);
+    modal.addEventListener("click", (event) => {
+      if (event.target.closest("[data-close-card-zoom]")) closeHomeCardZoom();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeHomeCardZoom();
+    });
+  }
+  document.getElementById("home-card-zoom-image").src = button.dataset.cardImage || "";
+  document.getElementById("home-card-zoom-image").alt = button.dataset.cardName || "Carta ampliada";
+  document.getElementById("home-card-zoom-name").textContent = button.dataset.cardName || "Carta";
+  document.getElementById("home-card-zoom-type").textContent = button.dataset.cardType || "";
+  document.getElementById("home-card-zoom-cost").textContent = button.dataset.cardCost ? `Coste: ${button.dataset.cardCost}` : "";
+  document.getElementById("home-card-zoom-effect").textContent = button.dataset.cardEffect || "Sin descripción disponible.";
+  modal.classList.remove("hidden");
+  document.body.classList.add("card-zoom-open");
+}
+
+function closeHomeCardZoom() {
+  const modal = document.getElementById("home-card-zoom-modal");
+  if (modal) modal.classList.add("hidden");
+  document.body.classList.remove("card-zoom-open");
 }
 
 function buttonIcon(button) {
@@ -3958,6 +4012,12 @@ $$("[data-card-guide]").forEach((button) => {
     enhanceButtonIcons();
     sound("click");
   });
+});
+document.addEventListener("click", (event) => {
+  const zoomButton = event.target.closest(".guide-card-zoom");
+  if (!zoomButton) return;
+  openHomeCardZoom(zoomButton);
+  sound("click");
 });
 $("#site-birthdate").addEventListener("change", () => {
   const age = calculateAge($("#site-birthdate").value);
