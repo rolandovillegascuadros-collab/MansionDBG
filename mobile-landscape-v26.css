@@ -641,3 +641,662 @@ body.focus-mode #hand-cards .card.card-face {
   -webkit-box-orient: vertical !important;
   overflow: hidden !important;
 }
+
+/* =========================================================
+   FIX v39 - Celular/Tablet horizontal + pantalla completa
+   Evita montajes y hace que la carta revelada de mansion
+   use el mismo alto visual que el mazo de mansion.
+   ========================================================= */
+@media (orientation: landscape) and (max-width: 1180px) and (max-height: 820px) {
+  html,
+  body {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100dvh !important;
+    overflow: hidden !important;
+  }
+
+  .app-shell,
+  body.focus-mode .app-shell {
+    width: 100vw !important;
+    height: 100dvh !important;
+    min-height: 0 !important;
+    max-height: 100dvh !important;
+    grid-template-columns: minmax(0, 1fr) clamp(176px, 22vw, 232px) !important;
+    grid-template-rows: minmax(0, 1fr) !important;
+    grid-template-areas: "game rail" !important;
+    gap: 3px !important;
+    padding: 3px !important;
+    overflow: hidden !important;
+  }
+
+  .game-surface,
+  body.focus-mode .game-surface {
+    height: 100% !important;
+    min-height: 0 !important;
+    padding: 3px !important;
+    gap: 3px !important;
+    grid-template-rows: auto minmax(0, 1fr) !important;
+    overflow: hidden !important;
+  }
+
+  .topbar,
+  body.focus-mode .topbar {
+    height: 34px !important;
+    min-height: 34px !important;
+    max-height: 34px !important;
+    padding: 3px 6px !important;
+    overflow: hidden !important;
+  }
+
+  .topbar .eyebrow,
+  .volume-controls {
+    display: none !important;
+  }
+
+  .top-actions,
+  .topbar .top-actions {
+    gap: 3px !important;
+    flex-wrap: nowrap !important;
+    min-width: 0 !important;
+  }
+
+  .topbar button,
+  .topbar .tutorial-button,
+  .topbar .sound-button,
+  .topbar .turn-pill,
+  body.focus-mode .topbar button,
+  body.focus-mode .topbar .turn-pill {
+    min-height: 24px !important;
+    height: 24px !important;
+    padding: 0 7px !important;
+    font-size: 10px !important;
+    white-space: nowrap !important;
+  }
+
+  .board,
+  body.focus-mode .board {
+    height: 100% !important;
+    min-height: 0 !important;
+    grid-template-rows: clamp(72px, 16dvh, 96px) minmax(0, 1fr) !important;
+    gap: 3px !important;
+    padding: 3px !important;
+    overflow: hidden !important;
+  }
+
+  .table-grid,
+  body.focus-mode .table-grid {
+    height: 100% !important;
+    min-height: 0 !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 3px !important;
+    overflow: hidden !important;
+  }
+
+  .table-grid .player-card,
+  body.focus-mode .table-grid .player-card {
+    min-height: 0 !important;
+    height: 100% !important;
+    padding: 3px !important;
+    border-radius: 7px !important;
+    overflow: hidden !important;
+  }
+
+  .table-grid .player-card .portrait,
+  body.focus-mode .table-grid .player-card .portrait {
+    width: 26px !important;
+    height: 26px !important;
+    min-width: 26px !important;
+    margin: 0 4px 0 0 !important;
+    float: left !important;
+  }
+
+  .table-grid .player-card > p,
+  .table-grid .player-meta,
+  .table-grid .character-read-btn {
+    display: none !important;
+  }
+
+  .table-grid .player-name-row strong {
+    font-size: 10px !important;
+    line-height: 1.05 !important;
+  }
+
+  .table-grid .health-bar {
+    height: 6px !important;
+    margin: 3px 0 !important;
+  }
+
+  .play-area,
+  body.focus-mode .play-area {
+    min-height: 0 !important;
+    height: 100% !important;
+    grid-template-columns: clamp(152px, 24vw, 205px) minmax(0, 1fr) !important;
+    gap: 3px !important;
+    overflow: hidden !important;
+  }
+
+  .mansion-panel,
+  body.focus-mode .mansion-panel {
+    display: grid !important;
+    grid-template-rows: auto minmax(0, 1fr) auto !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    padding: 5px !important;
+    overflow: hidden !important;
+  }
+
+  .mansion-row,
+  body.focus-mode .mansion-row {
+    min-height: 0 !important;
+    height: 100% !important;
+    grid-template-rows: minmax(0, 1fr) auto !important;
+    gap: 3px !important;
+    overflow: hidden !important;
+  }
+
+  .deck-stack,
+  body.focus-mode .deck-stack {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    place-items: center !important;
+    overflow: hidden !important;
+  }
+
+  .deck-card,
+  #mansion-card.card-face,
+  #mansion-card.card-face:not(.has-card-image),
+  #mansion-card.card-face.has-card-image,
+  .mansion-card.card-face,
+  .mansion-card.card-face.has-card-image {
+    width: auto !important;
+    height: min(100%, clamp(118px, 34dvh, 178px)) !important;
+    max-width: 92% !important;
+    max-height: 100% !important;
+    aspect-ratio: 2.5 / 3.5 !important;
+    padding: 3px !important;
+    align-self: center !important;
+    justify-self: center !important;
+    transform: none !important;
+    overflow: hidden !important;
+  }
+
+  #mansion-card.card-face.has-card-image,
+  .mansion-card.card-face.has-card-image {
+    height: min(100%, clamp(128px, 36dvh, 190px)) !important;
+    width: auto !important;
+    max-width: 96% !important;
+    display: grid !important;
+    grid-template-rows: minmax(0, 1fr) !important;
+  }
+
+  #mansion-card.has-card-image .card-art,
+  .mansion-card.has-card-image .card-art,
+  #mansion-card.has-card-image .card-art img,
+  .mansion-card.has-card-image .card-art img {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: 100% !important;
+  }
+
+  #mansion-card.has-card-image .card-art img,
+  .mansion-card.has-card-image .card-art img {
+    object-fit: contain !important;
+    object-position: center center !important;
+  }
+
+  .mansion-command-zone {
+    gap: 3px !important;
+    padding-top: 3px !important;
+  }
+
+  .mansion-command-zone .action-row,
+  .mansion-command-zone .action-row-end {
+    gap: 3px !important;
+  }
+
+  .mansion-command-zone .turn-footer {
+    min-height: 28px !important;
+    height: 28px !important;
+    overflow: hidden !important;
+  }
+
+  .controls-panel,
+  body.focus-mode .controls-panel {
+    display: grid !important;
+    grid-template-rows: auto 30px minmax(76px, 1fr) minmax(44px, 54px) !important;
+    gap: 3px !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    padding: 5px !important;
+    overflow: hidden !important;
+  }
+
+  .controls-panel > .section-title {
+    min-height: 22px !important;
+    height: 22px !important;
+    overflow: hidden !important;
+  }
+
+  .live-trackers,
+  body.focus-mode .live-trackers {
+    height: 30px !important;
+    min-height: 30px !important;
+    max-height: 30px !important;
+    padding: 3px !important;
+    gap: 3px !important;
+    overflow: hidden !important;
+  }
+
+  .hand,
+  #hand.hand,
+  #hand-cards,
+  body.focus-mode .hand,
+  body.focus-mode #hand.hand,
+  body.focus-mode #hand-cards {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+    padding: 4px !important;
+    gap: 5px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+  }
+
+  .hand .card,
+  #hand.hand .card,
+  #hand-cards .card,
+  .hand .card-face,
+  #hand.hand .card-face,
+  #hand-cards .card-face,
+  body.focus-mode .hand .card,
+  body.focus-mode #hand.hand .card,
+  body.focus-mode #hand-cards .card,
+  body.focus-mode .hand .card-face,
+  body.focus-mode #hand.hand .card-face,
+  body.focus-mode #hand-cards .card-face {
+    flex: 0 0 clamp(76px, 12vw, 108px) !important;
+    width: clamp(76px, 12vw, 108px) !important;
+    height: auto !important;
+    max-height: 100% !important;
+    aspect-ratio: 2.5 / 3.5 !important;
+    padding: 3px !important;
+    gap: 2px !important;
+  }
+
+  .hand .card-copy small,
+  .hand .card-copy span,
+  #hand.hand .card-copy small,
+  #hand.hand .card-copy span,
+  #hand-cards .card-copy small,
+  #hand-cards .card-copy span {
+    font-size: 8px !important;
+    line-height: 1 !important;
+  }
+
+  .hand .card-copy strong,
+  #hand.hand .card-copy strong,
+  #hand-cards .card-copy strong {
+    font-size: 9px !important;
+    line-height: 1.02 !important;
+  }
+
+  .player-card-zones {
+    display: none !important;
+  }
+
+  .hand-zone-grid {
+    display: grid !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    max-height: 54px !important;
+    overflow: hidden !important;
+  }
+
+  .hand-zone-tabs {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 3px !important;
+  }
+
+  .hand-zone-tab {
+    min-height: 28px !important;
+    height: 28px !important;
+    padding: 0 4px !important;
+    font-size: 9px !important;
+    line-height: 1.05 !important;
+  }
+
+  .hand-zone-panel {
+    display: none !important;
+  }
+
+  .right-rail,
+  body.focus-mode .right-rail {
+    grid-template-rows: minmax(100px, 36%) minmax(0, 1fr) !important;
+    gap: 3px !important;
+    height: 100% !important;
+    max-height: 100dvh !important;
+    overflow: hidden !important;
+  }
+
+  .right-rail .chat-panel,
+  .right-rail .resources-panel,
+  body.focus-mode .right-rail .chat-panel,
+  body.focus-mode .right-rail .resources-panel {
+    padding: 5px !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .resource-grid,
+  #resource-area {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 4px !important;
+    min-height: 0 !important;
+    overflow: auto !important;
+  }
+}
+
+@media (orientation: landscape) and (max-width: 760px) and (max-height: 430px) {
+  .app-shell,
+  body.focus-mode .app-shell {
+    grid-template-columns: minmax(0, 1fr) 168px !important;
+  }
+
+  .play-area,
+  body.focus-mode .play-area {
+    grid-template-columns: 142px minmax(0, 1fr) !important;
+  }
+
+  .board,
+  body.focus-mode .board {
+    grid-template-rows: 66px minmax(0, 1fr) !important;
+  }
+
+  .topbar h2 {
+    font-size: 13px !important;
+  }
+
+  .topbar .tutorial-button,
+  .topbar .sound-button,
+  .topbar .turn-pill {
+    padding: 0 5px !important;
+    font-size: 9px !important;
+  }
+
+  .deck-card,
+  #mansion-card.card-face,
+  #mansion-card.card-face.has-card-image,
+  .mansion-card.card-face,
+  .mansion-card.card-face.has-card-image {
+    height: min(100%, 138px) !important;
+    max-width: 94% !important;
+  }
+
+  .controls-panel,
+  body.focus-mode .controls-panel {
+    grid-template-rows: 21px 27px minmax(66px, 1fr) 38px !important;
+  }
+
+  .hand .card,
+  #hand.hand .card,
+  #hand-cards .card,
+  .hand .card-face,
+  #hand.hand .card-face,
+  #hand-cards .card-face {
+    flex-basis: 72px !important;
+    width: 72px !important;
+  }
+
+  .hand-zone-grid {
+    max-height: 38px !important;
+  }
+
+  .hand-zone-tab {
+    min-height: 24px !important;
+    height: 24px !important;
+    font-size: 8px !important;
+  }
+}
+
+/* v40 - correccion celular/tablet horizontal pantalla completa: mansion + indicadores desplazables */
+@media (orientation: landscape) and (max-width: 1180px) and (max-height: 820px) {
+  html,
+  body,
+  .app-shell,
+  .game-surface,
+  .board {
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    overflow: hidden !important;
+  }
+
+  body.focus-mode .app-shell,
+  .app-shell {
+    grid-template-columns: minmax(0, 1fr) clamp(168px, 22vw, 230px) !important;
+    gap: 4px !important;
+    padding: max(3px, env(safe-area-inset-top)) max(4px, env(safe-area-inset-right)) max(3px, env(safe-area-inset-bottom)) max(4px, env(safe-area-inset-left)) !important;
+  }
+
+  body.focus-mode .board,
+  .board {
+    grid-template-rows: clamp(58px, 13dvh, 86px) minmax(0, 1fr) !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+  }
+
+  body.focus-mode .play-area,
+  .play-area {
+    grid-template-columns: clamp(185px, 27vw, 305px) minmax(0, 1fr) !important;
+    gap: 5px !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    overflow: hidden !important;
+  }
+
+  body.focus-mode .mansion-panel,
+  .mansion-panel {
+    display: grid !important;
+    grid-template-rows: auto minmax(0, 1fr) auto !important;
+    gap: 4px !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    overflow: hidden !important;
+    padding: 6px !important;
+  }
+
+  body.focus-mode .mansion-row,
+  .mansion-row {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    align-items: center !important;
+    justify-items: center !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    overflow: visible !important;
+  }
+
+  body.focus-mode .deck-stack,
+  .deck-stack {
+    width: min(96%, calc((100dvh - 170px) * 0.72)) !important;
+    max-width: 245px !important;
+    height: auto !important;
+    max-height: 100% !important;
+    aspect-ratio: 2.5 / 3.5 !important;
+    display: grid !important;
+    place-items: center !important;
+    margin: 0 auto !important;
+  }
+
+  body.focus-mode .deck-card,
+  .deck-card,
+  body.focus-mode #mansion-card.card-face,
+  #mansion-card.card-face,
+  body.focus-mode #mansion-card.card-face.has-card-image,
+  #mansion-card.card-face.has-card-image,
+  body.focus-mode .mansion-card.card-face,
+  .mansion-card.card-face,
+  body.focus-mode .mansion-card.card-face.has-card-image,
+  .mansion-card.card-face.has-card-image {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    aspect-ratio: 2.5 / 3.5 !important;
+    padding: 0 !important;
+  }
+
+  body.focus-mode #mansion-card.has-card-image .card-art,
+  #mansion-card.has-card-image .card-art,
+  body.focus-mode .mansion-card.has-card-image .card-art,
+  .mansion-card.has-card-image .card-art {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    border-radius: inherit !important;
+    overflow: hidden !important;
+  }
+
+  body.focus-mode #mansion-card.has-card-image .card-art img,
+  #mansion-card.has-card-image .card-art img,
+  body.focus-mode .mansion-card.has-card-image .card-art img,
+  .mansion-card.has-card-image .card-art img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    display: block !important;
+  }
+
+  body.focus-mode .discard-slot,
+  .discard-slot {
+    display: none !important;
+  }
+
+  body.focus-mode .mansion-command-zone,
+  .mansion-command-zone {
+    max-height: clamp(52px, 17dvh, 92px) !important;
+    min-height: 0 !important;
+    overflow: auto !important;
+    padding: 3px 2px 0 !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  body.focus-mode .mansion-command-zone .action-row,
+  .mansion-command-zone .action-row,
+  body.focus-mode .mansion-command-zone .action-row-end,
+  .mansion-command-zone .action-row-end {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: 4px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    padding-bottom: 2px !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  body.focus-mode .turn-command,
+  .turn-command {
+    flex: 0 0 auto !important;
+    min-width: 74px !important;
+    min-height: 30px !important;
+    height: 30px !important;
+    padding: 2px 6px !important;
+    font-size: 10px !important;
+  }
+
+  body.focus-mode .controls-panel,
+  .controls-panel {
+    grid-template-rows: auto auto minmax(0, 1fr) auto !important;
+    overflow: hidden !important;
+    min-height: 0 !important;
+  }
+
+  body.focus-mode .live-trackers,
+  .live-trackers {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    max-height: 42px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    gap: 5px !important;
+    padding: 4px !important;
+    scroll-snap-type: x proximity !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  body.focus-mode .live-trackers > div,
+  .live-trackers > div,
+  body.focus-mode .tracker,
+  .tracker {
+    flex: 0 0 clamp(108px, 17vw, 150px) !important;
+    height: 34px !important;
+    min-height: 34px !important;
+    display: grid !important;
+    grid-template-columns: 24px minmax(0, 1fr) !important;
+    scroll-snap-align: start !important;
+  }
+
+  body.focus-mode .tracker-info span,
+  .tracker-info span {
+    display: block !important;
+    font-size: 8px !important;
+    line-height: 1 !important;
+  }
+
+  body.focus-mode .tracker-info,
+  .tracker-info {
+    display: grid !important;
+    justify-items: start !important;
+    align-content: center !important;
+  }
+}
+
+@media (orientation: landscape) and (max-width: 760px) and (max-height: 430px) {
+  body.focus-mode .app-shell,
+  .app-shell {
+    grid-template-columns: minmax(0, 1fr) 158px !important;
+  }
+
+  body.focus-mode .play-area,
+  .play-area {
+    grid-template-columns: clamp(168px, 29vw, 210px) minmax(0, 1fr) !important;
+  }
+
+  body.focus-mode .deck-stack,
+  .deck-stack {
+    width: min(98%, calc((100dvh - 142px) * 0.72)) !important;
+    max-width: 186px !important;
+  }
+
+  body.focus-mode .live-trackers,
+  .live-trackers {
+    height: 38px !important;
+    min-height: 38px !important;
+    max-height: 38px !important;
+  }
+
+  body.focus-mode .live-trackers > div,
+  .live-trackers > div,
+  body.focus-mode .tracker,
+  .tracker {
+    flex-basis: 104px !important;
+    height: 31px !important;
+    min-height: 31px !important;
+  }
+}
