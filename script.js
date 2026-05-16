@@ -42,7 +42,7 @@ const catalog = {
   ammo10: { id: "ammo10", name: "Ammo x10", type: "Municion", ammo: 10, gold: 10, art: "ammo", cost: 0, image: `${CARD_PATH}AM-001.png` },
   ammo20: { id: "ammo20", name: "Ammo x20", type: "Municion", ammo: 20, gold: 20, art: "ammo", cost: 30, image: `${CARD_PATH}AM-002.png` },
   ammo30: { id: "ammo30", name: "Ammo x30", type: "Municion", ammo: 30, gold: 30, art: "ammo", cost: 60, image: `${CARD_PATH}AM-003.png` },
-  knife: { id: "knife", name: "Combat Knife", type: "Arma", damage: 10, ammoCost: 0, art: "knife", cost: 20, image: `${CARD_PATH}WE-004.png` },
+  knife: { id: "knife", name: "Combat Knife", type: "Arma", damage: 5, ammoCost: 0, art: "knife", cost: 20, image: `${CARD_PATH}WE-004.png` },
   handgun: { id: "handgun", name: "Handgun", type: "Arma", damage: 20, ammoCost: 20, art: "handgun", cost: 40, image: `${CARD_PATH}WE-009.png` },
   bow: { id: "bow", name: "Longbow", type: "Arma", damage: 30, ammoCost: 20, art: "handgun", cost: 50, image: `${CARD_PATH}WE-002.png` },
   grenade: { id: "grenade", name: "Grenade", type: "Arma", damage: 40, ammoCost: 0, splash: 10, explosive: true, art: "shotgun", cost: 60, image: `${CARD_PATH}WE-001.png`, text: "-5 dano a sus puntos de vida de cada jugador de los costado del jugador que explora. Se activa al explorar mansion esta carta." },
@@ -131,6 +131,7 @@ const state = {
   resourceFilter: "Todos",
   resourceMarketOpen: false,
   resourceMarketOrder: [],
+  handPanelTab: "actions",
   resourceArea: [],
   mansion: [],
   lastRevealed: null,
@@ -2041,11 +2042,13 @@ function renderGame() {
   renderTargets();
   renderLiveTrackers(current);
   renderMansionCard(mode);
-  renderHand(current);
-  renderPlayerCardZones(myPlayer());
-  renderActionCards(current);
-  renderWeapons(current);
-  renderPlayed(current);
+  const mine = myPlayer();
+  renderHand(mine);
+  renderPlayerCardZones(mine);
+  renderHandPanel(mine);
+  renderActionCards(mine);
+  renderWeapons(mine);
+  renderPlayed(mine);
   renderPlayers();
   renderDiceRoll();
   renderResources();
@@ -2295,6 +2298,24 @@ async function setCurrentAvailability(online) {
       notify("Disponibilidad no guardada", error.message, "error");
     }
   }
+}
+
+function renderHandPanel(current) {
+  const tabs = $$(".hand-zone-tab");
+  const panels = $$(".hand-zone-panel");
+  if (!tabs.length || !panels.length) return;
+  tabs.forEach((tab) => {
+    const active = tab.dataset.zone === state.handPanelTab;
+    tab.classList.toggle("active", active);
+    tab.setAttribute("aria-selected", active ? "true" : "false");
+    tab.onclick = () => {
+      state.handPanelTab = tab.dataset.zone || "actions";
+      renderGame();
+    };
+  });
+  panels.forEach((panel) => {
+    panel.classList.toggle("active", panel.dataset.zonePanel === state.handPanelTab);
+  });
 }
 
 function renderActionCards(current) {
@@ -2727,6 +2748,7 @@ async function beginConfirmedGame() {
   state.round = 1;
   state.activeIndex = 0;
   state.turn = freshTurn();
+  buildResourceArea();
   state.mansion = buildMansion();
   state.lastRevealed = null;
   refreshRandomCharacters();
@@ -2948,6 +2970,7 @@ function playHandCard(instanceId) {
   }
   if (card.type === "Accion") {
     if (state.turn.actions <= 0) return notify("No puedes jugar accion", "No quedan acciones este turno.", "error");
+    if (card.id === "action3" && !playSharedMemories(player, card)) return;
     if (card.id === "action9" && !playItemManagement(player, card)) return;
     state.turn.actions -= 1;
     state.turn.actionsPlayed += 1;
@@ -2959,6 +2982,14 @@ function playHandCard(instanceId) {
     state.turn.actions += card.extraAction || 0;
     if (card.draw) drawCards(player, card.draw);
     notify(card.name, card.text || "Efecto aplicado.", "success");
+    if (card.id === "action3") {
+      player.hand = player.hand.filter((item) => item.instanceId !== instanceId);
+      returnCardToResource(card);
+      addAchievement("Primera carta jugada");
+      sound("card");
+      renderGame();
+      return;
+    }
   } else if (card.type === "Arma") {
     return selectWeapon(card);
   } else if (card.type === "Objeto") {
@@ -2979,9 +3010,11 @@ function selectWeapon(card) {
   playAudio("resident-evil-2-inventario.mp3", 0.8);
   if (player.selectedWeapons.some((weapon) => weapon.instanceId === card.instanceId)) {
     player.selectedWeapons = player.selectedWeapons.filter((weapon) => weapon.instanceId !== card.instanceId);
-    state.turn.ammo += card.ammoCost || 0;
-    state.turn.weaponAmmoSpent = Math.max(0, state.turn.weaponAmmoSpent - (card.ammoCost || 0));
+    const spent = card.id === "gatling" ? (card.gatlingAmmoSpent || 0) : (card.ammoCost || 0);
+    state.turn.ammo += spent;
+    state.turn.weaponAmmoSpent = Math.max(0, state.turn.weaponAmmoSpent - spent);
     state.turn.damage = Math.max(0, state.turn.damage - weaponDamage(card));
+    if (card.id === "gatling") card.gatlingAmmoSpent = 0;
     state.turn.explores = Math.max(0, state.turn.explores - (card.extraExplore || 0));
     notify("Arma retirada", `${card.name} ya no se usara en este ataque.`);
     renderGame();
@@ -2991,12 +3024,23 @@ function selectWeapon(card) {
     notify("Arma ya usada", `${card.name} ya fue usada en una exploracion de este turno.`, "error");
     return;
   }
-  if (state.turn.ammo < (card.ammoCost || 0)) {
-    notify("Municion insuficiente", `${card.name} requiere ${card.ammoCost || 0} de municion. Disponible: ${state.turn.ammo}.`, "error");
+  let ammoCost = card.ammoCost || 0;
+  if (card.id === "gatling") {
+    const maxSpend = Math.floor((state.turn.ammo || 0) / 20) * 20;
+    if (maxSpend <= 0) return notify("Municion insuficiente", "Gatling Gun necesita gastar municion en bloques de 20.", "error");
+    const answer = window.prompt(`Gatling Gun: ¿cuanta municion quieres gastar?\nDisponible: ${state.turn.ammo}. Usa multiplos de 20.`, String(maxSpend));
+    if (answer === null) return;
+    ammoCost = Math.floor(Number(answer) / 20) * 20;
+    if (!Number.isFinite(ammoCost) || ammoCost <= 0) return notify("Municion invalida", "Debes ingresar una municion valida en multiplos de 20.", "error");
+    if (ammoCost > state.turn.ammo) return notify("Municion insuficiente", `Solo tienes ${state.turn.ammo} de municion disponible.`, "error");
+    card.gatlingAmmoSpent = ammoCost;
+  }
+  if (state.turn.ammo < ammoCost) {
+    notify("Municion insuficiente", `${card.name} requiere ${ammoCost} de municion. Disponible: ${state.turn.ammo}.`, "error");
     return;
   }
-  state.turn.ammo -= card.ammoCost || 0;
-  state.turn.weaponAmmoSpent += card.ammoCost || 0;
+  state.turn.ammo -= ammoCost;
+  state.turn.weaponAmmoSpent += ammoCost;
   state.turn.damage += weaponDamage(card);
   state.turn.explores += card.extraExplore || 0;
   player.selectedWeapons.push(card);
@@ -3033,8 +3077,7 @@ function markSelectedWeaponsUsed(player) {
 }
 
 function returnCardToResource(card) {
-  const pile = state.resourceArea.find((item) => item.card.id === card.id);
-  if (pile) pile.count += 1;
+  addCardToResource(card);
 }
 
 function resolveUsedWeaponsAfterExplore(player) {
@@ -3059,6 +3102,7 @@ function resolveUsedWeaponsAfterExplore(player) {
     if (keepExplosive) player.discard.push(weapon);
     else returnCardToResource(weapon);
   });
+  (player.selectedWeapons || []).forEach((weapon) => { if (weapon.id === "gatling") weapon.gatlingAmmoSpent = 0; });
   player.selectedWeapons = [];
   state.turn.weaponAmmoSpent = 0;
   state.turn.weaponDamageBonus = 0;
@@ -3068,7 +3112,10 @@ function resolveUsedWeaponsAfterExplore(player) {
 function weaponDamage(card) {
   let damage = card.damage || 0;
   if (card.id === "rocket") damage = 90; // Daño fijo de 90 solicitado
-  if (card.damagePerAmmo) damage = Math.floor((state.turn.autoAmmo || 0) / card.damagePerAmmo.step) * card.damagePerAmmo.damage;
+  if (card.damagePerAmmo) {
+    const spent = card.id === "gatling" ? (card.gatlingAmmoSpent || 0) : (state.turn.autoAmmo || 0);
+    damage = Math.floor(spent / card.damagePerAmmo.step) * card.damagePerAmmo.damage;
+  }
   if (card.damageXAmmo && card.id !== "rocket") damage = state.turn.autoAmmo || 0;
   if (card.id === "burstHandgun" && currentPlayer()?.selectedWeapons?.length > 0) damage += 20;
   if (card.id === "fullBoreMachineGun" && state.turn.ammo + state.turn.weaponAmmoSpent > 100) damage += 30;
@@ -3098,8 +3145,14 @@ function drawCards(player, amount) {
 }
 
 function addCardToResource(card) {
-  const pile = state.resourceArea.find((item) => item.card.id === card.id);
-  if (pile) pile.count += 1;
+  const base = catalog[card.id] || card;
+  let pile = state.resourceArea.find((item) => item.card.id === card.id);
+  if (!pile) {
+    pile = { card: base, count: 0 };
+    state.resourceArea.push(pile);
+    state.resourceMarketOrder = state.resourceArea.map((_, index) => index);
+  }
+  pile.count += 1;
 }
 
 function takeResourceCardById(id) {
@@ -3107,6 +3160,30 @@ function takeResourceCardById(id) {
   if (!pile) return null;
   pile.count -= 1;
   return cloneCard(pile.card);
+}
+
+function playSharedMemories(player, actionCard) {
+  const discard = [...(player.discard || [])];
+  if (discard.length < 2) {
+    notify("Shared Memories", "Necesitas al menos 2 cartas en tu descarte para devolverlas al area de recursos.", "error");
+    return false;
+  }
+  const selected = [];
+  const selectable = [...discard].reverse();
+  for (const card of selectable) {
+    if (selected.length >= 2) break;
+    const ok = window.confirm(`Shared Memories: ¿devolver ${card.name} del descarte al area de recursos?\n\nSeleccionadas: ${selected.length}/2`);
+    if (ok) selected.push(card);
+  }
+  if (selected.length !== 2) {
+    notify("Shared Memories cancelada", "Debes seleccionar exactamente 2 cartas de tu descarte.", "error");
+    return false;
+  }
+  const ids = new Set(selected.map((card) => card.instanceId));
+  player.discard = player.discard.filter((card) => !ids.has(card.instanceId));
+  selected.forEach((card) => addCardToResource(card));
+  notify("Shared Memories", `Devuelves ${selected.map((card) => card.name).join(" y ")} al area de recursos. Shared Memories va inmediatamente a tu descarte.`, "success");
+  return true;
 }
 
 function playItemManagement(player) {
@@ -4069,3 +4146,12 @@ playAmbient();
   else moveCommands();
   window.addEventListener('resize', moveCommands);
 })();
+
+const fullscreenToggleButton = document.getElementById("fullscreen-toggle");
+if (fullscreenToggleButton) {
+  fullscreenToggleButton.addEventListener("click", () => {
+    document.body.classList.toggle("focus-mode");
+    const active = document.body.classList.contains("focus-mode");
+    fullscreenToggleButton.textContent = active ? "Vista Normal" : "Pantalla Completa";
+  });
+}

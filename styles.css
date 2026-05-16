@@ -7371,3 +7371,34 @@ input {
     max-width: 230px;
   }
 }
+
+/* Panel único para Acciones / Armas / Cartas jugadas */
+.hand-zone-grid {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+}
+.hand-zone-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.hand-zone-tab {
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 12px;
+  padding: 10px 8px;
+  background: rgba(10, 16, 24, .78);
+  color: #f5f5f5;
+  font-weight: 700;
+  cursor: pointer;
+}
+.hand-zone-tab.active {
+  background: linear-gradient(135deg, rgba(160, 20, 30, .95), rgba(50, 12, 18, .95));
+  border-color: rgba(255,255,255,.35);
+  box-shadow: 0 0 0 2px rgba(255,255,255,.08) inset;
+}
+.hand-zone-panel { display: none; }
+.hand-zone-panel.active { display: block; }
+@media (max-width: 720px) {
+  .hand-zone-tabs { grid-template-columns: 1fr; }
+}

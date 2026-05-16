@@ -4483,3 +4483,760 @@ html, body {
     font-size: 10px !important;
   }
 }
+
+
+/* =========================================================
+   MODO PANTALLA COMPLETA DEL JUEGO
+   Oculta solo el panel izquierdo de cuenta/sala y mantiene
+   visible el tablero + chat/recursos como en la referencia.
+   ========================================================= */
+.fullscreen-toggle {
+  background: linear-gradient(135deg, #38d88d, #2ac979) !important;
+  border: 1px solid rgba(84, 255, 177, 0.45) !important;
+  color: #06120c !important;
+  box-shadow: 0 10px 26px rgba(42, 201, 121, 0.18) !important;
+}
+
+body.focus-mode {
+  overflow: hidden !important;
+}
+
+body.focus-mode .sidebar {
+  display: none !important;
+}
+
+body.focus-mode .app-shell {
+  grid-template-columns: minmax(0, 1fr) clamp(280px, 22vw, 360px) !important;
+  grid-template-rows: minmax(0, 100vh) !important;
+  grid-template-areas: "game rail" !important;
+  gap: 10px !important;
+  padding: 4px !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  overflow: hidden !important;
+}
+
+body.focus-mode .game-surface {
+  grid-area: game !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+body.focus-mode .right-rail {
+  grid-area: rail !important;
+  display: grid !important;
+  grid-template-rows: minmax(270px, 38vh) minmax(0, 1fr) !important;
+  gap: 10px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 100% !important;
+  max-height: calc(100vh - 8px) !important;
+  overflow: hidden !important;
+}
+
+body.focus-mode .right-rail .chat-panel,
+body.focus-mode .right-rail .resources-panel {
+  display: flex !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: hidden !important;
+}
+
+body.focus-mode .right-rail .rules-panel {
+  display: none !important;
+}
+
+body.focus-mode #chat-log {
+  display: block !important;
+  min-height: 0 !important;
+  overflow: auto !important;
+}
+
+body.focus-mode .play-area {
+  grid-template-columns: clamp(250px, 26%, 340px) minmax(0, 1fr) !important;
+  gap: 10px !important;
+  min-height: 0 !important;
+}
+
+body.focus-mode .table-grid {
+  grid-template-columns: minmax(260px, 1fr) repeat(3, minmax(220px, 1fr)) !important;
+  gap: 10px !important;
+}
+
+body.focus-mode .topbar {
+  height: 80px !important;
+  min-height: 80px !important;
+  padding: 10px 18px !important;
+}
+
+body.focus-mode .top-actions {
+  gap: 12px !important;
+}
+
+body.focus-mode .hand-zone {
+  min-height: 310px !important;
+}
+
+body.focus-mode .card-list,
+body.focus-mode #hand-cards {
+  align-content: flex-start !important;
+  gap: 12px !important;
+}
+
+@media (max-width: 1180px) {
+  body.focus-mode .app-shell {
+    grid-template-columns: minmax(0, 1fr) clamp(220px, 24vw, 300px) !important;
+    gap: 6px !important;
+    padding: 3px !important;
+  }
+
+  body.focus-mode .play-area {
+    grid-template-columns: clamp(210px, 27%, 290px) minmax(0, 1fr) !important;
+    gap: 6px !important;
+  }
+
+  body.focus-mode .table-grid {
+    grid-template-columns: minmax(210px, 1fr) repeat(3, minmax(160px, 1fr)) !important;
+    gap: 6px !important;
+  }
+
+  body.focus-mode .right-rail {
+    grid-template-rows: minmax(230px, 36vh) minmax(0, 1fr) !important;
+    gap: 6px !important;
+  }
+}
+
+/* === Ajuste final: cartas de la mano más grandes y nítidas === */
+.hand,
+#hand.hand,
+.card-list#hand-cards,
+#hand-cards {
+  min-height: clamp(220px, 32vh, 360px) !important;
+  padding: clamp(14px, 1.4vw, 22px) !important;
+  gap: clamp(14px, 1.35vw, 22px) !important;
+  align-items: center !important;
+  align-content: flex-start !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+}
+
+.hand .card,
+#hand.hand .card,
+#hand-cards .card {
+  flex: 0 0 clamp(140px, 9.2vw, 180px) !important;
+  width: clamp(140px, 9.2vw, 180px) !important;
+  height: auto !important;
+  aspect-ratio: 2.5 / 3.5 !important;
+  min-height: 0 !important;
+  border-radius: 14px !important;
+}
+
+.hand .card-face,
+#hand.hand .card-face,
+#hand-cards .card-face,
+.hand .card.card-face,
+#hand.hand .card.card-face,
+#hand-cards .card.card-face {
+  width: clamp(140px, 9.2vw, 180px) !important;
+  height: auto !important;
+  aspect-ratio: 2.5 / 3.5 !important;
+  grid-template-rows: 56% 44% !important;
+  padding: 7px !important;
+  gap: 6px !important;
+  border-radius: 14px !important;
+  image-rendering: auto !important;
+}
+
+.hand .card-art,
+#hand-cards .card-art {
+  min-height: 0 !important;
+  border-radius: 10px !important;
+  image-rendering: auto !important;
+}
+
+.hand .card-art img,
+#hand-cards .card-art img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  image-rendering: auto !important;
+  transform: translateZ(0) !important;
+  backface-visibility: hidden !important;
+}
+
+.hand .card-copy,
+#hand-cards .card-copy {
+  display: grid !important;
+  align-content: center !important;
+  gap: 3px !important;
+  min-height: 0 !important;
+  padding: 2px 2px 4px !important;
+}
+
+.hand .card-copy small,
+#hand-cards .card-copy small {
+  font-size: clamp(0.62rem, 0.56vw, 0.78rem) !important;
+  line-height: 1.05 !important;
+}
+
+.hand .card-copy strong,
+#hand-cards .card-copy strong {
+  font-size: clamp(0.82rem, 0.75vw, 1.02rem) !important;
+  line-height: 1.08 !important;
+}
+
+.hand .card-copy span,
+#hand-cards .card-copy span {
+  font-size: clamp(0.66rem, 0.62vw, 0.82rem) !important;
+  line-height: 1.12 !important;
+}
+
+.hand .inspect-btn,
+#hand-cards .inspect-btn {
+  width: clamp(26px, 1.8vw, 34px) !important;
+  height: clamp(26px, 1.8vw, 34px) !important;
+  font-size: clamp(0.72rem, 0.8vw, 0.95rem) !important;
+  top: 5px !important;
+  right: 5px !important;
+}
+
+body.focus-mode .hand-zone {
+  min-height: clamp(420px, 54vh, 620px) !important;
+}
+
+body.focus-mode .hand,
+body.focus-mode #hand.hand,
+body.focus-mode #hand-cards {
+  min-height: clamp(280px, 38vh, 460px) !important;
+  padding: clamp(20px, 1.8vw, 30px) !important;
+  gap: clamp(18px, 1.5vw, 26px) !important;
+}
+
+body.focus-mode .hand .card,
+body.focus-mode #hand.hand .card,
+body.focus-mode #hand-cards .card,
+body.focus-mode .hand .card-face,
+body.focus-mode #hand.hand .card-face,
+body.focus-mode #hand-cards .card-face,
+body.focus-mode .hand .card.card-face,
+body.focus-mode #hand.hand .card.card-face,
+body.focus-mode #hand-cards .card.card-face {
+  flex-basis: clamp(155px, 10.5vw, 205px) !important;
+  width: clamp(155px, 10.5vw, 205px) !important;
+  max-width: none !important;
+}
+
+@media (max-width: 1180px) {
+  .hand .card,
+  #hand.hand .card,
+  #hand-cards .card,
+  .hand .card-face,
+  #hand.hand .card-face,
+  #hand-cards .card-face,
+  .hand .card.card-face,
+  #hand.hand .card.card-face,
+  #hand-cards .card.card-face,
+  body.focus-mode .hand .card,
+  body.focus-mode #hand.hand .card,
+  body.focus-mode #hand-cards .card,
+  body.focus-mode .hand .card-face,
+  body.focus-mode #hand.hand .card-face,
+  body.focus-mode #hand-cards .card-face {
+    flex-basis: clamp(118px, 13.5vw, 155px) !important;
+    width: clamp(118px, 13.5vw, 155px) !important;
+  }
+
+  .hand,
+  #hand.hand,
+  #hand-cards,
+  body.focus-mode .hand,
+  body.focus-mode #hand.hand,
+  body.focus-mode #hand-cards {
+    min-height: clamp(210px, 36vh, 330px) !important;
+    padding: 12px !important;
+    gap: 12px !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .hand .card,
+  #hand.hand .card,
+  #hand-cards .card,
+  .hand .card-face,
+  #hand.hand .card-face,
+  #hand-cards .card-face,
+  .hand .card.card-face,
+  #hand.hand .card.card-face,
+  #hand-cards .card.card-face {
+    flex-basis: 126px !important;
+    width: 126px !important;
+  }
+}
+
+/* === Ajuste v30: texto de cartas de mano más compacto === */
+#hand-cards .card-face,
+#hand-cards .card.card-face,
+#hand.hand .card-face,
+#hand.hand .card.card-face,
+.hand .card-face,
+.hand .card.card-face {
+  grid-template-rows: 64% 36% !important;
+  padding: 6px !important;
+  gap: 4px !important;
+}
+
+#hand-cards .card-art img,
+#hand.hand .card-art img,
+.hand .card-art img {
+  object-fit: contain !important;
+  object-position: center center !important;
+  background: #05070a !important;
+}
+
+#hand-cards .card-copy,
+#hand.hand .card-copy,
+.hand .card-copy {
+  gap: 1px !important;
+  padding: 1px 2px 2px !important;
+  align-content: start !important;
+  overflow: hidden !important;
+}
+
+#hand-cards .card-copy small,
+#hand.hand .card-copy small,
+.hand .card-copy small {
+  font-size: clamp(0.48rem, 0.42vw, 0.60rem) !important;
+  line-height: 1 !important;
+  letter-spacing: .015em !important;
+}
+
+#hand-cards .card-copy strong,
+#hand.hand .card-copy strong,
+.hand .card-copy strong {
+  font-size: clamp(0.62rem, 0.56vw, 0.78rem) !important;
+  line-height: 1.03 !important;
+  margin: 0 !important;
+  white-space: normal !important;
+}
+
+#hand-cards .card-copy span,
+#hand.hand .card-copy span,
+.hand .card-copy span {
+  font-size: clamp(0.50rem, 0.46vw, 0.64rem) !important;
+  line-height: 1.06 !important;
+  margin: 0 !important;
+}
+
+#hand-cards .card-copy span:nth-of-type(n+2),
+#hand.hand .card-copy span:nth-of-type(n+2),
+.hand .card-copy span:nth-of-type(n+2) {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+body.focus-mode #hand-cards .card-face,
+body.focus-mode #hand-cards .card.card-face,
+body.focus-mode #hand.hand .card-face,
+body.focus-mode .hand .card-face {
+  grid-template-rows: 65% 35% !important;
+}
+
+body.focus-mode #hand-cards .card-copy small,
+body.focus-mode #hand.hand .card-copy small,
+body.focus-mode .hand .card-copy small {
+  font-size: clamp(0.50rem, 0.44vw, 0.62rem) !important;
+}
+
+body.focus-mode #hand-cards .card-copy strong,
+body.focus-mode #hand.hand .card-copy strong,
+body.focus-mode .hand .card-copy strong {
+  font-size: clamp(0.64rem, 0.58vw, 0.80rem) !important;
+}
+
+body.focus-mode #hand-cards .card-copy span,
+body.focus-mode #hand.hand .card-copy span,
+body.focus-mode .hand .card-copy span {
+  font-size: clamp(0.52rem, 0.48vw, 0.66rem) !important;
+}
+
+/* === Ajuste v31: usar todo el espacio marcado en rojo del área de la mano === */
+.player-board #hand.hand,
+#hand.hand,
+.hand#hand {
+  min-height: clamp(300px, 36vh, 390px) !important;
+  padding: clamp(10px, 1vw, 16px) !important;
+  gap: clamp(14px, 1.1vw, 20px) !important;
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: stretch !important;
+  align-content: stretch !important;
+  justify-content: flex-start !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scroll-snap-type: x proximity !important;
+}
+
+#hand.hand > .card.card-face,
+#hand.hand > button.card.card-face,
+.hand#hand > .card.card-face,
+.hand#hand > button.card.card-face {
+  flex: 0 0 clamp(205px, 13.2vw, 250px) !important;
+  width: clamp(205px, 13.2vw, 250px) !important;
+  height: clamp(285px, 34vh, 350px) !important;
+  max-height: 100% !important;
+  aspect-ratio: auto !important;
+  padding: clamp(8px, .7vw, 12px) !important;
+  border-radius: 16px !important;
+  display: grid !important;
+  grid-template-rows: minmax(0, 68%) minmax(86px, 32%) !important;
+  gap: 7px !important;
+  scroll-snap-align: start !important;
+  box-sizing: border-box !important;
+}
+
+#hand.hand > .card.card-face .card-art,
+#hand.hand > button.card.card-face .card-art,
+.hand#hand > .card.card-face .card-art,
+.hand#hand > button.card.card-face .card-art {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  border-radius: 13px !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: #05070a !important;
+}
+
+#hand.hand > .card.card-face .card-art img,
+#hand.hand > button.card.card-face .card-art img,
+.hand#hand > .card.card-face .card-art img,
+.hand#hand > button.card.card-face .card-art img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  object-position: center center !important;
+  image-rendering: auto !important;
+}
+
+#hand.hand > .card.card-face .card-copy,
+#hand.hand > button.card.card-face .card-copy,
+.hand#hand > .card.card-face .card-copy,
+.hand#hand > button.card.card-face .card-copy {
+  min-height: 0 !important;
+  padding: 2px 4px 3px !important;
+  gap: 2px !important;
+  align-content: center !important;
+  overflow: hidden !important;
+}
+
+#hand.hand > .card.card-face .card-copy small,
+#hand.hand > button.card.card-face .card-copy small,
+.hand#hand > .card.card-face .card-copy small,
+.hand#hand > button.card.card-face .card-copy small {
+  font-size: clamp(.58rem, .48vw, .72rem) !important;
+  line-height: 1 !important;
+}
+
+#hand.hand > .card.card-face .card-copy strong,
+#hand.hand > button.card.card-face .card-copy strong,
+.hand#hand > .card.card-face .card-copy strong,
+.hand#hand > button.card.card-face .card-copy strong {
+  font-size: clamp(.90rem, .82vw, 1.12rem) !important;
+  line-height: 1.04 !important;
+}
+
+#hand.hand > .card.card-face .card-copy span,
+#hand.hand > button.card.card-face .card-copy span,
+.hand#hand > .card.card-face .card-copy span,
+.hand#hand > button.card.card-face .card-copy span {
+  font-size: clamp(.68rem, .58vw, .82rem) !important;
+  line-height: 1.1 !important;
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  -webkit-line-clamp: 2 !important;
+  overflow: hidden !important;
+}
+
+#hand.hand > .card.card-face .inspect-btn,
+#hand.hand > button.card.card-face .inspect-btn,
+.hand#hand > .card.card-face .inspect-btn,
+.hand#hand > button.card.card-face .inspect-btn {
+  width: clamp(30px, 2.2vw, 40px) !important;
+  height: clamp(30px, 2.2vw, 40px) !important;
+  top: 8px !important;
+  right: 8px !important;
+  font-size: clamp(.78rem, .85vw, 1rem) !important;
+}
+
+@media (max-width: 1180px) {
+  .player-board #hand.hand,
+  #hand.hand,
+  .hand#hand {
+    min-height: clamp(260px, 39vh, 340px) !important;
+    padding: 10px !important;
+    gap: 12px !important;
+  }
+
+  #hand.hand > .card.card-face,
+  #hand.hand > button.card.card-face,
+  .hand#hand > .card.card-face,
+  .hand#hand > button.card.card-face {
+    flex-basis: clamp(165px, 21vw, 220px) !important;
+    width: clamp(165px, 21vw, 220px) !important;
+    height: clamp(235px, 36vh, 310px) !important;
+  }
+}
+
+/* === Ajuste v32: imagen de carta arriba + texto hasta el máximo del área asignada === */
+#hand-cards,
+#hand.hand,
+.hand {
+  min-height: clamp(250px, 37vh, 420px) !important;
+  padding: clamp(12px, 1.2vw, 18px) !important;
+  align-items: stretch !important;
+}
+
+#hand-cards .card,
+#hand.hand .card,
+.hand .card,
+#hand-cards .card-face,
+#hand.hand .card-face,
+.hand .card-face,
+#hand-cards .card.card-face,
+#hand.hand .card.card-face,
+.hand .card.card-face {
+  flex: 0 0 clamp(158px, 11.2vw, 210px) !important;
+  width: clamp(158px, 11.2vw, 210px) !important;
+  height: clamp(255px, 30vh, 355px) !important;
+  aspect-ratio: auto !important;
+  max-width: none !important;
+  display: grid !important;
+  grid-template-rows: minmax(0, 72%) minmax(58px, 28%) !important;
+  gap: 5px !important;
+  padding: 8px !important;
+  overflow: hidden !important;
+}
+
+#hand-cards .card-art,
+#hand.hand .card-art,
+.hand .card-art {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  border-radius: 11px !important;
+  background: #05070a !important;
+}
+
+#hand-cards .card-art img,
+#hand.hand .card-art img,
+.hand .card-art img {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+  object-position: center center !important;
+  display: block !important;
+}
+
+#hand-cards .card-copy,
+#hand.hand .card-copy,
+.hand .card-copy {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  display: grid !important;
+  grid-template-rows: auto auto auto minmax(0, 1fr) !important;
+  align-content: start !important;
+  justify-items: center !important;
+  text-align: center !important;
+  gap: 2px !important;
+  padding: 2px 4px 4px !important;
+  overflow: hidden !important;
+}
+
+#hand-cards .card-copy small,
+#hand.hand .card-copy small,
+.hand .card-copy small {
+  font-size: clamp(0.55rem, 0.48vw, 0.72rem) !important;
+  line-height: 1.02 !important;
+  max-width: 100% !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+#hand-cards .card-copy strong,
+#hand.hand .card-copy strong,
+.hand .card-copy strong {
+  font-size: clamp(0.88rem, 0.86vw, 1.16rem) !important;
+  line-height: 1.04 !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+}
+
+#hand-cards .card-copy span,
+#hand.hand .card-copy span,
+.hand .card-copy span {
+  font-size: clamp(0.62rem, 0.58vw, 0.82rem) !important;
+  line-height: 1.08 !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+}
+
+body.focus-mode #hand-cards .card,
+body.focus-mode #hand.hand .card,
+body.focus-mode .hand .card,
+body.focus-mode #hand-cards .card-face,
+body.focus-mode #hand.hand .card-face,
+body.focus-mode .hand .card-face,
+body.focus-mode #hand-cards .card.card-face,
+body.focus-mode #hand.hand .card.card-face,
+body.focus-mode .hand .card.card-face {
+  flex-basis: clamp(175px, 12.2vw, 230px) !important;
+  width: clamp(175px, 12.2vw, 230px) !important;
+  height: clamp(285px, 34vh, 385px) !important;
+}
+
+@media (max-width: 1180px) {
+  #hand-cards .card,
+  #hand.hand .card,
+  .hand .card,
+  #hand-cards .card-face,
+  #hand.hand .card-face,
+  .hand .card-face,
+  #hand-cards .card.card-face,
+  #hand.hand .card.card-face,
+  .hand .card.card-face {
+    flex-basis: clamp(145px, 15.5vw, 175px) !important;
+    width: clamp(145px, 15.5vw, 175px) !important;
+    height: clamp(235px, 31vh, 300px) !important;
+  }
+}
+
+/* ============================================================
+   V33 - INDICADORES DE MANO MAS GRANDES Y COMPACTOS
+   - Indicadores del jugador ampliados para mejor lectura.
+   - Iconos proporcionados al tamaño del indicador.
+   - Elementos juntos, alineados y sin separarse.
+   ============================================================ */
+.controls-panel .live-trackers {
+  display: grid !important;
+  grid-template-columns: repeat(8, minmax(82px, 1fr)) !important;
+  gap: 6px !important;
+  margin: 4px 0 10px !important;
+  padding: 7px 8px !important;
+  border: 1px solid rgba(69, 211, 139, 0.32) !important;
+  border-radius: 14px !important;
+  background: linear-gradient(180deg, rgba(13, 43, 31, 0.72), rgba(5, 17, 14, 0.88)) !important;
+  box-shadow: inset 0 0 0 1px rgba(229, 181, 72, 0.08), 0 8px 18px rgba(0,0,0,0.22) !important;
+}
+
+.controls-panel .live-trackers > div {
+  min-height: 50px !important;
+  height: 50px !important;
+  padding: 5px 7px !important;
+  gap: 6px !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  border-radius: 10px !important;
+  border-width: 1px !important;
+  background: linear-gradient(135deg, rgba(216, 168, 77, 0.18), rgba(21, 50, 37, 0.42)), rgba(3, 7, 10, 0.72) !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.025) !important;
+}
+
+.controls-panel .tracker-icon {
+  width: 31px !important;
+  height: 31px !important;
+  object-fit: contain !important;
+  flex: 0 0 31px !important;
+  display: block !important;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.55)) !important;
+}
+
+.controls-panel .tracker-info {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+  gap: 2px !important;
+  min-width: 0 !important;
+  line-height: 1 !important;
+}
+
+.controls-panel .tracker-info span {
+  display: block !important;
+  font-size: 0.54rem !important;
+  line-height: 1 !important;
+  letter-spacing: 0.02em !important;
+  max-width: 100% !important;
+}
+
+.controls-panel .tracker-info strong {
+  font-size: 0.94rem !important;
+  line-height: 1.05 !important;
+  margin-top: 0 !important;
+  font-weight: 950 !important;
+}
+
+@media (max-width: 1360px) {
+  .controls-panel .live-trackers {
+    grid-template-columns: repeat(8, minmax(70px, 1fr)) !important;
+    gap: 4px !important;
+    padding: 6px !important;
+  }
+  .controls-panel .live-trackers > div {
+    min-height: 46px !important;
+    height: 46px !important;
+    padding: 4px 5px !important;
+    gap: 4px !important;
+  }
+  .controls-panel .tracker-icon {
+    width: 27px !important;
+    height: 27px !important;
+    flex-basis: 27px !important;
+  }
+  .controls-panel .tracker-info span {
+    font-size: 0.48rem !important;
+  }
+  .controls-panel .tracker-info strong {
+    font-size: 0.82rem !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  .controls-panel .live-trackers {
+    grid-template-columns: repeat(4, minmax(86px, 1fr)) !important;
+  }
+  .controls-panel .tracker-info span {
+    display: block !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .controls-panel .live-trackers {
+    grid-template-columns: repeat(2, minmax(120px, 1fr)) !important;
+  }
+}
